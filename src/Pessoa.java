@@ -2,21 +2,21 @@
  * Declaração da classe que representa uma pessoa no sistema.
  */
 public class Pessoa {
-    /** Atributo do cartão de cidadão da pessoa.*/
+    /** Atribuição do cartão de cidadão da pessoa.*/
     private String cc;
-    /** Atributo do nome completo da pessoa.*/
+    /** Atribuição do nome completo da pessoa.*/
     private String nome;
-    /** Atributo do numero de identificação da segurança social.*/
+    /** Atribuição do número de identificação da segurança social.*/
     private int idSegSocial;
-    /** Número de identificação fiscal (Finanças) */
+    /** Número de identificação fiscal / Contribuinte. */
     private int idFinancas;
-    /** Morada da pessoa */
+    /** Morada de residência da pessoa. */
     private String morada;
-    /** Número de telemóvel da pessoa */
+    /** Número de telemóvel da pessoa. */
     private int telemovel;
 
     /**
-     * Construtor vazio da classe pessoa.
+     * Construtor vazio.
      * Inicia todos os atributos com valores por defeito.
      */
     public Pessoa() {
@@ -29,14 +29,14 @@ public class Pessoa {
     }
 
     /**
-     * Construtor com parâmetros da classe Pessoa.
+     * Construtor com parâmetros.
      * Permite criar uma pessoa com todos os seus dados definidos.
      * @param cc O cartão de cidadão.
      * @param nome O nome completo.
      * @param idSegSocial O número da segurança social.
      * @param idFinancas O número de identificação fiscal / Contribuinte.
      * @param morada A morada de residência.
-     * @param telemovel O número de telefone
+     * @param telemovel O número de telefone.
      */
     public Pessoa(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel) {
         this.cc = cc;
@@ -48,7 +48,7 @@ public class Pessoa {
     }
 
     /**
-     * devolve o número do cartão de cidadão.
+     * Devolve o número do cartão de cidadão.
      * @return número do cartão de cidadão
      */
     public String getCc() {
@@ -56,7 +56,7 @@ public class Pessoa {
     }
 
     /**
-     * define o número do cartão de cidadão.
+     * Define o número do cartão de cidadão.
      * @param cc O novo cartão de cidadão.
      */
     public void setCc(String cc) {
@@ -64,15 +64,15 @@ public class Pessoa {
     }
 
     /**
-     * devolve o nome da pessoa.
-     * @return nome da pessoa
+     * Devolve o nome da pessoa.
+     * @return O nome da pessoa
      */
     public String getNome() {
         return nome;
     }
 
     /**
-     * define o nome da pessoa
+     * Define o nome da pessoa
      * @param nome O novo nome completo.
      */
     public void setNome(String nome) {
@@ -80,15 +80,15 @@ public class Pessoa {
     }
 
     /**
-     * devolve o número de identificação da Segurança Social.
-     * @return número da Segurança Social
+     * Devolve o número de identificação da Segurança Social.
+     * @return O número da Segurança Social
      */
     public int getIdSegSocial() {
         return idSegSocial;
     }
 
     /**
-     * define o número de identificação da Segurança Social.
+     * Define o número de identificação da Segurança Social.
      * @param idSegSocial O número da segurança social.
      */
     public void setIdSegSocial(int idSegSocial) {
@@ -96,15 +96,15 @@ public class Pessoa {
     }
 
     /**
-     * devolve o número de identificação fiscal.
-     * @return  número de identificação fiscal
+     * Devolve o número de identificação fiscal.
+     * @return O número de identificação fiscal
      */
     public int getIdFinancas() {
         return idFinancas;
     }
 
     /**
-     * define o número de identificação fiscal.
+     * Define o número de identificação fiscal.
      * @param idFinancas O novo número de identificação fiscal / Contribuinte.
      */
     public void setIdFinancas(int idFinancas) {
@@ -112,15 +112,15 @@ public class Pessoa {
     }
 
     /**
-     * devolve a morada da pessoa.
-     * @return morada da pessoa
+     * Devolve a morada da pessoa.
+     * @return A morada da pessoa.
      */
     public String getMorada() {
         return morada;
     }
 
     /**
-     * define a morada da pessoa
+     * Define a morada da pessoa.
      * @param morada A nova morada de residência.
      */
     public void setMorada(String morada) {
@@ -129,15 +129,15 @@ public class Pessoa {
 
     /**
      * Devolve o número de telemóvel da pessoa.
-     * @return número de telemóvel da pessoa
+     * @return número de telemóvel da pessoa.
      */
     public int getTelemovel() {
         return telemovel;
     }
 
     /**
-     * define o número de telemóvel da pessoa.
-     * @param telemovel O novo número de telefone
+     * Define o número de telemóvel da pessoa.
+     * @param telemovel O novo número de telefone.
      */
     public void setTelemovel(int telemovel) {
         this.telemovel = telemovel;

@@ -4,13 +4,13 @@
  * Declaração da classe Viatura.
  */
 public class Viatura {
-    /** atributo da matrícula.*/
+    /** Atribuição da matrícula.*/
     private String matricula;
-    /** atributo da marca.*/
+    /** Atribuição da marca.*/
     private String marca;
-    /** atributo do modelo.*/
+    /** Atribuição do modelo.*/
     private String modelo;
-    /** atributo do ano de fabrico.*/
+    /** Atribuição do ano de fabrico.*/
     private int anoDeFabrico;
 
     /**
@@ -26,7 +26,7 @@ public class Viatura {
 
     /**
      * Construtor com parâmetros da classe Viatura.
-     * Permite criar uma viatura com todos os seus atributos defenidos.
+     * Permite criar uma viatura com todos os seus atributos definidos.
      * @param anoDeFabrico O ano do fabrico da viatura.
      * @param modelo O modelo da viatura.
      * @param marca A marca da viatura.
@@ -41,15 +41,15 @@ public class Viatura {
 
     /**
      * Obtém a matrícula da viatura.
-     * @return matrícula da viatura
+     * @return matrícula da viatura.
      */
     public String getMatricula() {
         return matricula;
     }
 
     /**
-     * Define a matricula da viatura.
-     * @param matricula A nova matricula
+     * Define a matrícula da viatura.
+     * @param matricula A nova matrícula.
      */
     public void setMatricula(String matricula) {
         this.matricula = matricula;
@@ -73,7 +73,7 @@ public class Viatura {
 
     /**
      * Obtém o modelo da viatura.
-     * @return modelo da viatura
+     * @return modelo da viatura.
      */
     public String getModelo() {
         return modelo;
@@ -89,7 +89,7 @@ public class Viatura {
 
     /**
      * Obtém o ano de fabrico da viatura.
-     * @return ano de fabrico
+     * @return ano de fabrico.
      */
     public int getAnoDeFabrico() {
         return anoDeFabrico;

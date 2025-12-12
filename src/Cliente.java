@@ -9,7 +9,7 @@ public class Cliente extends Pessoa{
     private int idCliente;
 
     /**
-     * construtor da classe que recebe apenas o identificador do cliente.
+     * Construtor da classe que recebe apenas o identificador do cliente.
      * @param idCliente
      */
     public Cliente(int idCliente) {
@@ -17,12 +17,12 @@ public class Cliente extends Pessoa{
     }
 
     /**
-     * construtor vazio da classe cliente.
-     * permite criar um cliente com todos os seus atributos defenidos.
-     * @param cc O cartão de cidadão
-     * @param nome O nome completo
-     * @param idSegSocial O numero da segurança social
-     * @param idFinancas O numero de identificação fiscal / Contribuinte.
+     * Construtor vazio da classe cliente.
+     * Permite criar um cliente com todos os seus atributos definidos.
+     * @param cc O cartão de cidadão.
+     * @param nome O nome completo.
+     * @param idSegSocial O número da segurança social.
+     * @param idFinancas O número de identificação fiscal / Contribuinte.
      * @param morada  A morada de residência.
      * @param telemovel  O número de telefone.
      * @param idCliente  O número da carta de condução.
@@ -33,15 +33,15 @@ public class Cliente extends Pessoa{
     }
 
     /**
-     * devolve o número de identificação do cliente.
-     * @return IdCliente do cliente.
+     * Devolve o número de identificação do cliente.
+     * @return IdCliente O número identificação do cliente.
      */
     public int getIdCliente() {
         return idCliente;
     }
 
     /**
-     * define o identificador do cliente.
+     * Define o número de identificação do cliente.
      * @param idCliente O novo número de identificação do cliente
      */
     public void setIdCliente(int idCliente) {
