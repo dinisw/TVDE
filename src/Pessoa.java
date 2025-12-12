@@ -1,6 +1,6 @@
 
 public class Pessoa {
-    private int cc;
+    private String cc;
     private String nome;
     private int idSegSocial;
     private int idFinancas;
@@ -8,7 +8,7 @@ public class Pessoa {
     private int telemovel;
 
     public Pessoa() {
-        cc = 0;
+        cc = "";
         nome = "";
         idSegSocial = 0;
         idFinancas = 0;
@@ -25,7 +25,7 @@ public class Pessoa {
      * @param morada
      * @param telemovel
      */
-    public Pessoa(int cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel) {
+    public Pessoa(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel) {
         this.cc = cc;
         this.nome = nome;
         this.idSegSocial = idSegSocial;
@@ -34,7 +34,7 @@ public class Pessoa {
         this.telemovel = telemovel;
     }
 
-    public int getCc() {
+    public String getCc() {
         return cc;
     }
 
@@ -42,7 +42,7 @@ public class Pessoa {
      * 
      * @param cc
      */
-    public void setCc(int cc) {
+    public void setCc(String cc) {
         this.cc = cc;
     }
 
