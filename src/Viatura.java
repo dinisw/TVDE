@@ -49,8 +49,10 @@ public class Viatura {
     }
 
     public void setAnoDeFabrico(int anoDeFabrico) {
-        this.anoDeFabrico = anoDeFabrico;
+        if (anoDeFabrico > 1900 && anoDeFabrico <= 2025) {
+            this.anoDeFabrico = anoDeFabrico;
+        } else {
+            System.out.println("Erro");
+        }
     }
-
-
 }
