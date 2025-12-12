@@ -17,15 +17,15 @@ public class Cliente extends Pessoa{
     }
 
     /**
-     * construtor completo da classe cliente.
+     * construtor vazio da classe cliente.
      * permite criar um cliente com todos os seus atributos defenidos.
-     * @param cc
-     * @param nome
-     * @param idSegSocial
-     * @param idFinancas
-     * @param morada
-     * @param telemovel
-     * @param idCliente
+     * @param cc O cartão de cidadão
+     * @param nome O nome completo
+     * @param idSegSocial O numero da segurança social
+     * @param idFinancas O numero de identificação fiscal / Contribuinte.
+     * @param morada  A morada de residência.
+     * @param telemovel  O número de telefone.
+     * @param idCliente  O número da carta de condução.
      */
     public Cliente(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel, int idCliente) {
         super(cc, nome, idSegSocial, idFinancas, morada, telemovel);
@@ -33,8 +33,8 @@ public class Cliente extends Pessoa{
     }
 
     /**
-     * devolve o identificador do cliente.
-     * @return identificador do cliente
+     * devolve o número de identificação do cliente.
+     * @return IdCliente do cliente.
      */
     public int getIdCliente() {
         return idCliente;
@@ -42,7 +42,7 @@ public class Cliente extends Pessoa{
 
     /**
      * define o identificador do cliente.
-     * @param idCliente
+     * @param idCliente O novo número de identificação do cliente
      */
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;

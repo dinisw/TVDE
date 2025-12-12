@@ -4,7 +4,7 @@
  * Declaração da classe Viatura.
  */
 public class Viatura {
-    /** atributo da matricula.*/
+    /** atributo da matrícula.*/
     private String matricula;
     /** atributo da marca.*/
     private String marca;
@@ -14,7 +14,7 @@ public class Viatura {
     private int anoDeFabrico;
 
     /**
-     * Construtor padrão (sem argumentos).
+     * Construtor vazio.
      * Inicia todos os atributos com valores por defeito.
      */
     public Viatura() {
@@ -27,10 +27,10 @@ public class Viatura {
     /**
      * Construtor com parâmetros da classe Viatura.
      * Permite criar uma viatura com todos os seus atributos defenidos.
-     * @param anoDeFabrico
-     * @param modelo
-     * @param marca
-     * @param matricula
+     * @param anoDeFabrico O ano do fabrico da viatura.
+     * @param modelo O modelo da viatura.
+     * @param marca A marca da viatura.
+     * @param matricula A matrícula da viatura.
      */
     public Viatura(int anoDeFabrico, String modelo, String marca, String matricula) {
         this.anoDeFabrico = anoDeFabrico;
@@ -40,8 +40,8 @@ public class Viatura {
     }
 
     /**
-     * Devolve a matricula da viatura.
-     * @return matricula da viatura
+     * Obtém a matrícula da viatura.
+     * @return matrícula da viatura
      */
     public String getMatricula() {
         return matricula;
@@ -49,15 +49,15 @@ public class Viatura {
 
     /**
      * Define a matricula da viatura.
-     * @param matricula
+     * @param matricula A nova matricula
      */
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
 
     /**
-     * Devolve a marca da viatura.
-     * @return marca da viatura
+     * Obtém a marca da viatura.
+     * @return marca da viatura.
      */
     public String getMarca() {
         return marca;
@@ -65,14 +65,14 @@ public class Viatura {
 
     /**
      * Define a marca da viatura.
-     * @param marca
+     * @param marca A nova marca da viatura.
      */
     public void setMarca(String marca) {
         this.marca = marca;
     }
 
     /**
-     * devolve o modelo da viatura.
+     * Obtém o modelo da viatura.
      * @return modelo da viatura
      */
     public String getModelo() {
@@ -81,14 +81,14 @@ public class Viatura {
 
     /**
      * Define o modelo da viatura.
-     * @param modelo
+     * @param modelo O novo modelo da viatura.
      */
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
 
     /**
-     * Devolve o ano de fabrico da viatura.
+     * Obtém o ano de fabrico da viatura.
      * @return ano de fabrico
      */
     public int getAnoDeFabrico() {

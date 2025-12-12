@@ -16,7 +16,7 @@ public class Pessoa {
     private int telemovel;
 
     /**
-     * Construtor padrão da classe pessoa.
+     * Construtor vazio da classe pessoa.
      * Inicia todos os atributos com valores por defeito.
      */
     public Pessoa() {
@@ -31,12 +31,12 @@ public class Pessoa {
     /**
      * Construtor com parâmetros da classe Pessoa.
      * Permite criar uma pessoa com todos os seus dados definidos.
-     * @param cc
-     * @param nome
-     * @param idSegSocial
-     * @param idFinancas
-     * @param morada
-     * @param telemovel
+     * @param cc O cartão de cidadão.
+     * @param nome O nome completo.
+     * @param idSegSocial O número da segurança social.
+     * @param idFinancas O número de identificação fiscal / Contribuinte.
+     * @param morada A morada de residência.
+     * @param telemovel O número de telefone
      */
     public Pessoa(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel) {
         this.cc = cc;
@@ -48,16 +48,16 @@ public class Pessoa {
     }
 
     /**
-     * devolve o numero do cartão de cidadão.
-     * @return numero do cartão de cidadão
+     * devolve o número do cartão de cidadão.
+     * @return número do cartão de cidadão
      */
     public String getCc() {
         return cc;
     }
 
     /**
-     * define o numero do cartão de cidadão.
-     * @param cc
+     * define o número do cartão de cidadão.
+     * @param cc O novo cartão de cidadão.
      */
     public void setCc(String cc) {
         this.cc = cc;
@@ -73,7 +73,7 @@ public class Pessoa {
 
     /**
      * define o nome da pessoa
-     * @param nome
+     * @param nome O novo nome completo.
      */
     public void setNome(String nome) {
         this.nome = nome;
@@ -89,7 +89,7 @@ public class Pessoa {
 
     /**
      * define o número de identificação da Segurança Social.
-     * @param idSegSocial
+     * @param idSegSocial O número da segurança social.
      */
     public void setIdSegSocial(int idSegSocial) {
         this.idSegSocial = idSegSocial;
@@ -105,7 +105,7 @@ public class Pessoa {
 
     /**
      * define o número de identificação fiscal.
-     * @param idFinancas
+     * @param idFinancas O novo número de identificação fiscal / Contribuinte.
      */
     public void setIdFinancas(int idFinancas) {
         this.idFinancas = idFinancas;
@@ -121,7 +121,7 @@ public class Pessoa {
 
     /**
      * define a morada da pessoa
-     * @param morada
+     * @param morada A nova morada de residência.
      */
     public void setMorada(String morada) {
         this.morada = morada;
@@ -129,7 +129,7 @@ public class Pessoa {
 
     /**
      * Devolve o número de telemóvel da pessoa.
-     * @return numeor de telemovel da pessoa
+     * @return número de telemóvel da pessoa
      */
     public int getTelemovel() {
         return telemovel;
@@ -137,7 +137,7 @@ public class Pessoa {
 
     /**
      * define o número de telemóvel da pessoa.
-     * @param telemovel
+     * @param telemovel O novo número de telefone
      */
     public void setTelemovel(int telemovel) {
         this.telemovel = telemovel;
