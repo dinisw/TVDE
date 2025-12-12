@@ -1,11 +1,17 @@
 //Viaturas (ex: matrícula, marca, modelo, ano de fabrico, …);
 
+/**
+ * Declaração de classes e atributos
+ */
 public class Viatura {
     private String matricula;
     private String marca;
     private String modelo;
     private int anoDeFabrico;
 
+    /**
+     * Construtor padrão (sem argumentos)
+     */
     public Viatura() {
         anoDeFabrico = 0;
         modelo = "";
@@ -13,6 +19,9 @@ public class Viatura {
         matricula = "";
     }
 
+    /**
+     * Construtor com parâmetros
+     */
     public Viatura(int anoDeFabrico, String modelo, String marca, String matricula) {
         this.anoDeFabrico = anoDeFabrico;
         this.modelo = modelo;
@@ -20,6 +29,9 @@ public class Viatura {
         this.matricula = matricula;
     }
 
+    /**
+     * Métodos getters e setters
+     */
     public String getMatricula() {
         return matricula;
     }
@@ -48,9 +60,14 @@ public class Viatura {
         return anoDeFabrico;
     }
 
+    /**
+     * Validação no setter do ano
+     */
     public void setAnoDeFabrico(int anoDeFabrico) {
-        this.anoDeFabrico = anoDeFabrico;
+        if (anoDeFabrico > 1900 && anoDeFabrico <= 2025) {
+            this.anoDeFabrico = anoDeFabrico;
+        } else {
+            System.out.println("Erro");
+        }
     }
-
-
 }
