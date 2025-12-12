@@ -1,5 +1,17 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+/**
+ * Classe principal da aplicação TVDE.
+ * Apresenta um menu de opções do sistema de viagens TVDE
+ * e permite ao utilizador realizar operações através da
+ * leitura de dados introduzidos pelo teclado.
+ *
+ * Atualmente, o menu permite o registo de um condutor,
+ * solicitando os seus dados pessoais e profissionais,
+ * criando um objeto da classe Condutor e armazenando-o
+ * numa lista de condutores.
+ */
 void main() {
     while (true){
         Scanner ler = new Scanner(System.in);
