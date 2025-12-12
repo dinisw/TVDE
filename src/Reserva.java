@@ -22,8 +22,8 @@ public class Reserva {
     }
 
     /**
-     * Construtor Preenchido.
-     * Cria uma reserva preenchendo logo todos os dados.
+     * Construtor preenchido.
+     * Cria uma reserva preenchendo todos os dados.
      * @param kms A Distância da viagem em quilómetros.
      * @param moradaDestino A morada para onde o cliente quer ir.
      * @param moradaOrigem A morada onde vamos buscar o cliente.
