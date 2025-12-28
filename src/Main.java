@@ -15,39 +15,46 @@
 void main() {
     while (true){
         Scanner ler = new Scanner(System.in);
+        int opcao;
         System.out.println("========= Sistema de Viagens TVDE ===========");
         System.out.println("            MENU            ");
-        System.out.println("1\tCadastrar Condutor");
-        System.out.print("Digite a opção que deseja realizar: ");
-
-        int opcao = Integer.parseInt(ler.nextLine());
-
+        System.out.println("1. Registar o/a Cliente");
+        System.out.println("2. Registar o/a Condutor");
+        System.out.println("3. Registar a Viatura");
+        System.out.println("4. Criar Reserva");
+        System.out.println("5. Registar Viagem");
+        System.out.println("6. Informações");
+        System.out.println("0. Sair");
+        System.out.print("Indique a opção que queira realizar utilizando os números de 0 a 6.");
+        opcao = ler.nextInt();
         switch (opcao){
             case 1:
-                String nome, morada, cartaoCidadao, cartaDeConducao;
-                int segurancaSocial, finacas, telemovel;
-
-                System.out.print("Digite o nome do condutor: ");
-                nome = ler.nextLine();
-                System.out.print("Digite o número da Carta de Condução: ");
-                cartaDeConducao = ler.nextLine();
-                System.out.print("Digite o número do Cartão de Cidadão: ");
+                String nomeCliente, morada, cartaoCidadao;
+                int telemovel, idFinancas;
+                System.out.print("Indique o nome do cliente: ");
+                nomeCliente = ler.nextLine();
+                Pessoa pessoa = new Pessoa();
+                pessoa.setNome(nomeCliente);
+                ArrayList<Pessoa> pessoas = new ArrayList<>();
+                System.out.print("Digite o número do Cartão de Cidadão (sem os últimos 4 dígitos): ");
                 cartaoCidadao = ler.nextLine();
-                System.out.print("Digite o número da Segurança Social: ");
-                segurancaSocial = Integer.parseInt(ler.nextLine());
-                System.out.print("Digite o número das Finanças: ");
-                finacas = Integer.parseInt(ler.nextLine());
+                pessoa.setCartaoCidadao(cartaoCidadao);
+                ArrayList<Pessoa> pessoas1 = new ArrayList<>();
+                System.out.println("Indique o número de contribuinte:");
+                idFinancas = ler.nextInt();
+                pessoa.setIdFinancas(idFinancas);
+                ArrayList<Pessoa> pessoas2 = new ArrayList<>();
                 System.out.print("Digite a morada: ");
                 morada = ler.nextLine();
-                System.out.print("Digite o número do telemóvel(apenas números): ");
-                telemovel = Integer.parseInt(ler.nextLine());
+                pessoa.setMorada(morada);
+                ArrayList<Pessoa> pessoas3 = new ArrayList<>();
+                System.out.print("Digite o número do telemóvel(sem o indicativo do país): ");
+                telemovel = ler.nextInt();
+                pessoa.setTelemovel(telemovel);
+                ArrayList<Pessoa> pessoas4 = new ArrayList<>();
+                break;
+            case 2:
 
-                Condutor condutor = new Condutor(cartaoCidadao, nome, segurancaSocial, finacas, morada, telemovel, cartaDeConducao);
-
-                ArrayList<Condutor> condutores = new ArrayList<>();
-                condutores.add(condutor);
-                
-                System.out.println(condutor.toString());
                 break;
 
         }

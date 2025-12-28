@@ -27,7 +27,7 @@ public class Condutor extends Pessoa{
     /**
      * Construtor preenchido.
      * Cria um construtor que cria todos os dados pessoais e profissionais.
-     * @param cc O cartão de cidadão.
+     * @param cartaoCidadao O cartão de cidadão.
      * @param nome O nome completo.
      * @param idSegSocial O número da segurança social.
      * @param idFinancas O número de identificação fiscal / Contribuinte.
@@ -36,8 +36,8 @@ public class Condutor extends Pessoa{
      * @param cartaDeConducao O número da carta de condução.
      * @param avaliacao A nota inicial do condutor.
      */
-    public Condutor(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel, String cartaDeConducao, double avaliacao) {
-        super(cc, nome, idSegSocial, idFinancas, morada, telemovel);
+    public Condutor(String cartaoCidadao, String nome, int idSegSocial, int idFinancas, String morada, int telemovel, String cartaDeConducao, double avaliacao) {
+        super(cartaoCidadao, nome, idSegSocial, idFinancas, morada, telemovel);
         this.cartaDeConducao = cartaDeConducao;
         this.avaliacao = avaliacao;
     }
@@ -45,7 +45,7 @@ public class Condutor extends Pessoa{
     /**
      * Construtor parcial.
      * A Avaliação começa automaticamente em 0.
-     * @param cc O cartão de cidadão.
+     * @param cartaoCidadao O cartão de cidadão.
      * @param nome O nome completo.
      * @param idSegSocial O número da segurança social.
      * @param idFinancas O número de identificação fiscal / Contribuinte.
@@ -53,8 +53,8 @@ public class Condutor extends Pessoa{
      * @param telemovel O número de telefone
      * @param cartaDeConducao O número da carta de condução.
      */
-    public Condutor(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel, String cartaDeConducao) {
-        super(cc, nome, idSegSocial, idFinancas, morada, telemovel);
+    public Condutor(String cartaoCidadao, String nome, int idSegSocial, int idFinancas, String morada, int telemovel, String cartaDeConducao) {
+        super(cartaoCidadao, nome, idSegSocial, idFinancas, morada, telemovel);
         this.cartaDeConducao = cartaDeConducao;
     }
 
