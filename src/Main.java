@@ -6,7 +6,6 @@
  * Apresenta um menu de opções do sistema de viagens TVDE
  * e permite ao utilizador realizar operações através da
  * leitura de dados introduzidos pelo teclado.
- *
  * Atualmente, o menu permite o registo de um condutor,
  * solicitando os seus dados pessoais e profissionais,
  * criando um objeto da classe Condutor e armazenando-o
@@ -29,34 +28,63 @@ void main() {
         opcao = ler.nextInt();
         switch (opcao){
             case 1:
-                String nomeCliente, morada, cartaoCidadao;
-                int telemovel, idFinancas;
+                String nomeCliente, morada;
+                int telemovel, cartaoCidadao, idContribuinte;
                 System.out.print("Indique o nome do cliente: ");
                 nomeCliente = ler.nextLine();
-                Pessoa pessoa = new Pessoa();
-                pessoa.setNome(nomeCliente);
-                ArrayList<Pessoa> pessoas = new ArrayList<>();
+                Cliente cliente = new Cliente();
+                cliente.setNomeCliente(nomeCliente);
+                ArrayList<Cliente> clientes = new ArrayList<>();
                 System.out.print("Digite o número do Cartão de Cidadão (sem os últimos 4 dígitos): ");
-                cartaoCidadao = ler.nextLine();
-                pessoa.setCartaoCidadao(cartaoCidadao);
-                ArrayList<Pessoa> pessoas1 = new ArrayList<>();
+                cartaoCidadao = ler.nextInt();
+                cliente.setCartaoCidadao(cartaoCidadao);
+                ArrayList<Cliente> clientes1 = new ArrayList<>();
                 System.out.println("Indique o número de contribuinte:");
-                idFinancas = ler.nextInt();
-                pessoa.setIdFinancas(idFinancas);
-                ArrayList<Pessoa> pessoas2 = new ArrayList<>();
+                idContribuinte = ler.nextInt();
+                cliente.setIdContribuinte(idContribuinte);
+                ArrayList<Cliente> clientes2 = new ArrayList<>();
                 System.out.print("Digite a morada: ");
                 morada = ler.nextLine();
-                pessoa.setMorada(morada);
-                ArrayList<Pessoa> pessoas3 = new ArrayList<>();
+                cliente.setMorada(morada);
+                ArrayList<Cliente> clientes3 = new ArrayList<>();
                 System.out.print("Digite o número do telemóvel(sem o indicativo do país): ");
                 telemovel = ler.nextInt();
-                pessoa.setTelemovel(telemovel);
-                ArrayList<Pessoa> pessoas4 = new ArrayList<>();
+                cliente.setTelemovel(telemovel);
+                ArrayList<Cliente> clientes4 = new ArrayList<>();
                 break;
             case 2:
-
+                String nomeCondutor, moradaCondutor, cartaDeConducao;
+                int cartaoDeCidadao, Contribuinte, telemovelCondutor;
+                double avaliacao;
+                Condutor condutor = new Condutor();
+                System.out.println("Indique o nome do/a condutor/a");
+                nomeCondutor = ler.nextLine();
+                condutor.setNomeCondutor(nomeCondutor);
+                ArrayList<Condutor> condutores = new ArrayList<>();
+                System.out.println("Indique o numero da carta de condução:");
+                cartaDeConducao = ler.nextLine();
+                condutor.setCartaDeConducao(cartaDeConducao);
+                ArrayList<Condutor> condutores1 = new ArrayList<>();
+                System.out.println("Indique o numero de cartão de cidadão sem os últimos 4 dígitos:");
+                cartaoDeCidadao = ler.nextInt();
+                condutor.setCartaoCidadao(cartaoDeCidadao);
+                ArrayList<Condutor> condutores2 = new ArrayList<>();
+                System.out.println("Indique o seu número de contribuinte:");
+                Contribuinte = ler.nextInt();
+                condutor.setIdContribuinte(Contribuinte);
+                ArrayList<Condutor> condutores3 = new ArrayList<>();
+                System.out.println("Indique a sua morada:");
+                moradaCondutor = ler.nextLine();
+                condutor.setMorada(moradaCondutor);
+                ArrayList<Condutor> condutores4 = new ArrayList<>();
+                System.out.println("Indique o seu número de telemóvel:");
+                telemovelCondutor = ler.nextInt();
+                condutor.setTelemovel(telemovelCondutor);
+                ArrayList<Condutor> condutores5 = new ArrayList<>();
                 break;
+                case 3:
 
+                    break;
         }
         break;
     }
