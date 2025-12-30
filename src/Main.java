@@ -30,9 +30,9 @@ void main() {
             case 1:
                 String nomeCliente, morada;
                 int telemovel, cartaoCidadao, idContribuinte;
+                Cliente cliente = new Cliente();
                 System.out.print("Indique o nome do cliente: ");
                 nomeCliente = ler.nextLine();
-                Cliente cliente = new Cliente();
                 cliente.setNomeCliente(nomeCliente);
                 ArrayList<Cliente> clientes = new ArrayList<>();
                 System.out.print("Digite o número do Cartão de Cidadão (sem os últimos 4 dígitos): ");
@@ -83,8 +83,37 @@ void main() {
                 ArrayList<Condutor> condutores5 = new ArrayList<>();
                 break;
                 case 3:
-
+                    String matricula, marca, modelo, cor;
+                    int anoDeFabrico, nPortas;
+                    Viatura viatura = new Viatura();
+                    System.out.println("Indique a marca da viatura.");
+                    marca = ler.nextLine();
+                    viatura.setMarca(marca);
+                    ArrayList<Viatura> viaturas = new ArrayList<>();
+                    System.out.println("Indique a modelo da viatura.");
+                    modelo = ler.nextLine();
+                    viatura.setModelo(modelo);
+                    ArrayList<Viatura> viaturas1 = new ArrayList<>();
+                    System.out.println("Indique a cor da viatura.");
+                    cor = ler.nextLine();
+                    viatura.setCor(cor);
+                    ArrayList<Viatura> viaturas2 = new ArrayList<>();
+                    System.out.println("Indique a matrícula.");
+                    matricula = ler.nextLine();
+                    viatura.setMatricula(matricula);
+                    ArrayList<Viatura> viaturas3 = new ArrayList<>();
+                    System.out.println("Indique o número de portas da viatura.");
+                    nPortas = ler.nextInt();
+                    viatura.setNPortas(nPortas);
+                    ArrayList<Viatura> viaturas4 = new ArrayList<>();
+                    System.out.println("Indique o ano de fabrico da viatura.");
+                    anoDeFabrico = ler.nextInt();
+                    viatura.setAnoDeFabrico(anoDeFabrico);
+                    ArrayList<Viatura> viaturas5 = new ArrayList<>();
                     break;
+            case 4:
+
+                break;
         }
         break;
     }

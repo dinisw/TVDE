@@ -12,6 +12,10 @@ public class Viatura {
     private String modelo;
     /** Atribuição do ano de fabrico.*/
     private int anoDeFabrico;
+    /** Atribuição do número de portas. */
+    private int nPortas;
+    /** Atribuição da cor do Veículo. */
+    private String cor;
 
     /**
      * Construtor vazio.
@@ -22,6 +26,8 @@ public class Viatura {
         modelo = "";
         marca = "";
         matricula = "";
+        cor = "";
+        nPortas = 0;
     }
 
     /**
@@ -31,12 +37,16 @@ public class Viatura {
      * @param modelo O modelo da viatura.
      * @param marca A marca da viatura.
      * @param matricula A matrícula da viatura.
+     * @param nPortas Número de portas da viatura.
+     * @param cor A cor da viatura.
      */
-    public Viatura(int anoDeFabrico, String modelo, String marca, String matricula) {
-        this.anoDeFabrico = anoDeFabrico;
-        this.modelo = modelo;
-        this.marca = marca;
+    public Viatura(String matricula, String marca, String modelo, int anoDeFabrico, int nPortas, String cor) {
         this.matricula = matricula;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anoDeFabrico = anoDeFabrico;
+        this.nPortas = nPortas;
+        this.cor = cor;
     }
 
     /**
@@ -105,5 +115,37 @@ public class Viatura {
         } else {
             System.out.println("Erro");
         }
+    }
+
+    /**
+     * Devolve o número de portas da viatura.
+     * @return O número de portas da viatura.
+     */
+    public int getNPortas() {
+        return nPortas;
+    }
+
+    /**
+     * Define o número de portas da viatura.
+     * @param nPortas O novo número de portas da viatura.
+     */
+    public void setNPortas(int nPortas) {
+        this.nPortas = nPortas;
+    }
+
+    /**
+     * Devolve a cor da viatura.
+     * @return A cor da viatura.
+     */
+    public String getCor() {
+        return cor;
+    }
+
+    /**
+     * Define a cor da viatura.
+     * @param cor A nova cor da viatura.
+     */
+    public void setCor(String cor) {
+        this.cor = cor;
     }
 }
