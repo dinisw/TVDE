@@ -1,6 +1,8 @@
 
 //Clientes (ex: nome, n.º de identificação fiscal, telemóvel, morada, …);
 
+import java.util.ArrayList;
+
 /**
  * Declaração da classe Cliente representa um cliente do sistema.
  */
@@ -124,5 +126,8 @@ public class Cliente {
      */
     public void setTelemovel(int telemovel) {
         this.telemovel = telemovel;
+    }
+    public void add(ArrayList<Cliente> clientes){
+
     }
 }

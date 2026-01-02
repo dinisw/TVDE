@@ -1,5 +1,7 @@
 //Viaturas (ex: matrícula, marca, modelo, ano de fabrico, …);
 
+import java.util.ArrayList;
+
 /**
  * Declaração da classe Viatura.
  */
@@ -147,5 +149,7 @@ public class Viatura {
      */
     public void setCor(String cor) {
         this.cor = cor;
+    }
+    public void add(ArrayList<Viatura> viaturas){
     }
 }

@@ -1,14 +1,15 @@
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 /**
  * Declaração da classe Viagem.
  */
 public class Viagem {
-    /** Atribuição da data de início.*/
-    private Date dataInicio;
-    /** Atribuição da data do fim.*/
-    private Date dataFim;
+    /** Atribuição da data da viagem.*/
+    private LocalDate dataViagem;
+    private LocalTime horaInicial;
+    private LocalTime horaFinal;
     /** Atribuição da morada da origem.*/
     private String moradaOrigem;
     /** Atribuição da morada do destino.*/
@@ -23,8 +24,9 @@ public class Viagem {
      * Inicia todos os atributos com valores por defeito.
      */
     public Viagem() {
-        dataInicio = new Date();
-        dataFim = new Date();
+        dataViagem = LocalDate.now();
+        horaInicial = LocalTime.now();
+        horaFinal = LocalTime.now();
         moradaOrigem = "";
         moradaDestino = "";
         kms = 0;
@@ -35,16 +37,18 @@ public class Viagem {
     /**
      * Construtor com parametros da classe Viagem.
      * Permite criar uma viagem com todos os seus atributos definidos.
-     * @param dataInicio A Data de início da viagem.
-     * @param dataFim A Data do fim da viagem.
+     * @param dataViagem A Data da viagem.
+     * @param dataInicial A Hora de inicio da viagem.
+     * @param dataFinal A Hora de fim da viagem.
      * @param moradaOrigem A morada de origem.
      * @param moradaDestino A morada do destino da viagem.
      * @param kms O valor de quilómetros da viagem.
      * @param custoViagem O custo total da viagem
      */
-    public Viagem(Date dataInicio, Date dataFim, String moradaOrigem, String moradaDestino, double kms, double custoViagem) {
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
+    public Viagem(LocalDate dataViagem, LocalTime dataInicial, LocalTime dataFinal, String moradaOrigem, String moradaDestino, double kms, double custoViagem) {
+        this.dataViagem = dataViagem;
+        this.horaInicial = dataInicial;
+        this.horaFinal = dataFinal;
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
         this.kms = kms;
@@ -55,39 +59,38 @@ public class Viagem {
      * Devolve a data de início da viagem.
      * @return A data de inicio
      */
-    public Date getDataInicio() {
-        return dataInicio;
+    public LocalDate getDataViagem() {
+        return dataViagem;
     }
 
     /**
-     * Define a data de inicio da viagem.
-     * @param dataInicio A nova data de início da viagem.
+     * Define a data da viagem.
+     * @param dataViagem A nova data da viagem.
      */
-    public void setDataInicio(Date dataInicio) {
-        this.dataInicio = dataInicio;
+    public void setDataViagem(LocalDate dataViagem) {
+        this.dataViagem = dataViagem;}
+
+    public LocalTime getHoraInicial() {
+        return horaInicial;
     }
 
-    /**
-     * Devolve a data do fim da viagem.
-     * @return A data do fim.
-     */
-    public Date getDataFim() {
-        return dataFim;
+    public void setHoraInicial(LocalTime horaInicial) {
+        this.horaInicial = horaInicial;
     }
 
-    /**
-     * Define a data de fin da viagem.
-     * @param dataFim A nova data de fim da viagem.
-     */
-    public void setDataFim(Date dataFim) {
-        this.dataFim = dataFim;
+    public LocalTime getHoraFinal() {
+        return horaFinal;
+    }
+
+    public void setHoraFinal(LocalTime horaFinal) {
+        this.horaFinal = horaFinal;
     }
 
     /**
      * Define a morada da origem da viagem.
      * @return A morada da origem.
      */
-    public String getMoradaOrigem() {
+    public String getMoradaDeOrigem() {
         return moradaOrigem;
     }
 
@@ -95,7 +98,7 @@ public class Viagem {
      * Define a morada da origem da viagem.
      * @param moradaOrigem A nova morada de origem da viagem.
      */
-    public void setMoradaOrigem(String moradaOrigem) {
+    public void setMoradaDeOrigem(String moradaOrigem) {
         this.moradaOrigem = moradaOrigem;
     }
 
@@ -103,7 +106,7 @@ public class Viagem {
      * Devolve a morada do destino da viagem.
      * @return A morada do destino.
      */
-    public String getMoradaDestino() {
+    public String getMoradaDeDestino() {
         return moradaDestino;
     }
 
@@ -111,7 +114,7 @@ public class Viagem {
      * Define a morada do destino da viagem.
      * @param moradaDestino A nova morada do destino da viagem.
      */
-    public void setMoradaDestino(String moradaDestino) {
+    public void setMoradaDeDestino(String moradaDestino) {
         this.moradaDestino = moradaDestino;
     }
 
@@ -119,7 +122,7 @@ public class Viagem {
      * Devolve número de quilómetros percorridos na viagem.
      * @return O número de quilómetros da viagem.
      */
-    public double getKms() {
+    public double getKMS() {
         return kms;
     }
 
@@ -127,7 +130,7 @@ public class Viagem {
      * define número de quilómetros percorridos na viagem.
      * @param kms A nova distância em quilómetros.
      */
-    public void setKms(double kms) {
+    public void setKMS(double kms) {
         this.kms = kms;
     }
 
@@ -146,4 +149,6 @@ public class Viagem {
     public void setCustoViagem(double custoViagem) {
         this.custoViagem = custoViagem;
     }
+
+    public void add(ArrayList<Viagem> viagens) {}
 }

@@ -1,11 +1,14 @@
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 /**
  * Representa um ficheiro Reserva.
  * Serve para guardar os dados de uma reserva.
  */
 public class Reserva {
-    private Date dataHora;
+    private LocalDate data;
+    private LocalTime hora;
     private String moradaOrigem;
     private String moradaDestino;
     private double kms;
@@ -15,7 +18,8 @@ public class Reserva {
      * Cria uma reserva vazia com a data atual e kms 0.
      */
     public Reserva() {
-        dataHora = new Date();
+        data =  LocalDate.now();
+        hora = LocalTime.now();
         moradaOrigem = "";
         moradaDestino = "";
         kms = 0;
@@ -27,29 +31,39 @@ public class Reserva {
      * @param kms A Distância da viagem em quilómetros.
      * @param moradaDestino A morada para onde o cliente quer ir.
      * @param moradaOrigem A morada onde vamos buscar o cliente.
-     * @param dataHora A data e hora em que a viagem vai acontecer.
+     * @param data A data em que a viagem vai acontecer.
+     * @param hora A hora em que a viagem vai acontecer.
      */
-    public Reserva(double kms, String moradaDestino, String moradaOrigem, Date dataHora) {
+    public Reserva(double kms, String moradaDestino, String moradaOrigem, LocalDate data, LocalTime hora) {
         this.kms = kms;
         this.moradaDestino = moradaDestino;
         this.moradaOrigem = moradaOrigem;
-        this.dataHora = dataHora;
+        this.data = data;
+        this.hora = hora;
     }
 
     /**
-     * Obtém a data e hora da reserva.
+     * Obtém a data da reserva.
      * @return A data agendada da viagem.
      */
-    public Date getDataHora() {
-        return dataHora;
+    public LocalDate getData() {
+        return data;
     }
 
     /**
      * Define uma nova data e hora para a reserva da viagem.
-     * @param dataHora A nova data e hora a registar.
+     * @param data A nova data e hora a registar.
      */
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     /**
@@ -88,7 +102,7 @@ public class Reserva {
      * Obtém a distância da viagem.
      * @return O número de quilómetros da reserva da viagem.
      */
-    public double getkms() {
+    public double getKms() {
         return kms;
     }
 
@@ -96,7 +110,9 @@ public class Reserva {
      * Define a distância da Viagem.
      * @param kms A nova distância em quilómetros.
      */
-    public void setkms(double kms) {
+    public void setKms(double kms) {
         this.kms = kms;
+    }
+    public void add(ArrayList<Reserva> reservas) {
     }
 }

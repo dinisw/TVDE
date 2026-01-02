@@ -1,6 +1,8 @@
 //Condutores (ex: nome, n.º de identificação, carta de condução, n.º de segurança social, n.º de
 //identificação fiscal, telemóvel, morada, …);
 
+import java.util.ArrayList;
+
 /**
  * Representa um condutor TVDE.
  */
@@ -155,5 +157,8 @@ public class Condutor{
      */
     public void setAvaliacao(double avaliacao) {
         this.avaliacao = avaliacao;
+    }
+    public void add(ArrayList<Condutor> condutores){
+
     }
 }
