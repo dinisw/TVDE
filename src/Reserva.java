@@ -12,7 +12,7 @@ public class Reserva {
     private LocalTime hora;
     private String moradaOrigem;
     private String moradaDestino;
-    private boolean confirmacao;
+    private double distancia;
 
     /**
      * Construtor preenchido.
@@ -23,15 +23,15 @@ public class Reserva {
      * @param moradaOrigem  A morada onde vamos buscar o cliente.
      * @param data          A data em que a viagem vai acontecer.
      * @param hora          A hora em que a viagem vai acontecer.
-     * @param confirmacao   A confirmação da viagem.
+     * @param distancia A distância da viagem.
      */
-    public Reserva(Cliente cliente, LocalDate data, LocalTime hora, String moradaOrigem, String moradaDestino, boolean confirmacao) {
+    public Reserva(Cliente cliente, LocalDate data, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
         this.cliente = cliente;
         this.data = data;
         this.hora = hora;
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
-        this.confirmacao = confirmacao;
+        this.distancia = distancia;
     }
 
     /**
@@ -104,13 +104,15 @@ public class Reserva {
         this.cliente = cliente;
     }
 
-    public boolean isConfirmacao() {
-        return confirmacao;
+    public double getDistancia() {
+        return distancia;
     }
 
-    public void setConfirmacao(boolean confirmacao) {
-        this.confirmacao = confirmacao;
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
     }
+
+    public void add(ArrayList<Reserva> reservas){}
 
     @Override
     public String toString() {
@@ -120,7 +122,7 @@ public class Reserva {
                 ", hora=" + hora +
                 ", moradaOrigem='" + moradaOrigem + '\'' +
                 ", moradaDestino='" + moradaDestino + '\'' +
-                ", confirmacao=" + confirmacao +
+                ", distancia=" + distancia +
                 '}';
     }
 }

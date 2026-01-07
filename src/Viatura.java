@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Viatura {
     /** Atribuição da matrícula.*/
-    private String matricula;
+    private final String matricula;
     /** Atribuição da marca.*/
     private String marca;
     /** Atribuição do modelo.*/
@@ -36,20 +36,8 @@ public class Viatura {
         this.disponivel = disponivel;
     }
 
-    /**
-     * Obtém a matrícula da viatura.
-     * @return matrícula da viatura.
-     */
     public String getMatricula() {
         return matricula;
-    }
-
-    /**
-     * Define a matrícula da viatura.
-     * @param matricula A nova matrícula.
-     */
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
     }
 
     /**
@@ -127,4 +115,5 @@ public class Viatura {
     public void setDisponivel(boolean disponivel) {
         this.disponivel = disponivel;
     }
+    public void add(ArrayList<Viatura> viaturas){}
 }

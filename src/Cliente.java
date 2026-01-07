@@ -1,9 +1,11 @@
+import java.util.ArrayList;
+
 public class Cliente extends Pessoa {
     private int totalViagens;
     private double totalGasto;
 
-    public Cliente(String nome, int idade, String sexo, String email, String telefone, String morada, int cartaoDeCidadao) {
-        super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao);
+    public Cliente(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
+        super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
         this.totalViagens = 0;
         this.totalGasto = 0;
     }
@@ -28,6 +30,8 @@ public class Cliente extends Pessoa {
         this.totalViagens++;
         this.totalGasto += valor;
     }
+
+    public void add(ArrayList<Cliente> clientes){}
 
     @Override
     public String toString() {

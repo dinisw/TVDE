@@ -13,8 +13,8 @@ public class Condutor extends Pessoa{
     private double avaliacao;
     private int totalViagens;
 
-    public Condutor(String nome, int idade, String sexo, String email, String telefone, String morada, int cartaoDeCidadao) {
-        super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao);
+    public Condutor(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
+        super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
         this.cartaDeConducao = "";
         this.avaliacao = 0;
         this.totalViagens = 0;
@@ -61,6 +61,9 @@ public class Condutor extends Pessoa{
 
     public void addViagem(){
         this.totalViagens ++;
+    }
+
+    public void add(ArrayList<Condutor> condutores){
     }
 
     @Override

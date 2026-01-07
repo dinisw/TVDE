@@ -40,8 +40,12 @@ void main() {
                 break;
         }
         break;
-    } while (opcao < 0 || opcao > 6);
+    } while (opcao != 0);
 }
+ArrayList<Viagem> viagens = new ArrayList<>();
+ArrayList<Condutor> condutores = new ArrayList<>();
+ArrayList<Reserva> reservas = new ArrayList<>();
+ArrayList<Cliente> clientes = new ArrayList<>();
 int menu(Scanner ler){
     System.out.println("========= Sistema de Viagens TVDE ===========");
     System.out.println("            MENU            ");
@@ -54,138 +58,126 @@ int menu(Scanner ler){
     System.out.println("0. Sair");
     System.out.print("Indique a opção que queira realizar utilizando os números de 0 a 6.");
     int opcao = Integer.parseInt(ler.nextLine());
-    return opcao;
+    return Integer.parseInt(ler.nextLine());
 }
-
 void opcao1(Scanner ler){
-    String nomeCliente, morada;
-    int telemovel, cartaoCidadao, idContribuinte;
-    Cliente cliente = new Cliente();
-    ArrayList<Cliente> clientes = new ArrayList<>();
-    System.out.print("Indique o nome do cliente: ");
-    nomeCliente = ler.nextLine();
-    cliente.setNomeCliente(nomeCliente);
-    System.out.print("Digite o número do Cartão de Cidadão (sem os últimos 4 dígitos): ");
-    cartaoCidadao = Integer.parseInt(ler.nextLine());
-    cliente.setCartaoCidadao(cartaoCidadao);
-    System.out.println("Indique o número de contribuinte:");
-    idContribuinte = Integer.parseInt(ler.nextLine());
-    cliente.setIdContribuinte(idContribuinte);
-    System.out.print("Digite a morada: ");
-    morada = ler.nextLine();
-    cliente.setMorada(morada);
-    System.out.print("Digite o número do telemóvel(sem o indicativo do país): ");
-    telemovel = Integer.parseInt(ler.nextLine());
-    cliente.setTelemovel(telemovel);
-    cliente.add(clientes);
+    System.out.println("Indique o seu nome:");
+    String nome =ler.nextLine();
+    System.out.println("Indique a sua idade:");
+    int idade = Integer.parseInt(ler.nextLine());
+    System.out.println("Indique o seu genero:");
+    String sexo = ler.nextLine();
+    System.out.println("Indique o seu email:");
+    String email = ler.nextLine();
+    System.out.println("Indique o seu número de telemóvel:");
+    int telefone = Integer.parseInt(ler.nextLine());
+    System.out.println("Indique a sua morada:");
+    String morada = ler.nextLine();
+    System.out.println("Indique o seu número de cartão de cidadão (sem os últimos 4 dígitos):");
+    int cartaoDeCidadao = Integer.parseInt(ler.nextLine());
+    System.out.println("Indique o seu número de contribuinte.");
+    boolean existe = false;
+    int contribuinte = Integer.parseInt(ler.nextLine());
+    for (Cliente cliente : clientes) {
+        if (cliente.getContribuinte() == contribuinte){
+            existe = true;
+            break;
+        }
+    }
+    if (existe){
+        System.out.println("Já existe um cliente cadastrado com sucesso!");
+    }
+    else {
+        Cliente cliente = new Cliente(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
+        cliente.add(clientes);
+        System.out.println("Cliente cadastrado com sucesso!");
+    }
 }
 void opcao2(Scanner ler){
-    String nomeCondutor, moradaCondutor, cartaDeConducao;
-    int cartaoDeCidadao, Contribuinte, telemovelCondutor;
-    double avaliacao;
-    Condutor condutor = new Condutor();
-    ArrayList<Condutor> condutores = new ArrayList<>();
     System.out.println("Indique o nome do/a condutor/a");
-    nomeCondutor = ler.nextLine();
-    condutor.setNomeCondutor(nomeCondutor);
+    String nome = ler.nextLine();
+    System.out.println("Indique a sua idade:");
+    int idade = Integer.parseInt(ler.nextLine());
+    System.out.println("Indique o seu genero:");
+    String sexo = ler.nextLine();
+    System.out.println("Indique o seu email:");
+    String email = ler.nextLine();
     System.out.println("Indique o numero da carta de condução:");
-    cartaDeConducao = ler.nextLine();
-    condutor.setCartaDeConducao(cartaDeConducao);
+    int cartaDeConducao = Integer.parseInt(ler.nextLine());
     System.out.println("Indique o numero de cartão de cidadão sem os últimos 4 dígitos:");
-    cartaoDeCidadao = Integer.parseInt(ler.nextLine());
-    condutor.setCartaoCidadao(cartaoDeCidadao);
+    int cartaDeCidadao = Integer.parseInt(ler.nextLine());
     System.out.println("Indique o seu número de contribuinte:");
-    Contribuinte = Integer.parseInt(ler.nextLine());
-    condutor.setIdContribuinte(Contribuinte);
+    int contribuinte = Integer.parseInt(ler.nextLine());
     System.out.println("Indique a sua morada:");
-    moradaCondutor = ler.nextLine();
-    condutor.setMorada(moradaCondutor);
+    String morada = ler.nextLine();
     System.out.println("Indique o seu número de telemóvel:");
-    telemovelCondutor = Integer.parseInt(ler.nextLine());
-    condutor.setTelemovel(telemovelCondutor);
+    int telefone = Integer.parseInt(ler.nextLine());
+    Condutor condutor = new Condutor(nome, idade, sexo, email, telefone, morada, cartaDeCidadao, contribuinte);
     condutor.add(condutores);
 }
 void opcao3(Scanner ler){
-    String matricula, marca, modelo, cor;
-    int anoDeFabrico, nPortas;
-    Viatura viatura = new Viatura();
     ArrayList<Viatura> viaturas = new ArrayList<>();
     System.out.println("Indique a marca da viatura.");
-    marca = ler.nextLine();
-    viatura.setMarca(marca);
+    String marca = ler.nextLine();
     System.out.println("Indique a modelo da viatura.");
-    modelo = ler.nextLine();
-    viatura.setModelo(modelo);
+    String modelo = ler.nextLine();
     System.out.println("Indique a cor da viatura.");
-    cor = ler.nextLine();
-    viatura.setCor(cor);
+    String cor = ler.nextLine();
     System.out.println("Indique a matrícula.");
-    matricula = ler.nextLine();
-    viatura.setMatricula(matricula);
-    System.out.println("Indique o número de portas da viatura.");
-    nPortas = Integer.parseInt(ler.nextLine());
-    viatura.setNPortas(nPortas);
     System.out.println("Indique o ano de fabrico da viatura.");
-    anoDeFabrico = Integer.parseInt(ler.nextLine());
-    viatura.setAnoDeFabrico(anoDeFabrico);
-    viatura.add(viaturas);
+    int anoDeFabrico = Integer.parseInt(ler.nextLine());
+    do{
+        System.out.println("Indique a matrícula:");
+        String matricula = ler.nextLine();
+        boolean disponivel = false;
+        for (Viatura viatura : viaturas) {
+            if (viatura.getMatricula().equals(matricula)) {
+                disponivel = true;
+                break;
+            }
+        }
+        if (disponivel) {
+            System.out.println("Já existe uma viatura com a mesma matricula.");
+        }
+        else {
+            Viatura viatura = new Viatura(matricula, marca, modelo, anoDeFabrico, cor, disponivel);
+            viatura.add(viaturas);
+        }
+    } while(true);
 }
 void opcao4(Scanner ler){
-    LocalDate data;
-    LocalTime hora;
-    String moradaOrigem, moradaDestino;
-    double kms;
-    Reserva reserva = new Reserva();
-    ArrayList<Reserva> reservas = new ArrayList<>();
     System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
     DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    data = LocalDate.parse(ler.nextLine(), formatoData);
-    reserva.setData(data);
+    LocalDate data = LocalDate.parse(ler.nextLine(), formatoData);
     System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
     DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
-    hora = LocalTime.parse(ler.nextLine(), formatoHora);
-    reserva.setHora(hora);
+    LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
     System.out.println("Indique a sua atual morada:");
-    moradaOrigem = ler.nextLine();
-    reserva.setMoradaOrigem(moradaOrigem);
+    String moradaOrigem = ler.nextLine();
     System.out.println("Indique o destino:");
-    moradaDestino = ler.nextLine();
-    reserva.setMoradaDestino(moradaDestino);
+    String moradaDestino = ler.nextLine();
     System.out.println("Indique a distância:");
-    kms = ler.nextDouble();
-    reserva.setKms(kms);
+    double distancia = ler.nextDouble();
+    Reserva reserva = new Reserva(cliente, data, hora, moradaOrigem, moradaDestino, distancia);
     reserva.add(reservas);
 }
-void  opcao5(Scanner ler){
-    LocalTime horaInicial, horaFinal;
-    LocalDate dataViagem;
-    String moradaDeOrigem, moradaDeDestino;
-    double kMS, custoViagem;
-    Viagem viagem = new Viagem();
-    ArrayList<Viagem> viagens = new ArrayList<>();
+void opcao5(Scanner ler){
     System.out.println("Indique a hora de inicio:");
     DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-    horaInicial = LocalTime.parse(ler.nextLine(), formatter);
-    viagem.setHoraInicial(horaInicial);
-    System.out.println("Indique a hora final:");
-    horaFinal = LocalTime.parse(ler.nextLine(), formatter);
-    viagem.setHoraFinal(horaFinal);
+    System.out.println("Indique a hora:");
+    LocalTime hora = LocalTime.parse(ler.nextLine(), formatter);
     System.out.println("Indique a data");
-    dataViagem = LocalDate.parse(ler.nextLine(), formatterData);
-    viagem.setDataViagem(dataViagem);
+    LocalDate dataViagem = LocalDate.parse(ler.nextLine(), formatterData);
     System.out.println("Indique a morada de origem:");
-    moradaDeOrigem = ler.nextLine();
-    viagem.setMoradaDeOrigem(moradaDeOrigem);
+    String moradaOrigem = ler.nextLine();
     System.out.println("Indique a morada de destino:");
-    moradaDeDestino = ler.nextLine();
-    viagem.setMoradaDeDestino(moradaDeDestino);
+    String moradaDestino = ler.nextLine();
     System.out.println("Indique a custo da viagem:");
-    custoViagem = ler.nextDouble();
-    viagem.setCustoViagem(custoViagem);
+    double custoViagem = ler.nextDouble();
     System.out.println("Indique a distancia percorrida:");
-    kMS = ler.nextDouble();
-    viagem.setKMS(kMS);
+    double distancia = ler.nextDouble();
+    Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
     viagem.add(viagens);
 }
 void opcao6(Scanner ler){

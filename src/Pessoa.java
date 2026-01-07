@@ -1,13 +1,14 @@
 public abstract class Pessoa {
-    protected String nome;
-    protected int idade;
-    protected String sexo;
-    protected String email;
-    protected String telefone;
-    protected String morada;
-    protected int cartaoDeCidadao;
+    private String nome;
+    private int idade;
+    private String sexo;
+    private String email;
+    private int telefone;
+    private String morada;
+    private int cartaoDeCidadao;
+    private int contribuinte;
 
-    public Pessoa(String nome, int idade, String sexo, String email, String telefone, String morada, int cartaoDeCidadao) {
+    public Pessoa(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
         this.nome = nome;
         this.idade = idade;
         this.sexo = sexo;
@@ -15,6 +16,15 @@ public abstract class Pessoa {
         this.telefone = telefone;
         this.morada = morada;
         this.cartaoDeCidadao = cartaoDeCidadao;
+        this.contribuinte = contribuinte;
+    }
+
+    public int getContribuinte() {
+        return contribuinte;
+    }
+
+    public void setContribuinte(int contribuinte) {
+        this.contribuinte = contribuinte;
     }
 
     public String getNome() {
@@ -49,11 +59,11 @@ public abstract class Pessoa {
         this.email = email;
     }
 
-    public String getTelefone() {
+    public int getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(String telefone) {
+    public void setTelefone(int telefone) {
         this.telefone = telefone;
     }
 

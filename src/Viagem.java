@@ -12,11 +12,11 @@ public class Viagem {
     /** Atribuição da data da viagem.*/
     private LocalDate dataViagem;
     private LocalTime hora;
-    private boolean concluida;
     /** Atribuição da morada da origem.*/
     private String moradaOrigem;
     /** Atribuição da morada do destino.*/
     private String moradaDestino;
+    private boolean concluida;
     /** Atributo do custo da viagem.*/
     private double custoViagem;
     /**
@@ -111,4 +111,5 @@ public class Viagem {
     public void setCustoViagem(double custoViagem) {
         this.custoViagem = custoViagem;
     }
+    public void add(ArrayList<Viagem> viagens){}
 }
