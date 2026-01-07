@@ -16,6 +16,7 @@ public class Viatura {
     private int anoDeFabrico;
     /** Atribuição da cor do Veículo. */
     private String cor;
+    /** Indica se a viatura está disponível para utilização.*/
     private boolean disponivel;
     /**
      * Construtor com parâmetros da classe Viatura.
@@ -36,6 +37,10 @@ public class Viatura {
         this.disponivel = disponivel;
     }
 
+    /**
+     * Obtém a matrícula da viatura.
+     * @return A matrícula da viatura.
+     */
     public String getMatricula() {
         return matricula;
     }
@@ -82,7 +87,8 @@ public class Viatura {
 
     /**
      * Define o ano de fabrico da viatura.
-     * O ano só é aceite se estiver entre 1901 e 2025.
+     * O ano só é aceite se estiver entre 2001 e 2025.
+     * @param anoDeFabrico O novo ano de fabrico a ser definido.
      */
     public void setAnoDeFabrico(int anoDeFabrico) {
         if (anoDeFabrico > 2000 && anoDeFabrico <= 2025) {
@@ -107,13 +113,23 @@ public class Viatura {
     public void setCor(String cor) {
         this.cor = cor;
     }
-
+    /**
+     * Verifica se a viatura está disponível.
+     * @return true se a viatura estiver disponível, false caso contrário.
+     */
     public boolean isDisponivel() {
         return disponivel;
     }
-
+    /**
+     * Define o estado de disponibilidade da viatura.
+     * @param disponivel O novo estado de disponibilidade (true para disponível).
+     */
     public void setDisponivel(boolean disponivel) {
         this.disponivel = disponivel;
     }
+    /**
+     * Adiciona ou processa uma lista de viaturas.
+     * @param viaturas A lista (ArrayList) de viaturas a ser adicionada.
+     */
     public void add(ArrayList<Viatura> viaturas){}
 }
