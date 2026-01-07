@@ -11,8 +11,20 @@ public class Condutor extends Pessoa{
     private String cartaDeConducao;
     /** A avaliação da/o condutor/a.*/
     private double avaliacao;
+    /** Número total de viagens realizadas pelo condutor. */
     private int totalViagens;
-
+    /**
+     * Construtor da classe Condutor.
+     *
+     * @param nome Nome do condutor
+     * @param idade Idade do condutor
+     * @param sexo Sexo do condutor
+     * @param email Email do condutor
+     * @param telefone Número de telefone
+     * @param morada Morada do condutor
+     * @param cartaoDeCidadao Número do cartão de cidadão
+     * @param contribuinte Número de contribuinte
+     */
     public Condutor(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
         super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
         this.cartaDeConducao = "";
@@ -51,21 +63,44 @@ public class Condutor extends Pessoa{
         this.avaliacao = avaliacao;
     }
 
+    /**
+     * Obtém o número total de viagens realizadas.
+     *
+     * @return Total de viagens
+     */
     public int getTotalViagens() {
         return totalViagens;
     }
 
+    /**
+     * Define o número total de viagens realizadas.
+     *
+     * @param totalViagens Número de viagens
+     */
     public void setTotalViagens(int totalViagens) {
         this.totalViagens = totalViagens;
     }
 
+    /**
+     * Incrementa o número total de viagens do condutor em uma unidade.
+     */
     public void addViagem(){
         this.totalViagens ++;
     }
 
+    /**
+     * Método destinado a adicionar este condutor a uma lista de condutores.
+     *
+     * @param condutores Lista de condutores
+     */
     public void add(ArrayList<Condutor> condutores){
     }
 
+    /**
+     * Devolve uma representação textual do condutor.
+     *
+     * @return String com os dados do condutor
+     */
     @Override
     public String toString() {
         return "Condutor{" +
