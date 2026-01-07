@@ -1,145 +1,98 @@
-/**
- * Declaração da classe que representa uma pessoa no sistema.
- */
-public class Pessoa {
-    /** Atribuição do cartão de cidadão da pessoa.*/
-    private String cc;
-    /** Atribuição do nome completo da pessoa.*/
+public abstract class Pessoa {
     private String nome;
-    /** Atribuição do número de identificação da segurança social.*/
-    private int idSegSocial;
-    /** Número de identificação fiscal / Contribuinte. */
-    private int idFinancas;
-    /** Morada de residência da pessoa. */
+    private int idade;
+    private String sexo;
+    private String email;
+    private int telefone;
     private String morada;
-    /** Número de telemóvel da pessoa. */
-    private int telemovel;
+    private int cartaoDeCidadao;
+    private int contribuinte;
 
-    /**
-     * Construtor vazio.
-     * Inicia todos os atributos com valores por defeito.
-     */
-    public Pessoa() {
-        cc = "";
-        nome = "";
-        idSegSocial = 0;
-        idFinancas = 0;
-        morada = "";
-        telemovel = 0;
-    }
-
-    /**
-     * Construtor com parâmetros.
-     * Permite criar uma pessoa com todos os seus dados definidos.
-     * @param cc O cartão de cidadão.
-     * @param nome O nome completo.
-     * @param idSegSocial O número da segurança social.
-     * @param idFinancas O número de identificação fiscal / Contribuinte.
-     * @param morada A morada de residência.
-     * @param telemovel O número de telefone.
-     */
-    public Pessoa(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel) {
-        this.cc = cc;
+    public Pessoa(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
         this.nome = nome;
-        this.idSegSocial = idSegSocial;
-        this.idFinancas = idFinancas;
+        this.idade = idade;
+        this.sexo = sexo;
+        this.email = email;
+        this.telefone = telefone;
         this.morada = morada;
-        this.telemovel = telemovel;
+        this.cartaoDeCidadao = cartaoDeCidadao;
+        this.contribuinte = contribuinte;
     }
 
-    /**
-     * Devolve o número do cartão de cidadão.
-     * @return número do cartão de cidadão
-     */
-    public String getCc() {
-        return cc;
+    public int getContribuinte() {
+        return contribuinte;
     }
 
-    /**
-     * Define o número do cartão de cidadão.
-     * @param cc O novo cartão de cidadão.
-     */
-    public void setCc(String cc) {
-        this.cc = cc;
+    public void setContribuinte(int contribuinte) {
+        this.contribuinte = contribuinte;
     }
 
-    /**
-     * Devolve o nome da pessoa.
-     * @return O nome da pessoa
-     */
     public String getNome() {
         return nome;
     }
 
-    /**
-     * Define o nome da pessoa
-     * @param nome O novo nome completo.
-     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    /**
-     * Devolve o número de identificação da Segurança Social.
-     * @return O número da Segurança Social
-     */
-    public int getIdSegSocial() {
-        return idSegSocial;
+    public int getIdade() {
+        return idade;
     }
 
-    /**
-     * Define o número de identificação da Segurança Social.
-     * @param idSegSocial O número da segurança social.
-     */
-    public void setIdSegSocial(int idSegSocial) {
-        this.idSegSocial = idSegSocial;
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 
-    /**
-     * Devolve o número de identificação fiscal.
-     * @return O número de identificação fiscal
-     */
-    public int getIdFinancas() {
-        return idFinancas;
+    public String getSexo() {
+        return sexo;
     }
 
-    /**
-     * Define o número de identificação fiscal.
-     * @param idFinancas O novo número de identificação fiscal / Contribuinte.
-     */
-    public void setIdFinancas(int idFinancas) {
-        this.idFinancas = idFinancas;
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
-    /**
-     * Devolve a morada da pessoa.
-     * @return A morada da pessoa.
-     */
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(int telefone) {
+        this.telefone = telefone;
+    }
+
     public String getMorada() {
         return morada;
     }
 
-    /**
-     * Define a morada da pessoa.
-     * @param morada A nova morada de residência.
-     */
     public void setMorada(String morada) {
         this.morada = morada;
     }
 
-    /**
-     * Devolve o número de telemóvel da pessoa.
-     * @return número de telemóvel da pessoa.
-     */
-    public int getTelemovel() {
-        return telemovel;
+    public int getCartaoDeCidadao() {
+        return cartaoDeCidadao;
     }
 
-    /**
-     * Define o número de telemóvel da pessoa.
-     * @param telemovel O novo número de telefone.
-     */
-    public void setTelemovel(int telemovel) {
-        this.telemovel = telemovel;
+    public void setCartaoDeCidadao(int cartaoDeCidadao) {
+        this.cartaoDeCidadao = cartaoDeCidadao;
+    }
+
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "nome='" + nome + '\'' +
+                ", idade=" + idade +
+                ", sexo='" + sexo + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", morada='" + morada + '\'' +
+                ", cartaoDeCidadao=" + cartaoDeCidadao +
+                '}';
     }
 }

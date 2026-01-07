@@ -1,59 +1,68 @@
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 
 /**
  * Representa um ficheiro Reserva.
  * Serve para guardar os dados de uma reserva.
  */
 public class Reserva {
-    private Date dataHora;
+    private Cliente cliente;
+    private LocalDate data;
+    private LocalTime hora;
     private String moradaOrigem;
     private String moradaDestino;
-    private double kms;
-
-    /**
-     * Construtor vazio.
-     * Cria uma reserva vazia com a data atual e kms 0.
-     */
-    public Reserva() {
-        dataHora = new Date();
-        moradaOrigem = "";
-        moradaDestino = "";
-        kms = 0;
-    }
+    private double distancia;
 
     /**
      * Construtor preenchido.
      * Cria uma reserva preenchendo todos os dados.
-     * @param kms A Distância da viagem em quilómetros.
+     *
+     * @param cliente       O cliente que fez a reserva.
      * @param moradaDestino A morada para onde o cliente quer ir.
-     * @param moradaOrigem A morada onde vamos buscar o cliente.
-     * @param dataHora A data e hora em que a viagem vai acontecer.
+     * @param moradaOrigem  A morada onde vamos buscar o cliente.
+     * @param data          A data em que a viagem vai acontecer.
+     * @param hora          A hora em que a viagem vai acontecer.
+     * @param distancia A distância da viagem.
      */
-    public Reserva(double kms, String moradaDestino, String moradaOrigem, Date dataHora) {
-        this.kms = kms;
-        this.moradaDestino = moradaDestino;
+    public Reserva(Cliente cliente, LocalDate data, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
+        this.cliente = cliente;
+        this.data = data;
+        this.hora = hora;
         this.moradaOrigem = moradaOrigem;
-        this.dataHora = dataHora;
+        this.moradaDestino = moradaDestino;
+        this.distancia = distancia;
     }
 
     /**
-     * Obtém a data e hora da reserva.
+     * Obtém a data da reserva.
+     *
      * @return A data agendada da viagem.
      */
-    public Date getDataHora() {
-        return dataHora;
+    public LocalDate getData() {
+        return data;
     }
 
     /**
      * Define uma nova data e hora para a reserva da viagem.
-     * @param dataHora A nova data e hora a registar.
+     *
+     * @param data A nova data e hora a registar.
      */
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     /**
      * Obtém a morada origem.
+     *
      * @return O local de onde começa a viagem.
      */
     public String getMoradaOrigem() {
@@ -62,6 +71,7 @@ public class Reserva {
 
     /**
      * Define uma nova morada de origem.
+     *
      * @param moradaOrigem O novo endereço em que a viagem vai começar.
      */
     public void setMoradaOrigem(String moradaOrigem) {
@@ -70,6 +80,7 @@ public class Reserva {
 
     /**
      * Obtém a morada do destino.
+     *
      * @return O local onde termina a viagem.
      */
     public String getMoradaDestino() {
@@ -78,25 +89,40 @@ public class Reserva {
 
     /**
      * Define uma nova morada de destino.
+     *
      * @param moradaDestino O novo endereço em que a viagem vai terminar.
      */
     public void setMoradaDestino(String moradaDestino) {
         this.moradaDestino = moradaDestino;
     }
 
-    /**
-     * Obtém a distância da viagem.
-     * @return O número de quilómetros da reserva da viagem.
-     */
-    public double getkms() {
-        return kms;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    /**
-     * Define a distância da Viagem.
-     * @param kms A nova distância em quilómetros.
-     */
-    public void setkms(double kms) {
-        this.kms = kms;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
+
+    public void add(ArrayList<Reserva> reservas){}
+
+    @Override
+    public String toString() {
+        return "Reserva{" +
+                "cliente=" + cliente +
+                ", data=" + data +
+                ", hora=" + hora +
+                ", moradaOrigem='" + moradaOrigem + '\'' +
+                ", moradaDestino='" + moradaDestino + '\'' +
+                ", distancia=" + distancia +
+                '}';
     }
 }
