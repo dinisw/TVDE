@@ -18,22 +18,22 @@ void main() {
         opcao = menu(ler);
         switch (opcao) {
             case 1:
-                opcao1(ler);
+                registarCliente(ler);
                 break;
             case 2:
-                opcao2(ler);
+                registarCondutor(ler);
                 break;
             case 3:
-                opcao3(ler);
+                Viaturas(ler);
                 break;
             case 4:
-                opcao4(ler);
+                Reservas(ler);
                 break;
             case 5:
-                opcao5(ler);
+                Viagens(ler);
                 break;
             case 6:
-                opcao6(ler);
+                informacoes(ler);
                 break;
             default:
                 System.out.println("Opção Inválida! Tente novamente!");
@@ -51,16 +51,16 @@ int menu(Scanner ler){
     System.out.println("            MENU            ");
     System.out.println("1. Registar o/a Cliente");
     System.out.println("2. Registar o/a Condutor");
-    System.out.println("3. Registar a Viatura");
-    System.out.println("4. Criar Reserva");
-    System.out.println("5. Registar Viagem");
+    System.out.println("3. Viaturas");
+    System.out.println("4. Reservas");
+    System.out.println("5. Viagens");
     System.out.println("6. Informações");
     System.out.println("0. Sair");
     System.out.print("Indique a opção que queira realizar utilizando os números de 0 a 6.");
     int opcao = Integer.parseInt(ler.nextLine());
     return Integer.parseInt(ler.nextLine());
 }
-void opcao1(Scanner ler){
+void registarCliente(Scanner ler){
     System.out.println("Indique o seu nome:");
     String nome =ler.nextLine();
     System.out.println("Indique a sua idade:");
@@ -93,7 +93,7 @@ void opcao1(Scanner ler){
         System.out.println("Cliente cadastrado com sucesso!");
     }
 }
-void opcao2(Scanner ler){
+void registarCondutor(Scanner ler){
     System.out.println("Indique o nome do/a condutor/a");
     String nome = ler.nextLine();
     System.out.println("Indique a sua idade:");
@@ -115,7 +115,29 @@ void opcao2(Scanner ler){
     Condutor condutor = new Condutor(nome, idade, sexo, email, telefone, morada, cartaDeCidadao, contribuinte);
     condutor.add(condutores);
 }
-void opcao3(Scanner ler){
+void Viaturas(Scanner ler){
+    /*
+    * Criar um Submenu para as opções
+    * */
+    String matricula = ""; /*pegar a matricula*/
+
+    registarViatura(ler);
+    pesquisarViaturaPelaMatricula(ler);
+    verListadeClientes(ler, matricula);
+    removerViatura(ler);
+
+}
+
+private void verListadeClientes(Scanner ler, String matricula) {
+}
+
+void removerViatura(Scanner ler) {
+}
+
+void pesquisarViaturaPelaMatricula(Scanner ler) {
+}
+
+void registarViatura(Scanner ler){
     ArrayList<Viatura> viaturas = new ArrayList<>();
     System.out.println("Indique a marca da viatura.");
     String marca = ler.nextLine();
@@ -145,7 +167,28 @@ void opcao3(Scanner ler){
         }
     } while(true);
 }
-void opcao4(Scanner ler){
+void Reservas(Scanner ler){
+    /*Validar antes de inserir se a reserva já existe*/
+
+
+
+    /*
+    Fazer um switch case
+    * Criar um SUb menu para Registrar Reservas e Eliminar
+    * */
+    criarReserva(ler);
+    consultarReservas(ler);
+    alterarReserva(ler);
+    removerReserva(ler);
+}
+
+private void alterarReserva(Scanner ler) {
+}
+
+private void consultarReservas(Scanner ler) {
+}
+
+void criarReserva(Scanner ler){
     System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
     DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     LocalDate data = LocalDate.parse(ler.nextLine(), formatoData);
@@ -161,7 +204,29 @@ void opcao4(Scanner ler){
     Reserva reserva = new Reserva(cliente, data, hora, moradaOrigem, moradaDestino, distancia);
     reserva.add(reservas);
 }
-void opcao5(Scanner ler){
+
+void removerReserva(Scanner ler){
+
+}
+void Viagens(Scanner ler){
+    /*Permitir trasnformar uma reserva em viagem
+     * Validar se a viagem já existe antes de inserir
+     * */
+
+    /*
+     * Criar um SUb menu para Registrar Viagens e Eliminar
+     * */
+    transformarReservaEmViagem(ler);
+    criarViagem(ler);
+    removerViagem(ler);
+
+}
+void transformarReservaEmViagem(Scanner ler){
+    /*Ler dados que estão guardados*/
+    Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
+    viagem.add(viagens);
+}
+void criarViagem(Scanner ler){
     System.out.println("Indique a hora de inicio:");
     DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -180,5 +245,17 @@ void opcao5(Scanner ler){
     Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
     viagem.add(viagens);
 }
-void opcao6(Scanner ler){
+
+void removerViagem(Scanner ler){
+
+}
+
+void informacoes(Scanner ler){
+    /*Pesquisar viagens  de um cliente em um intevalo de data dada pelo liente
+    *Apresentar valor total faturado por um motorista  num intervalo de datas inmdicado pelo utilizador
+    * Apresentar a distancia media em kms das viagens em um intervalo de data
+    * Apresentar o destino mais solicitado  (reservas e viagens) durante intervalo de data
+    * Apresentar lista de clientes cum ciagens cuja a distancia esteja dentro do indicado pelo utilizador
+    *
+    */
 }
