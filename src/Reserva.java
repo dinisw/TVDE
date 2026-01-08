@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class Reserva {
     /** O cliente que efetuou a reserva. */
     private Cliente cliente;
+    /** A viatura associa a reserva. */
+    private Viatura viatura;
     /** A data agendada para a viagem. */
     private LocalDate data;
     /** A hora agendada para a viagem. */
@@ -25,14 +27,16 @@ public class Reserva {
      * Cria uma reserva preenchendo todos os dados necessários.
      *
      * @param cliente O cliente que fez a reserva.
+     * @param viatura A viatura associada a reserva.
      * @param data A data em que a viagem vai acontecer.
      * @param hora A hora em que a viagem vai acontecer.
      * @param moradaOrigem A morada onde vamos buscar o cliente.
      * @param moradaDestino A morada para onde o cliente quer ir.
      * @param distancia A distância da viagem.
      */
-    public Reserva(Cliente cliente, LocalDate data, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
+    public Reserva(Cliente cliente, Viatura viatura, LocalDate data, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
         this.cliente = cliente;
+        this.viatura = viatura;
         this.data = data;
         this.hora = hora;
         this.moradaOrigem = moradaOrigem;
@@ -126,6 +130,24 @@ public class Reserva {
     public void setDistancia(double distancia) {
         this.distancia = distancia;
     }
+
+    /**
+     * Obtém a viatura registada a reserva
+     * @return A viatura.
+     */
+    public Viatura getViatura() {
+        return viatura;
+    }
+
+    /**
+     * Define a viatura registada à viagem.
+     * @param viatura A nova viatura.
+     */
+
+    public void setViatura(Viatura viatura) {
+        this.viatura = viatura;
+    }
+
     /**
      * Adiciona ou processa uma lista de reservas.
      * @param reservas A lista (ArrayList) de reservas a ser adicionada.
@@ -139,6 +161,7 @@ public class Reserva {
     public String toString() {
         return "Reserva{" +
                 "cliente=" + cliente +
+                "viatura=" + viatura +
                 ", data=" + data +
                 ", hora=" + hora +
                 ", moradaOrigem='" + moradaOrigem + '\'' +
