@@ -180,6 +180,10 @@ public class Main {
             break;
         } while (opcao != 0);
 
+    void tituloViaturas(){
+
+    }
+
     int subMenuViaturas(Scanner ler){
             int count = 1;
             System.out.println("========= VIATURAS ===========");
@@ -203,6 +207,7 @@ public class Main {
     //Feito na classe Empresa.
     void registarViatura(Scanner ler) {
         try {
+            /*("========= VIATURAS ===========") */
             System.out.println("--- Novo Registo (Escreva 'sair' para cancelar) ---");
 
             System.out.println("Indique a marca da viatura.");
@@ -503,22 +508,30 @@ public class Main {
             
             switch (opçao){
                 case 1:
-
+                    System.out.println("Indique o nome do cliente:");
+                    String cliente = ler.nextLine();
                     break;
                 case 2:
-
+                    System.out.println("Indique o nome do viatura:");
+                    String viatura = ler.nextLine();
                     break;
                 case 3:
-
+                    System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
+                    DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate data = LocalDate.parse(ler.nextLine(), formatoData);
                     break;
                 case 4:
-
+                    System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
+                    DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
+                    LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
                     break;
                 case 5:
-
+                    System.out.println("Indique a sua atual morada:");
+                    String moradaOrigem = ler.nextLine();
                     break;
                 case 6:
-
+                    String moradaDestino = ler.nextLine();
+                    System.out.println("Indique a distância:");
                     break;
                 case 0:
                     System.out.println("Alterações concluidas");
