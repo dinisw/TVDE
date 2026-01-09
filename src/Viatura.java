@@ -51,6 +51,16 @@ public class Viatura {
         this.disponivel = disponivel;
     }
 
+    @Override
+    public String toString() {
+        return "Viatura{" +
+                "matricula='" + matricula + '\'' +
+                ", marca='" + marca + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", anoDeFabrico=" + anoDeFabrico +
+                '}';
+    }
+
     /**
      * Obtém a matrícula da viatura.
      *
