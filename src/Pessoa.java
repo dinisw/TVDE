@@ -1,88 +1,211 @@
-
-public class Pessoa {
-    private String cc;
+/**
+ * Representa uma pessoa no sistema.
+ *
+ * Classe abstrata que serve de base para os diferentes tipos de utilizadores,
+ * como clientes e condutores. Contém informação pessoal comum a todos.
+ */
+public abstract class Pessoa {
+    /** Nome da pessoa. */
     private String nome;
-    private int idSegSocial;
-    private int idFinancas;
+    /** Idade da pessoa. */
+    private int idade;
+    /** Sexo da pessoa. */
+    private String sexo;
+    /** Endereço de email da pessoa. */
+    private String email;
+    /** Número de telefone da pessoa. */
+    private int telefone;
+    /** Morada da pessoa. */
     private String morada;
-    private int telemovel;
-
-    public Pessoa() {
-        cc = "";
-        nome = "";
-        idSegSocial = 0;
-        idFinancas = 0;
-        morada = "";
-        telemovel = 0;
-    }
+    /** Número do cartão de cidadão da pessoa. */
+    private int cartaoDeCidadao;
+    /** Número de contribuinte da pessoa. */
+    private int contribuinte;
 
     /**
+     * Construtor da classe Pessoa.
      *
-     * @param cc
-     * @param nome
-     * @param idSegSocial
-     * @param idFinancas
-     * @param morada
-     * @param telemovel
+     * @param nome Nome da pessoa
+     * @param idade Idade da pessoa
+     * @param sexo Sexo da pessoa
+     * @param email Endereço de email
+     * @param telefone Número de telefone
+     * @param morada Morada
+     * @param cartaoDeCidadao Número do cartão de cidadão
+     * @param contribuinte Número de contribuinte
      */
-    public Pessoa(String cc, String nome, int idSegSocial, int idFinancas, String morada, int telemovel) {
-        this.cc = cc;
+    public Pessoa(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
         this.nome = nome;
-        this.idSegSocial = idSegSocial;
-        this.idFinancas = idFinancas;
+        this.idade = idade;
+        this.sexo = sexo;
+        this.email = email;
+        this.telefone = telefone;
         this.morada = morada;
-        this.telemovel = telemovel;
-    }
-
-    public String getCc() {
-        return cc;
+        this.cartaoDeCidadao = cartaoDeCidadao;
+        this.contribuinte = contribuinte;
     }
 
     /**
-     * 
-     * @param cc
+     * Obtém o número de contribuinte.
+     *
+     * @return Número de contribuinte
      */
-    public void setCc(String cc) {
-        this.cc = cc;
+    public int getContribuinte() {
+        return contribuinte;
     }
 
+    /**
+     * Define o número de contribuinte.
+     *
+     * @param contribuinte Número de contribuinte
+     */
+    public void setContribuinte(int contribuinte) {
+        this.contribuinte = contribuinte;
+    }
+
+    /**
+     * Obtém o nome da pessoa.
+     *
+     * @return Nome
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Define o nome da pessoa.
+     *
+     * @param nome Nome
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public int getIdSegSocial() {
-        return idSegSocial;
+    /**
+     * Obtém a idade da pessoa.
+     *
+     * @return Idade
+     */
+    public int getIdade() {
+        return idade;
     }
 
-    public void setIdSegSocial(int idSegSocial) {
-        this.idSegSocial = idSegSocial;
+    /**
+     * Define a idade da pessoa.
+     *
+     * @param idade Idade
+     */
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 
-    public int getIdFinancas() {
-        return idFinancas;
+    /**
+     * Obtém o sexo da pessoa.
+     *
+     * @return Sexo
+     */
+    public String getSexo() {
+        return sexo;
     }
 
-    public void setIdFinancas(int idFinancas) {
-        this.idFinancas = idFinancas;
+    /**
+     * Define o sexo da pessoa.
+     *
+     * @param sexo Sexo
+     */
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
+
+    /**
+     * Obtém o email da pessoa.
+     *
+     * @return Endereço de email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+
+    /**
+     * Define o email da pessoa.
+     *
+     * @param email Endereço de email
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Obtém o número de telefone.
+     *
+     * @return Número de telefone
+     */
+    public int getTelefone() {
+        return telefone;
+    }
+
+    /**
+     * Define o número de telefone.
+     *
+     * @param telefone Número de telefone
+     */
+    public void setTelefone(int telefone) {
+        this.telefone = telefone;
+    }
+
+    /**
+     * Obtém a morada da pessoa.
+     *
+     * @return Morada
+     */
     public String getMorada() {
         return morada;
     }
 
+    /**
+     * Define a morada da pessoa.
+     *
+     * @param morada Morada
+     */
     public void setMorada(String morada) {
         this.morada = morada;
     }
 
-    public int getTelemovel() {
-        return telemovel;
+    /**
+     * Obtém o número do cartão de cidadão.
+     *
+     * @return Número do cartão de cidadão
+     */
+    public int getCartaoDeCidadao() {
+        return cartaoDeCidadao;
     }
 
-    public void setTelemovel(int telemovel) {
-        this.telemovel = telemovel;
+    /**
+     * Define o número do cartão de cidadão.
+     *
+     * @param cartaoDeCidadao Número do cartão de cidadão
+     */
+    public void setCartaoDeCidadao(int cartaoDeCidadao) {
+        this.cartaoDeCidadao = cartaoDeCidadao;
+    }
+
+    /**
+     * Devolve uma representação textual da pessoa.
+     *
+     * @return String com os dados da pessoa
+     */
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "nome='" + nome + '\'' +
+                ", idade=" + idade +
+                ", sexo='" + sexo + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", morada='" + morada + '\'' +
+                ", cartaoDeCidadao=" + cartaoDeCidadao +
+                '}';
     }
 }
