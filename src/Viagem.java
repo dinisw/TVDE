@@ -13,9 +13,9 @@ public class Viagem {
     private Condutor condutor;
     /** A viatura utilizada na viagem. */
     private Viatura viatura;
-    /** Atribuição da data da viagem.*/
+    /** Atribuição da data e hora do início viagem.*/
     private LocalDateTime inicio;
-    /** Atribuição da hora da viagem. */
+    /** Atribuição da data e hora do fim da viagem. */
     private LocalDateTime fim;
     /** Atribuição da morada da origem.*/
     private String moradaOrigem;
@@ -92,29 +92,29 @@ public class Viagem {
         this.viatura = viatura;
     }
     /**
-     * Obtém a data da viagem.
-     * @return A data da viagem.
+     * Obtém a data e hora da viagem.
+     * @return A data e hora da viagem.
      */
     public LocalDateTime getInicio() {
         return inicio;
     }
     /**
-     * Define a data da viagem.
-     * @param inicio A nova data da viagem.
+     * Define a data e hora da viagem.
+     * @param inicio A nova data e hora da viagem.
      */
     public void setInicio(LocalDateTime inicio) {
         this.inicio = inicio;
     }
     /**
-     * Obtém a hora da viagem.
-     * @return A hora da viagem.
+     * Obtém a data e hora da viagem.
+     * @return A data e hora da viagem.
      */
     public LocalDateTime getFim() {
         return fim;
     }
     /**
-     * Define a hora da viagem.
-     * @param fim A nova hora da viagem.
+     * Define a data e hora da viagem.
+     * @param fim A nova data hora da viagem.
      */
     public void setFim(LocalDateTime fim) {
         this.fim = fim;
