@@ -193,9 +193,64 @@ public class Main {
     }
 
     private void alterarReserva(Scanner ler) {
+        System.out.println("Lista de Reservas:");
+        for (Reserva reserva : reservas) {
+            for (int i = 0; i < reservas.size(); i++) {
+                System.out.println( i + reservas.get(i));
+            }
+        }
+        System.out.println("Introduza o numero da reserva que deseja alterar");
+        int indice = Integer.parseInt(ler.nextLine());
+
+        if (indice < reservas.size() || indice >= 0) {
+            System.out.println("Reserva invalida");
+        }
+
+        Reserva reserva = reservas.get(indice);
+        int opçao;
+        do {
+            System.out.println("O que deseja alterar?");
+            System.out.println("1. Cliente");
+            System.out.println("2. Viatura");
+            System.out.println("3. Data");
+            System.out.println("4. Hora");
+            System.out.println("5. Origem");
+            System.out.println("6. Destino");
+            System.out.println("0. Concluir");
+
+            opçao = Integer.parseInt(ler.nextLine());
+            
+            switch (opçao){
+                case 1:
+
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
+                    break;
+                case 6:
+
+                    break;
+                case 0:
+                    System.out.println("Alterações concluidas");
+                    break;
+            }
+        } while (opçao = 0);
     }
 
     private void consultarReservas(Scanner ler) {
+        System.out.println("Lista de Reservas");
+        for (Reserva reserva : reservas) {
+            System.out.println(reserva);
+        }
     }
 
     void criarReserva(Scanner ler) {
@@ -216,7 +271,19 @@ public class Main {
     }
 
     void removerReserva(Scanner ler) {
-
+        System.out.println("Lista de Reservas");
+        for (Reserva reserva : reservas) {
+            System.out.println(reserva);
+        }
+        System.out.println("Escreva o nome do cliente da reserva que deseja remover:");
+        String nome = ler.nextLine();
+        for (Reserva reserva : reservas) {
+            if (reserva.getCliente().getNome().equals(nome)) {
+                reservas.remove(reserva);
+                System.out.println("A Reserva" + nome + "removida com sucesso!");
+                break;
+            }
+        }
     }
 
     void Viagens(Scanner ler) {
