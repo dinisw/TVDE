@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -11,10 +11,8 @@ public class Reserva {
     private Cliente cliente;
     /** A viatura associa a reserva. */
     private Viatura viatura;
-    /** A data agendada para a viagem. */
-    private LocalDate data;
-    /** A hora agendada para a viagem. */
-    private LocalTime hora;
+    /** A data e hora agendada para a viagem. */
+    private LocalDateTime dataHoraInicio;
     /** A morada de onde partirá a viagem. */
     private String moradaOrigem;
     /** A morada de destino da viagem. */
@@ -28,50 +26,34 @@ public class Reserva {
      *
      * @param cliente O cliente que fez a reserva.
      * @param viatura A viatura associada a reserva.
-     * @param data A data em que a viagem vai acontecer.
-     * @param hora A hora em que a viagem vai acontecer.
+     * @param dataHoraInicio A data e hora em que a viagem vai acontecer.
      * @param moradaOrigem A morada onde vamos buscar o cliente.
      * @param moradaDestino A morada para onde o cliente quer ir.
      * @param distancia A distância da viagem.
      */
-    public Reserva(Cliente cliente, Viatura viatura, LocalDate data, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
+    public Reserva(Cliente cliente, Viatura viatura, LocalDateTime dataHoraInicio, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
         this.cliente = cliente;
         this.viatura = viatura;
-        this.data = data;
-        this.hora = hora;
+        this.dataHoraInicio = dataHoraInicio;
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
         this.distancia = distancia;
     }
 
     /**
-     * Obtém a data da reserva.
-     * @return A data agendada da viagem.
+     * Obtém a data e hora da reserva.
+     * @return A data e hora agendada da viagem.
      */
-    public LocalDate getData() {
-        return data;
+    public LocalDateTime getDataHoraInicio() {
+        return dataHoraInicio;
     }
 
     /**
-     * Define uma nova data para a reserva da viagem.
-     * @param data A nova data a registar.
+     * Define uma nova data e hora para a reserva da viagem.
+     * @param dataHoraInicio A nova data e hora a registar.
      */
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-    /**
-     * Obtém a hora da reserva.
-     * @return A hora agendada para a viagem.
-     */
-    public LocalTime getHora() {
-        return hora;
-    }
-    /**
-     * Define a hora da reserva.
-     * @param hora A nova hora a ser definida.
-     */
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
+    public void setDataHoraInicio(LocalDateTime dataHoraInicio) {
+        this.dataHoraInicio = dataHoraInicio;
     }
     /**
      * Obtém a morada origem.
@@ -161,9 +143,8 @@ public class Reserva {
     public String toString() {
         return "Reserva{" +
                 "cliente=" + cliente +
-                "viatura=" + viatura +
-                ", data=" + data +
-                ", hora=" + hora +
+                ", viatura=" + viatura +
+                ", dataHoraInicio=" + dataHoraInicio +
                 ", moradaOrigem='" + moradaOrigem + '\'' +
                 ", moradaDestino='" + moradaDestino + '\'' +
                 ", distancia=" + distancia +
