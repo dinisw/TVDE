@@ -583,8 +583,17 @@ public class Main {
 
     void transformarReservaEmViagem(Scanner ler) {
         /*Ler dados que estão guardados*/
-        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
-        viagem.add(viagens);
+        if (reservas.isEmpty()){
+            System.out.println("Não existe nenhuma reserva para transformar em viagem.");
+            return;
+        }
+        System.out.println("=== Escolha a Reserva  a Transformar ===");
+        for (int i = 0; i < reservas.size(); i++) {
+            System.out.println((i + 1) + ". " + reservas.get(i).toString());
+        }
+        System.out.println("Introduza o número da reserva: ");
+        int numeroreserva = 
+
     }
 
     void criarViagem(Scanner ler) {
