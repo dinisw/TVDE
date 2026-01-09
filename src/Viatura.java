@@ -20,6 +20,16 @@ public class Viatura {
         this.matricula = matricula;
     }
 
+    @Override
+    public String toString() {
+        return "Viatura{" +
+                "matricula='" + matricula + '\'' +
+                ", marca='" + marca + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", anoDeFabrico=" + anoDeFabrico +
+                '}';
+    }
+
     public String getMatricula() {
         return matricula;
     }
