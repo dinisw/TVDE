@@ -106,7 +106,7 @@ public class EmpresaTVDE {
             System.out.println("Não existe nenhum cliente registado");
         }else{
             for (Cliente cliente : clientes) {
-                System.out.println(cliente.getContribuinte());
+                System.out.println(cliente.toString());
             }
         }
     }
