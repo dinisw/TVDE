@@ -104,7 +104,15 @@ public class Condutor extends Pessoa{
     @Override
     public String toString() {
         return "Condutor{" +
-                "Carta de condução='" + cartaDeConducao + '\'' +
+                "Nome=" + getNome() +
+                ", Idade=" + getIdade() +
+                ", Sexo=" + getSexo() +
+                ", Email=" + getEmail() +
+                ", Telefone=" + getTelefone() +
+                ", Morada=" + getMorada() +
+                ", Carta de Cidadão=" + getCartaoDeCidadao() +
+                ", Contribuinte=" + getContribuinte() +
+                ", Carta de condução='" + cartaDeConducao + '\'' +
                 ", avaliação=" + avaliacao + '\'' +
                 ", totalViagens=" + totalViagens + '\'' +
                 '}';
