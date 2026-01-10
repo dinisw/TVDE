@@ -20,6 +20,15 @@ public class Reserva {
     /** A distância estimada ou calculada da viagem. */
     private double distancia;
 
+    public Reserva() {
+        cliente = new Cliente();
+        viatura = new Viatura();
+        dataHoraInicio = LocalDateTime.now();
+        moradaOrigem = "";
+        moradaDestino = "";
+        distancia = 0;
+    }
+
     /**
      * Construtor preenchido da classe Reserva.
      * Cria uma reserva preenchendo todos os dados necessários.

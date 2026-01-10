@@ -12,6 +12,11 @@ public class Cliente extends Pessoa {
     /** Valor total gasto pelo cliente em viagens. */
     private double totalGasto;
 
+    public Cliente() {
+        totalViagens = 0;
+        totalGasto = 0;
+    }
+
     /**
      * Construtor da classe Cliente.
      *

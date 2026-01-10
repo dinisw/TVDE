@@ -2,6 +2,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Declaração da classe Viagem.
@@ -25,6 +26,18 @@ public class Viagem {
     private boolean concluida;
     /** Atributo do custo da viagem.*/
     private double custoViagem;
+
+    public Viagem() {
+        cliente = new Cliente();
+        condutor = new Condutor();
+        viatura = new Viatura();
+        inicio = LocalDateTime.now();
+        fim = LocalDateTime.now();
+        moradaOrigem = "";
+        moradaDestino = "";
+        concluida = false;
+        custoViagem = 0;
+    }
     /**
      * Construtor com parâmetros da classe Viagem.
      * Permite criar uma viagem com todos os seus atributos definidos.
