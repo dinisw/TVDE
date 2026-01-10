@@ -564,20 +564,64 @@ public class Main {
 
     }
 
-    void transformarReservaEmViagem(Scanner ler) {
-        /*Ler dados que estão guardados*/
-        if (reservas.isEmpty()){
-            System.out.println("Não existe nenhuma reserva para transformar em viagem.");
+void transformarReservaEmViagem(Scanner ler) {
+
+    if (reservas.isEmpty()) {
+        System.out.println("Não existe nenhuma reserva para transformar em viagem.");
+        return;
+    }
+
+
+    if (condutores.isEmpty()) {
+        System.out.println("Não existe nenhum condutor registado. Registe um condutor primeiro.");
+        return;
+    }
+
+    System.out.println("=== Escolha a Reserva a Transformar ===");
+    for (int i = 0; i < reservas.size(); i++) {
+        System.out.println((i + 1) + ". " + reservas.get(i).toString());
+    }
+
+    System.out.print("Introduza o número da reserva: ");
+    int indexReserva = ler.nextInt() - 1;
+    ler.nextLine();
+
+    if (indexReserva < 0 || indexReserva >= reservas.size()) {
+        System.out.println("Opção inválida.");
+        return;
+    }
+
+    Reserva reservaSelecionada = reservas.get(indexReserva);
+
+    for (Viagem v : viagens) {
+        if (v.getCliente().equals(reservaSelecionada.getCliente()) &&
+                v.getDataHoraInicio().equals(reservaSelecionada.getDataHoraInicio())) {
+            System.out.println("Erro: Esta viagem já foi registada anteriormente!");
             return;
         }
-        System.out.println("=== Escolha a Reserva  a Transformar ===");
-        for (int i = 0; i < reservas.size(); i++) {
-            System.out.println((i + 1) + ". " + reservas.get(i).toString());
-        }
-        System.out.println("Introduza o número da reserva: ");
-        int numeroreserva =
-
     }
+
+    System.out.println("=== Escolha o Condutor ===");
+    for (int i = 0; i < condutores.size(); i++) {
+        System.out.println((i + 1) + ". " + condutores.get(i).toString());
+    }
+
+    System.out.print("Introduza o número do condutor: ");
+    int indexCondutor = ler.nextInt() - 1;
+    ler.nextLine();
+
+    if (indexCondutor < 0 || indexCondutor >= condutores.size()) {
+        System.out.println("Condutor inválido.");
+        return;
+    }
+
+    Condutor condutorSelecionado = condutores.get(indexCondutor);
+    
+    Viagem novaViagem = new Viagem(reservaSelecionada, condutorSelecionado);
+    viagens.add(novaViagem);
+
+    System.out.println("Sucesso! A reserva foi transformada em viagem.");
+}
 
     void criarViagem(Scanner ler) {
         System.out.println("Indique a hora de inicio:");
