@@ -22,6 +22,17 @@ public abstract class Pessoa {
     /** Número de contribuinte da pessoa. */
     private int contribuinte;
 
+    public Pessoa() {
+        nome = "";
+        idade = 0;
+        sexo = "";
+        email = "";
+        telefone = 0;
+        morada = "";
+        cartaoDeCidadao = 0;
+        contribuinte = 0;
+    }
+
     /**
      * Construtor da classe Pessoa.
      *

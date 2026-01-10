@@ -31,6 +31,15 @@ public class Viatura {
      */
     private boolean disponivel;
 
+    public Viatura(){
+        matricula = "";
+        marca = "";
+        modelo = "";
+        anoDeFabrico = 0;
+        cor = "";
+        disponivel = false;
+    }
+
     /**
      * Construtor com parâmetros da classe Viatura.
      * Permite criar uma viatura com todos os seus atributos definidos.

@@ -13,6 +13,12 @@ public class Condutor extends Pessoa{
     private double avaliacao;
     /** Número total de viagens realizadas pelo condutor. */
     private int totalViagens;
+
+    public Condutor(){
+        cartaDeConducao = "";
+        avaliacao = 0;
+        totalViagens = 0;
+    }
     /**
      * Construtor da classe Condutor.
      *
