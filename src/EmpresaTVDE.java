@@ -1,7 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -53,12 +50,13 @@ public class EmpresaTVDE {
             }
         }
     }
-    // O CRUD DE VIATURAS
 
-    //CREATE
-    public boolean adicionarViatura(Viatura viatura) {
+    //region CRUD VIATURAS
+
+    //region CREATE
+    public String adicionarViatura(Viatura viatura) {
         if (viatura.getMatricula() == null || viatura.getMatricula().isEmpty()) {
-            return false;
+            return "Para inserir uma viatura é obrigatório a inserção da matrícula";
         }
         boolean adicionou = viaturas.add(viatura);
 
@@ -66,22 +64,93 @@ public class EmpresaTVDE {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS, true))) {
                 writer.write(viatura.paraFicheiro());
                 writer.newLine();
-                return true;
+                return "Viatura inserida com Sucesso!";
             } catch (IOException e) {
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
-                    writer.write(e.getMessage());
+                    writer.write("Erro ao adicionar viaturas: " + e.getMessage());
                     writer.newLine();
-                    return true;
+                    return "Ocorreu um erro durante a inserção da viatura, tente novamente....";
                 } catch (IOException ex) {
-                    System.out.println("Ocorreu um erro durante a inserção da viatura, tente novamente....");
-                    return false;
+                    return "";
                 }
             }
+        }
+        return "";
+    }
+    //endregion
+
+    //READ
+    public ArrayList<Viatura> carregarViaturas() {
+        viaturas.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIATURAS))) {
+            String linha;
+
+            while ((linha = reader.readLine()) != null) {
+                String[] dados = linha.split(";");
+                if (dados.length >= 6) {
+                    String matricula = dados[0];
+                    String marca = dados[1];
+                    String modelo = dados[2];
+                    String cor = dados[4];
+                    boolean disponivel = false;
+                    try {
+                        disponivel = Boolean.parseBoolean(dados[5]);
+                    } catch (IllegalArgumentException e) {
+                        disponivel = false;
+                    }
+
+                    int ano = 0;
+                    try {
+                        ano = Integer.parseInt(dados[3]);
+                    } catch (NumberFormatException e) {
+                        ano = 0;
+                    }
+                    Viatura viatura = new Viatura(matricula, marca, modelo, ano, cor, disponivel);
+                    viaturas.add(viatura);
+                }
+            }
+            return viaturas;
+        } catch (IOException e) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
+                writer.write("Erro ao ler viaturas: " + e.getMessage());
+                writer.newLine();
+                return null;
+            } catch (IOException ex) {
+                //System.out.println("Erro crítico: Falha ao ler ficheiro e falha ao gravar log.");
+            }
+        }
+        return null;
+    }
+
+    //DELETE
+    public Boolean deletarViaturas(String matricula) {
+        Viatura viaturaEncontrada = null;
+        viaturaEncontrada = procurarViatura(matricula);
+
+        if (viaturaEncontrada == null) {
+            return false;
+        }
+
+        try{
+            viaturas.remove(viaturaEncontrada);
+            return true;
+        } catch (Exception e) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
+                writer.write("Erro remover viatura: " + e.getMessage());
+                writer.newLine();
+            } catch (IOException ex) {
+                return false;
+            }
+        }
+        try {
+            guardarAlteracoes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return false;
     }
 
-    //READ:
+
     public Viatura procurarViatura(String matricula) {
         for (Viatura viatura : viaturas) {
             if (viatura.getMatricula().equals(matricula)) {
@@ -92,6 +161,8 @@ public class EmpresaTVDE {
     }
 
     //READ:
+
+
     public void listarViaturas() {
         if(viaturas.isEmpty()) {
             System.out.println("Não existe nenhuma viatura registada!");
@@ -102,6 +173,16 @@ public class EmpresaTVDE {
     }
 
     //UPDATE:
+
+    private void guardarAlteracoes() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS, false))) {
+
+            for (Viatura v : viaturas) {
+                writer.write(v.paraFicheiro());
+                writer.newLine();
+            }
+        }
+    }
     public boolean atualizarViatura(String matricula, String marca, String modelo, String cor, int anoDeFabrico) {
         Viatura viatura = procurarViatura(matricula);
         if (viatura != null) {
@@ -137,6 +218,8 @@ public class EmpresaTVDE {
     public ArrayList<Viatura> getViaturas() {
         return viaturas;
     }
+
+    //endregion
 
     // CRUD de Cliente
     //CREATE

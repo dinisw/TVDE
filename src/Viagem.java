@@ -51,7 +51,7 @@ public class Viagem {
      * @param moradaDestino A morada do destino da viagem.
      * @param custoViagem O custo total da viagem.
      */
-    public Viagem(Cliente cliente, Condutor condutor, Viatura viatura, LocalDate dataViagem, LocalTime hora, boolean concluida, String moradaOrigem, String moradaDestino, double custoViagem) {
+    public Viagem(Cliente cliente, Condutor condutor, Viatura viatura, LocalDateTime dataViagem, LocalTime hora, boolean concluida, String moradaOrigem, String moradaDestino, double custoViagem) {
         this.cliente = cliente;
         this.condutor = condutor;
         this.viatura = viatura;
