@@ -1,5 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -11,6 +13,8 @@ public class EmpresaTVDE {
     private ArrayList<Condutor> condutores;
     private ArrayList<Reserva> reservas;
     private ArrayList<Viatura> viaturas;
+    private final String CAMINHO_FICHEIRO_VIATURAS = "viaturas.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_VIATURAS = "logsViaturas.txt";
 
     Scanner ler = new Scanner(System.in);
 
@@ -32,14 +36,49 @@ public class EmpresaTVDE {
         this.viaturas = new ArrayList<>();
     }
 
+
+    /*CRUD LOGS*/
+    public boolean adicionarLogsDeErros(String caminho, String erro) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho, true))) {
+            writer.write(erro);
+            writer.newLine();
+            return true;
+        } catch (IOException e) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(e.getMessage(), true))) {
+                writer.write(erro);
+                writer.newLine();
+                return true;
+            } catch (IOException ex) {
+                return false;
+            }
+        }
+    }
     // O CRUD DE VIATURAS
 
     //CREATE
     public boolean adicionarViatura(Viatura viatura) {
-        if (viatura.getMatricula() == null) {
-            return viaturas.add(viatura);
+        if (viatura.getMatricula() == null || viatura.getMatricula().isEmpty()) {
+            return false;
         }
-        return false; // Pois já existe uma matrícula igual.
+        boolean adicionou = viaturas.add(viatura);
+
+        if (adicionou) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS, true))) {
+                writer.write(viatura.paraFicheiro());
+                writer.newLine();
+                return true;
+            } catch (IOException e) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
+                    writer.write(e.getMessage());
+                    writer.newLine();
+                    return true;
+                } catch (IOException ex) {
+                    System.out.println("Ocorreu um erro durante a inserção da viatura, tente novamente....");
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     //READ:

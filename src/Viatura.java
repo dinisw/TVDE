@@ -60,6 +60,10 @@ public class Viatura {
         this.disponivel = disponivel;
     }
 
+    public String paraFicheiro() {
+        return this.matricula + ";" + this.marca + ";" + this.modelo + ";" + this.anoDeFabrico + ";" + this.cor + ";" + this.disponivel;
+    }
+
     @Override
     public String toString() {
         return "Viatura{" +
