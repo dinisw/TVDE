@@ -3,6 +3,7 @@
 
 import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,8 +23,7 @@ import java.util.regex.Matcher;
  */
 public class Main {
 
-
-    ArrayList<Viatura> viaturas = new ArrayList<>();
+    //ArrayList<Viatura> viaturas = new ArrayList<>();
 
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
 
@@ -31,12 +31,58 @@ public class Main {
 
     ArrayList<Viagem> viagens = new ArrayList<>();
     ArrayList<Reserva>reservas = new ArrayList<>();
-    Cliente cliente = new Cliente();
-    Condutor condutor = new Condutor();
-    Viatura viatura = new Viatura();
-    Reserva reserva = new Reserva();
+    ArrayList<Condutor>condutores = new ArrayList<>();
+    //Cliente cliente = new Cliente();
+    //Condutor condutor = new Condutor();
+    //Viatura viatura = new Viatura();
+    //Reserva reserva = new Reserva();
     EmpresaTVDE empresaTVDE = new EmpresaTVDE();
+    ArrayList<Viatura> viaturas = empresaTVDE.carregarViaturas();
     //Antes de qualuqer coisa temos que carregar os itens da memória pra ca e guardar em um arraylist e depois irmos consultando
+
+    //region Design
+    /*Reset*/
+    public static final String RESET = "\u001B[0m";
+    /*Cores*/
+    public static final String VERMELHO = "\u001B[31m";
+    public static final String VERDE = "\u001B[32m";
+    public static final String AMARELO = "\u001B[33m";
+    public static final String AZUL = "\u001B[34m";
+    public static final String ROXO = "\u001B[35m";
+    public static final String CIANO = "\u001B[36m";
+
+    /*Cores Brilhantes*/
+    public static final String VERMELHO_BRILHANTE = "\u001B[91m";
+    public static final String VERDE_BRILHANTE = "\u001B[92m";
+    public static final String AMARELO_BRILHANTE = "\u001B[93m";
+    public static final String AZUL_BRILHANTE = "\u001B[94m";
+    public static final String ROXO_BRILHANTE = "\u001B[95m";
+    public static final String CIANO_BRILHANTE = "\u001B[96m";
+    /*Negrito*/
+    public static final String NEGRITO = "\u001B[1m";
+
+    /*função centralizar texto*/
+    public static void printCentralizado(String texto) {
+        int largura = 80;
+        int espacos = (largura - texto.length()) / 2;
+
+        if (espacos > 0) {
+            System.out.print(" ".repeat(espacos));
+        }
+        System.out.println(texto);
+    }
+    /*Função titulo principal*/
+    public static void printTituloPrincipal() {
+        System.out.println();
+        printCentralizado(NEGRITO + AZUL + "========= Sistema de Viagens TVDE ===========" + RESET);
+        System.out.println();
+    }
+    /*Função titulo secundario */
+    public static void printTituloSecundario(String texto) {
+        printCentralizado(CIANO + texto + RESET);
+        System.out.println();
+    }
+    //endregion
 
     void main() {
         int opcao;
@@ -69,61 +115,22 @@ public class Main {
                     System.out.println("Opção Inválida! Tente novamente!");
                     break;
             }
-            break;
         } while (opcao != 0);
     }
 
-    /*Reset*/
-    public static final String RESET = "\u001B[0m";
-
-    /*Cores*/
-    public static final String AZUL = "\u001B[34m";
-    public static final String VERDE = "\u001B[32m";
-    public static final String AMARELO = "\u001B[33m";
-    public static final String VERMELHO = "\u001B[31m";
-
-    /*Negrito*/
-    public static final String NEGRITO = "\u001B[1m";
-
-
-    /*função centralizar texto*/
-    public static void printCentralizado(String texto) {
-        int largura = 80;
-        int espacos = (largura - texto.length()) / 2;
-
-        if (espacos > 0) {
-            System.out.print(" ".repeat(espacos));
-        }
-        System.out.println(texto);
-    }
-
-    /*Função titulo principal*/
-    public static void printTituloPrincipal(String texto) {
-        System.out.println();
-        printCentralizado(NEGRITO + AZUL + texto + RESET);
-        System.out.println();
-    }
-
-    /*Função titulo secundario */
-    public static void printTituloSecundario(String texto) {
-        printCentralizado(VERDE + texto + RESET);
-        System.out.println();
-    }
-
-
     int menu(Scanner ler) {
-        printTituloPrincipal("========= Sistema de Viagens TVDE ===========");
-        printTituloSecundario(VERDE + "MENU" + RESET);
-        System.out.println("1. Registar o/a Cliente");
-        System.out.println("2. Registar o/a Condutor");
-        System.out.println("3. Viaturas");
-        System.out.println("4. Reservas");
-        System.out.println("5. Viagens");
-        System.out.println("6. Informações");
-        System.out.println("0. Sair");
-        System.out.print("Indique a opção que queira realizar utilizando os números de 0 a 6.");
-        int opcao = Integer.parseInt(ler.nextLine());
-        return Integer.parseInt(ler.nextLine());
+        printTituloPrincipal();
+        printTituloSecundario("MENU");
+        System.out.println(VERDE + "1\t-\tCliente" + RESET);
+        System.out.println(VERDE + "2\t-\tCondutor" + RESET);
+        System.out.println(VERDE + "3\t-\tViaturas" + RESET);
+        System.out.println(VERDE + "4\t-\tReservas" + RESET);
+        System.out.println(VERDE + "5\t-\tViagens" + RESET);
+        System.out.println(VERDE + "6\t-\tInformações" + RESET);
+        System.out.println(VERDE + "0\t-\tSair" + RESET);
+        System.out.print("Indique a opção que queira realizar utilizando os números de 0 a 6: ");
+        String opcao = ler.nextLine();
+        return Integer.parseInt(opcao);
     }
 
     void registarCliente(Scanner ler) {
@@ -226,10 +233,15 @@ public class Main {
         System.out.println("Indique o seu número de telemóvel:");
         int telefone = Integer.parseInt(ler.nextLine());
         Condutor condutor = new Condutor(nome, idade, sexo, email, telefone, morada, cartaDeCidadao, contribuinte);
-        condutor.add(condutores);
+        condutores.add(condutor);
     }
 
+    public void limparConsola() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
+    //region Viaturas
     void Viaturas(Scanner ler){
         int opcao;
         do {
@@ -237,56 +249,67 @@ public class Main {
             if (opcao == 1) {
                 registarViatura(ler);
             } else if (!viaturas.isEmpty() && opcao == 2) {
-                while(true) {
-                    System.out.println("Digite a Matrícula que deseja buscar [XX-XX-XX]");
-                    String matricula = ler.nextLine();
-                    if(isMatriculaValida(matricula)){
-                        pesquisarViaturaPelaMatricula(ler, matricula);
-                        break;
-                    }else {
-                        System.out.println("Formato incorreto, tente novamente com o formato [XX-XX-XX]");
+                while (true) {
+                    System.out.println("--- Bucar Viatura (Escreva 'sair' para cancelar) ---");
+                    System.out.print("Indique a matrícula que deseja buscar no formato [XX-XX-XX]: ");
+                    String matricula = ler.nextLine().toUpperCase();
+
+                    if (matricula.equalsIgnoreCase("sair"))
+                        return;
+
+                    if (!isMatriculaValida(matricula)) {
+                        System.out.println("Formato incorreto - ");
+                        continue;
+                    }
+
+                    for (Viatura viatura : viaturas) {
+                        if (viatura.getMatricula().equalsIgnoreCase(matricula)) {
+                            System.out.print(viatura.toString());
+                            System.out.println("Digite uma tecla qualquer para continuar");
+                            ler.nextLine();
+                            return;
+                        }
                     }
                 }
             } else if (!viaturas.isEmpty() && opcao == 3) {
-                String matricula = "";
                 removerViatura(ler);
             } else if (opcao == 0) {
-                System.out.print("Obrigado por utilizar a App da TVDE!!");
+                break;
             } else {
                 System.out.println("Opção Inválida! Tente novamente!");
             }
         } while (opcao != 0);
     }
-
-    void tituloViaturas(){
-
-    }
-
     int subMenuViaturas(Scanner ler){
         int count = 1;
-        System.out.println("========= VIATURAS ===========");
-        System.out.println("            MENU            ");
-        System.out.printf("%d\t-\tRegistar Viatura", count);
+        limparConsola();
+        printTituloPrincipal();
+        printTituloSecundario("VIATURAS");
+        System.out.printf(VERDE + "%d\t-\tRegistar Viatura\n" + RESET, count);
         if(!viaturas.isEmpty()){
             count++;
-            System.out.printf("%d\t-\tPesquisar Viatura pela Matrícula", count);
+            System.out.printf(VERDE + "%d\t-\tPesquisar Viatura pela Matrícula\n" + RESET, count);
         }
         if(!viaturas.isEmpty()) {
             count++;
-            System.out.printf("%d\t-\tRemover Viatura", count);
+            System.out.printf(VERDE + "%d\t-\tRemover Viatura\n" + RESET, count);
         }
-        System.out.println("0\t-\tVoltar ao menu anterior");
-        System.out.print("Indique a opção que queira realizar");
-        int opcao = Integer.parseInt(ler.nextLine());
-        return Integer.parseInt(ler.nextLine());
+        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
+        System.out.print("Indique a opção que queira realizar: ");
+        String opcao = ler.nextLine();
+        return Integer.parseInt(opcao);
     }
 
+    public boolean isMatriculaValida(String matricula) {
+        if (matricula == null) return false;
+        String regex = "^[A-Z0-9]{2}-[A-Z0-9]{2}-[A-Z0-9]{2}$";
 
-    //Feito na classe Empresa.
+        return matricula.trim().toUpperCase().matches(regex);
+    }
+
     void registarViatura(Scanner ler) {
         try {
-            /*("========= VIATURAS ===========") */
-            System.out.println("--- Novo Registo (Escreva 'sair' para cancelar) ---");
+            System.out.println("--- Novo Registo de Viatura (Escreva 'sair' para cancelar) ---");
 
             System.out.println("Indique a marca da viatura.");
             String marca = ler.nextLine();
@@ -316,7 +339,7 @@ public class Main {
             String matricula = "";
             while (true) {
                 System.out.println("Indique a matrícula no formato [XX-XX-XX]:");
-                matricula = ler.nextLine();
+                matricula = ler.nextLine().toUpperCase();
 
                 if (matricula.equalsIgnoreCase("sair"))
                     return;
@@ -343,11 +366,15 @@ public class Main {
                 if (existe) {
                     System.out.println("Erro: Essa matrícula já existe no sistema.");
                 } else {
-                    Viatura viatura = new Viatura(matricula, marca, modelo, Integer.parseInt(anoDeFabrico), cor, existe);
-                    viaturas.add(viatura);
-                    System.out.println("Viatura registada com sucesso!");
-                    empresaTVDE.adicionarViatura(viatura);
-                    break;
+                    Viatura viatura = new Viatura(matricula.toUpperCase(), marca, modelo, Integer.parseInt(anoDeFabrico), cor, existe);
+                    String resposta = empresaTVDE.adicionarViatura(viatura);
+                    if(resposta.equals("Viatura inserida com Sucesso!")) {
+                        System.out.println(resposta);
+                        viaturas.add(viatura);
+                        break;
+                    }else {
+                        break;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -355,25 +382,56 @@ public class Main {
         }
     }
 
-    public boolean isMatriculaValida(String matricula) {
-        if (matricula == null) return false;
-        String regex = "^[A-Z0-9]{2}-[A-Z0-9]{2}-[A-Z0-9]{2}$";
+    private void removerViatura(Scanner ler) {
+        try {
+            System.out.println("--- Remover Viatura (Escreva 'sair' para cancelar) ---");
+            String matricula = "";
+            while (true) {
+                System.out.println("Indique a matrícula do veículo que deseja remover no formato [XX-XX-XX]: ");
+                matricula = ler.nextLine().toUpperCase();
 
-        return matricula.trim().toUpperCase().matches(regex);
+                if (matricula.equalsIgnoreCase("sair"))
+                    break;
+
+                if (!isMatriculaValida(matricula)) {
+                    System.out.print("Formato incorreto - ");
+                    continue;
+                }
+
+                boolean existe = false;
+                for (Viatura viatura : viaturas) {
+                    if (viatura.getMatricula().equalsIgnoreCase(matricula)) {
+                        existe = true;
+                        break;
+                    }
+                }
+
+                if (!existe) {
+                    System.out.println("Erro: Essa matrícula não existe no sistema.");
+                } else {
+                    boolean resposta = empresaTVDE.deletarViaturas(matricula);
+                    if(resposta) {
+                        System.out.printf("Viatura com matrícula %s removida com sucesso.", matricula);
+                        System.out.print("Digite uma tecla qualquer para continuar");
+                        viaturas = empresaTVDE.carregarViaturas();
+                        ler.nextLine();
+                        break;
+                    }else {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS, e.getMessage() + ";");
+        }
     }
+    //endregion
+
 
     private void verListaDeClientes(Scanner ler, String matricula) {
     }
 
-    void removerViatura(Scanner ler) {
-    }
 
-    void pesquisarViaturaPelaMatricula(Scanner ler, String matricula) {
-        for (var viatura : viaturas){
-            viatura.toString();
-            System.out.println("Aperte qualquer tecla para continuar ...");
-        }
-    }
 
     void Reservas(Scanner ler) {
         /*Validar antes de inserir se a reserva já existe*/
@@ -384,7 +442,7 @@ public class Main {
     Fazer um switch case
     * Criar um SUb menu para Registrar Reservas e Eliminar
     * */
-        criarReserva(ler);
+        //criarReserva(ler);
         consultarReservas(ler);
         alterarReserva(ler);
         removerReserva(ler);
@@ -394,7 +452,7 @@ public class Main {
         System.out.println("Lista de Reservas:");
         for (Reserva reserva : reservas) {
             for (int i = 0; i < reservas.size(); i++) {
-                System.out.println( i + reservas.get(i));
+                //System.out.println( i + reservas.get(i));
             }
         }
         System.out.println("Introduza o numero da reserva que deseja alterar");
@@ -405,7 +463,7 @@ public class Main {
         }
 
         Reserva reserva = reservas.get(indice);
-        int opçao;
+        int opcao;
         do {
             System.out.println("O que deseja alterar?");
             System.out.println("1. Cliente");
@@ -416,9 +474,9 @@ public class Main {
             System.out.println("6. Destino");
             System.out.println("0. Concluir");
 
-            opçao = Integer.parseInt(ler.nextLine());
+            opcao = Integer.parseInt(ler.nextLine());
 
-            switch (opçao){
+            switch (opcao){
                 case 1:
                     System.out.println("Indique o nome do cliente:");
                     String cliente = ler.nextLine();
@@ -449,7 +507,7 @@ public class Main {
                     System.out.println("Alterações concluidas");
                     break;
             }
-        } while (opçao = 0);
+        } while (opcao == 0);
     }
 
     private void consultarReservas(Scanner ler) {
@@ -459,10 +517,10 @@ public class Main {
         }
     }
 
-    void criarReserva(Scanner ler) {
+    void criarReserva(Scanner ler, Cliente cliente, Viatura viatura) {
         System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
         DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate data = LocalDate.parse(ler.nextLine(), formatoData);
+        LocalDateTime data = LocalDateTime.parse(ler.nextLine(), formatoData);
         System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
@@ -472,7 +530,7 @@ public class Main {
         String moradaDestino = ler.nextLine();
         System.out.println("Indique a distância:");
         double distancia = ler.nextDouble();
-        Reserva reserva = new Reserva(cliente, data, hora, moradaOrigem, moradaDestino, distancia);
+        Reserva reserva = new Reserva(cliente, viatura, data, hora, moradaOrigem, moradaDestino, distancia);
         reserva.add(reservas);
     }
 
@@ -500,13 +558,13 @@ public class Main {
         /*
          * Criar um SUb menu para Registrar Viagens e Eliminar
          * */
-        transformarReservaEmViagem(ler);
-        criarViagem(ler);
+        //transformarReservaEmViagem(ler);
+        //criarViagem(ler);
         removerViagem(ler);
 
     }
 
-    void transformarReservaEmViagem(Scanner ler) {
+    void transformarReservaEmViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
 
         if (reservas.isEmpty()) {
             System.out.println("Não existe nenhuma reserva para transformar em viagem.");
@@ -537,7 +595,7 @@ public class Main {
 
         for (Viagem v : viagens) {
             if (v.getCliente().equals(reservaSelecionada.getCliente()) &&
-                    v.getDataHoraInicio().equals(reservaSelecionada.getDataHoraInicio())) {
+                    v.getInicio().equals(reservaSelecionada.getDataHoraInicio())) {
                 System.out.println("Erro: Esta viagem já foi registada anteriormente!");
                 return;
             }
@@ -559,20 +617,20 @@ public class Main {
 
         Condutor condutorSelecionado = condutores.get(indexCondutor);
 
-        Viagem novaViagem = new Viagem(reservaSelecionada, condutorSelecionado);
-        viagens.add(novaViagem);
+        //Viagem novaViagem = new Viagem(cliente, condutor, viatura, reservaSelecionada, condutorSelecionado);
+        //viagens.add(novaViagem);
 
         System.out.println("Sucesso! A reserva foi transformada em viagem.");
     }
 
-    void criarViagem(Scanner ler) {
+    void criarViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
         System.out.println("Indique a hora de inicio:");
         DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         System.out.println("Indique a hora:");
         LocalTime hora = LocalTime.parse(ler.nextLine(), formatter);
         System.out.println("Indique a data");
-        LocalDate dataViagem = LocalDate.parse(ler.nextLine(), formatterData);
+        LocalDateTime dataViagem = LocalDateTime.parse(ler.nextLine(), formatterData);
         System.out.println("Indique a morada de origem:");
         String moradaOrigem = ler.nextLine();
         System.out.println("Indique a morada de destino:");
@@ -581,7 +639,8 @@ public class Main {
         double custoViagem = ler.nextDouble();
         System.out.println("Indique a distancia percorrida:");
         double distancia = ler.nextDouble();
-        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
+        boolean concluida = false;
+        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, concluida, moradaOrigem, moradaDestino, custoViagem);
         viagem.add(viagens);
     }
 
