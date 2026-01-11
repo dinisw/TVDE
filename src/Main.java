@@ -22,11 +22,15 @@ import java.util.regex.Matcher;
  */
 public class Main {
 
-    ArrayList<Cliente>clientes = new ArrayList<>();
-    ArrayList<Condutor> condutores = new ArrayList<>();
+
     ArrayList<Viatura> viaturas = new ArrayList<>();
     ArrayList<Viagem> viagens = new ArrayList<>();
     ArrayList<Reserva>reservas = new ArrayList<>();
+    Cliente cliente = new Cliente();
+    Condutor condutor = new Condutor();
+    Viatura viatura = new Viatura();
+    Reserva reserva = new Reserva();
+    EmpresaTVDE empresaTVDE = new EmpresaTVDE();
     //Antes de qualuqer coisa temos que carregar os itens da memória pra ca e guardar em um arraylist e depois irmos consultando
 
     void main() {
@@ -79,36 +83,7 @@ public class Main {
     }
 
     void registarCliente(Scanner ler) {
-        System.out.println("Indique o seu nome:");
-        String nome = ler.nextLine();
-        System.out.println("Indique a sua idade:");
-        int idade = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu genero:");
-        String sexo = ler.nextLine();
-        System.out.println("Indique o seu email:");
-        String email = ler.nextLine();
-        System.out.println("Indique o seu número de telemóvel:");
-        int telefone = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique a sua morada:");
-        String morada = ler.nextLine();
-        System.out.println("Indique o seu número de cartão de cidadão (sem os últimos 4 dígitos):");
-        int cartaoDeCidadao = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu número de contribuinte.");
-        boolean existe = false;
-        int contribuinte = Integer.parseInt(ler.nextLine());
-        for (Cliente cliente : clientes) {
-            if (cliente.getContribuinte() == contribuinte) {
-                existe = true;
-                break;
-            }
-        }
-        if (existe) {
-            System.out.println("Já existe um cliente cadastrado com sucesso!");
-        } else {
-            Cliente cliente = new Cliente(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
-            cliente.add(clientes);
-            System.out.println("Cliente cadastrado com sucesso!");
-        }
+        empresaTVDE.adicionarCliente(cliente);
     }
 
     private void Clientes(){
@@ -268,17 +243,17 @@ public class Main {
 
     private void verListaDeClientes(Scanner ler, String matricula) {
     }
-    //Feito na classe Empresa.
+
     void removerViatura(Scanner ler) {
     }
-    //Feito na classe Empresa.
+
     void pesquisarViaturaPelaMatricula(Scanner ler, String matricula) {
         for (var viatura : viaturas){
             viatura.toString();
             System.out.println("Aperte qualquer tecla para continuar ...");
         }
     }
-    //Feito na classe Empresa.
+
     void Reservas(Scanner ler) {
         /*Validar antes de inserir se a reserva já existe*/
 
