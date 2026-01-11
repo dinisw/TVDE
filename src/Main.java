@@ -67,9 +67,51 @@ public class Main {
             break;
         } while (opcao != 0);
     }
+
+    /*função cores*/
+    public class ConsoleUtils {
+
+        /*Reset*/
+        public static final String RESET = "\u001B[0m";
+
+        /*Cores*/
+        public static final String AZUL = "\u001B[34m";
+        public static final String VERDE = "\u001B[32m";
+        public static final String AMARELO = "\u001B[33m";
+        public static final String VERMELHO = "\u001B[31m";
+
+        /*Negrito*/
+        public static final String NEGRITO = "\u001B[1m";
+    }
+
+    /*função centralizar texto*/
+    public static void printCentralizado(String texto) {
+        int largura = 80;
+        int espacos = (largura - texto.length()) / 2;
+
+        if (espacos > 0) {
+            System.out.print(" ".repeat(espacos));
+        }
+        System.out.println(texto);
+    }
+
+    /*Função titulo principal*/
+    public static void printTituloPrincipal(String texto) {
+        System.out.println();
+        printCentralizado(ConsoleUtils.NEGRITO + ConsoleUtils.AZUL + texto + ConsoleUtils.RESET);
+        System.out.println();
+    }
+
+    /*Função titulo secundario */
+    public static void printTituloSecundario(String texto) {
+        printCentralizado(ConsoleUtils.VERDE + texto + ConsoleUtils.RESET);
+        System.out.println();
+    }
+
+
     int menu(Scanner ler) {
         System.out.println("========= Sistema de Viagens TVDE ===========");
-        System.out.println("            MENU            ");
+        printTituloSecundario("MENU");
         System.out.println("1. Registar o/a Cliente");
         System.out.println("2. Registar o/a Condutor");
         System.out.println("3. Viaturas");
