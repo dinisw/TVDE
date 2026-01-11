@@ -1,5 +1,8 @@
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class EmpresaTVDE {
     private String nomeEmpresa;
@@ -8,6 +11,17 @@ public class EmpresaTVDE {
     private ArrayList<Condutor> condutores;
     private ArrayList<Reserva> reservas;
     private ArrayList<Viatura> viaturas;
+
+    Scanner ler = new Scanner(System.in);
+
+    public EmpresaTVDE() {
+        clientes = new ArrayList<>();
+        viagens = new ArrayList<>();
+        condutores = new ArrayList<>();
+        reservas = new ArrayList<>();
+        viaturas = new ArrayList<>();
+        nomeEmpresa = "";
+    }
 
     public EmpresaTVDE(String nomeEmpresa, ArrayList<Cliente> clientes, ArrayList<Viagem> viagens, ArrayList<Condutor> condutores, ArrayList<Reserva> reservas, ArrayList<ArrayList<Viatura>> viaturas) {
         this.nomeEmpresa = nomeEmpresa;
@@ -39,9 +53,13 @@ public class EmpresaTVDE {
     }
 
     //READ:
-
-    public ArrayList<Viatura> consultarViaturas(String matricula) {
-        return viaturas;
+    public void listarViaturas() {
+        if(viaturas.isEmpty()) {
+            System.out.println("Não existe nenhuma viatura registada!");
+        }
+        for (Viatura viatura : viaturas) {
+            System.out.println(viatura.toString());
+        }
     }
 
     //UPDATE:
@@ -84,6 +102,22 @@ public class EmpresaTVDE {
     // CRUD de Cliente
     //CREATE
     public boolean adicionarCliente(Cliente cliente) {
+        System.out.println("Indique o seu nome:");
+        String nome = ler.nextLine();
+        System.out.println("Indique a sua idade:");
+        int idade = Integer.parseInt(ler.nextLine());
+        System.out.println("Indique o seu genero:");
+        String sexo = ler.nextLine();
+        System.out.println("Indique o seu email:");
+        String email = ler.nextLine();
+        System.out.println("Indique o seu número de telemóvel:");
+        int telefone = Integer.parseInt(ler.nextLine());
+        System.out.println("Indique a sua morada:");
+        String morada = ler.nextLine();
+        System.out.println("Indique o seu número de cartão de cidadão (sem os últimos 4 dígitos):");
+        int cartaoDeCidadao = Integer.parseInt(ler.nextLine());
+        System.out.println("Indique o seu número de contribuinte.");
+        int contribuinte = Integer.parseInt(ler.nextLine());
         if (procurarCliente(cliente.getContribuinte()) == null) {
             return clientes.add(cliente);
         }
@@ -171,8 +205,13 @@ public class EmpresaTVDE {
     }
 
     //READ
-    public ArrayList<Condutor> getCondutores() {
-        return condutores;
+    public void listarCondutores(){
+        if (condutores == null) {
+            System.out.println("Não existe nenhum condutor cadastrado!");
+        }
+        for (Condutor condutor : condutores) {
+            System.out.println(condutor.toString());
+        }
     }
 
     //UPDATE
@@ -247,8 +286,13 @@ public class EmpresaTVDE {
     }
 
     //READ
-    public ArrayList<Reserva> getReservas() {
-        return reservas;
+    public void listarReservas() {
+        if(reservas == null) {
+            System.out.println("Não existe nenhum reserva cadastrada!");
+        }
+        for (Reserva reserva : reservas) {
+            System.out.println(reserva.toString());
+        }
     }
 
     //UPDATE
@@ -282,5 +326,5 @@ public class EmpresaTVDE {
         return false;
     }
 
-    //
+
 }

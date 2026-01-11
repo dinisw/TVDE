@@ -22,11 +22,15 @@ import java.util.regex.Matcher;
  */
 public class Main {
 
-    ArrayList<Cliente>clientes = new ArrayList<>();
-    ArrayList<Condutor> condutores = new ArrayList<>();
+
     ArrayList<Viatura> viaturas = new ArrayList<>();
     ArrayList<Viagem> viagens = new ArrayList<>();
     ArrayList<Reserva>reservas = new ArrayList<>();
+    Cliente cliente = new Cliente();
+    Condutor condutor = new Condutor();
+    Viatura viatura = new Viatura();
+    Reserva reserva = new Reserva();
+    EmpresaTVDE empresaTVDE = new EmpresaTVDE();
     //Antes de qualuqer coisa temos que carregar os itens da memória pra ca e guardar em um arraylist e depois irmos consultando
 
     void main() {
@@ -36,10 +40,6 @@ public class Main {
             opcao = menu(ler);
             switch (opcao) {
                 case 1:
-                    cliente(ler);
-                    break;
-                case 2:
-                    condutor(ler);
                     registarCliente(ler);
                     break;
                 case 2:
@@ -123,38 +123,9 @@ public class Main {
         int opcao = Integer.parseInt(ler.nextLine());
         return Integer.parseInt(ler.nextLine());
     }
-  
+
     void registarCliente(Scanner ler) {
-        System.out.println("Indique o seu nome:");
-        String nome = ler.nextLine();
-        System.out.println("Indique a sua idade:");
-        int idade = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu genero:");
-        String sexo = ler.nextLine();
-        System.out.println("Indique o seu email:");
-        String email = ler.nextLine();
-        System.out.println("Indique o seu número de telemóvel:");
-        int telefone = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique a sua morada:");
-        String morada = ler.nextLine();
-        System.out.println("Indique o seu número de cartão de cidadão (sem os últimos 4 dígitos):");
-        int cartaoDeCidadao = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu número de contribuinte.");
-        boolean existe = false;
-        int contribuinte = Integer.parseInt(ler.nextLine());
-        for (Cliente cliente : clientes) {
-            if (cliente.getContribuinte() == contribuinte) {
-                existe = true;
-                break;
-            }
-        }
-        if (existe) {
-            System.out.println("Já existe um cliente cadastrado com sucesso!");
-        } else {
-            Cliente cliente = new Cliente(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
-            cliente.add(clientes);
-            System.out.println("Cliente cadastrado com sucesso!");
-        }
+        empresaTVDE.adicionarCliente(cliente);
     }
 
     private void Clientes(){
@@ -196,54 +167,45 @@ public class Main {
                     System.out.println("Digite a Matrícula que deseja buscar [XX-XX-XX]");
                     String matricula = ler.nextLine();
                     if(isMatriculaValida(matricula)){
-                        return;
+                        pesquisarViaturaPelaMatricula(ler, matricula);
+                        break;
                     }else {
                         System.out.println("Formato incorreto, tente novamente com o formato [XX-XX-XX]");
                     }
                 }
-                pesquisarViaturaPelaMatricula(ler, matricula);
+            } else if (!viaturas.isEmpty() && opcao == 3) {
+                String matricula = "";
+                removerViatura(ler);
+            } else if (opcao == 0) {
+                System.out.print("Obrigado por utilizar a App da TVDE!!");
+            } else {
+                System.out.println("Opção Inválida! Tente novamente!");
             }
-            case 2:
-                    break;
-                case 3:
-                    verListadeClientes(ler);
-                    break;
-                case 4:
-                    matricula = "";
-                    removerViatura(ler, matricula);
-                    break;
-                case 0:
-                    System.out.print("Obrigado por utilizar a App da TVDE!!");
-                    break;
-                default:
-                    System.out.println("Opção Inválida! Tente novamente!");
-                    break;
-            }
-            break;
         } while (opcao != 0);
+    }
 
     void tituloViaturas(){
 
     }
 
     int subMenuViaturas(Scanner ler){
-            int count = 1;
-            System.out.println("========= VIATURAS ===========");
-            System.out.println("            MENU            ");
-            System.out.printf("%d\t-\tRegistar Viatura", count);
-            if(!viaturas.isEmpty()){
-                count++;
-                System.out.printf("%d\t-\tPesquisar Viatura pela Matrícula", count);
-            }
-            if(!viaturas.isEmpty()) {
-                count++;
-                System.out.printf("%d\t-\tRemover Viatura", count);
-            }
-            System.out.println("0\t-\tVoltar ao menu anterior");
-            System.out.print("Indique a opção que queira realizar");
-            int opcao = Integer.parseInt(ler.nextLine());
-            return Integer.parseInt(ler.nextLine());
+        int count = 1;
+        System.out.println("========= VIATURAS ===========");
+        System.out.println("            MENU            ");
+        System.out.printf("%d\t-\tRegistar Viatura", count);
+        if(!viaturas.isEmpty()){
+            count++;
+            System.out.printf("%d\t-\tPesquisar Viatura pela Matrícula", count);
         }
+        if(!viaturas.isEmpty()) {
+            count++;
+            System.out.printf("%d\t-\tRemover Viatura", count);
+        }
+        System.out.println("0\t-\tVoltar ao menu anterior");
+        System.out.print("Indique a opção que queira realizar");
+        int opcao = Integer.parseInt(ler.nextLine());
+        return Integer.parseInt(ler.nextLine());
+    }
 
 
     //Feito na classe Empresa.
@@ -310,7 +272,7 @@ public class Main {
             System.out.println("Viatura registada com sucesso!");
 
         } catch (Exception e) {
-             //Guardar em arquivo como log e.getMessage()
+            //Guardar em arquivo como log e.getMessage()
         }
     }
 
@@ -323,158 +285,17 @@ public class Main {
 
     private void verListaDeClientes(Scanner ler, String matricula) {
     }
-    //Feito na classe Empresa.
+
     void removerViatura(Scanner ler) {
     }
-    //Feito na classe Empresa.
+
     void pesquisarViaturaPelaMatricula(Scanner ler, String matricula) {
         for (var viatura : viaturas){
             viatura.toString();
             System.out.println("Aperte qualquer tecla para continuar ...");
         }
     }
-    //Feito na classe Empresa.
-    void Reservas(Scanner ler) {
-        /*Validar antes de inserir se a reserva já existe*/
 
-
-
-    /*
-    Fazer um switch case
-    * Criar um SUb menu para Registrar Reservas e Eliminar
-    * */
-        criarReserva(ler);
-        consultarReservas(ler);
-        alterarReserva(ler);
-        removerReserva(ler);
-    }
-
-    private void alterarReserva(Scanner ler) {
-    }
-
-    private void consultarReservas(Scanner ler) {
-    }
-
-    void criarReserva(Scanner ler) {
-        System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
-        DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate data = LocalDate.parse(ler.nextLine(), formatoData);
-        System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
-        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
-        System.out.println("Indique a sua atual morada:");
-        String moradaOrigem = ler.nextLine();
-        System.out.println("Indique o destino:");
-        String moradaDestino = ler.nextLine();
-        System.out.println("Indique a distância:");
-        double distancia = ler.nextDouble();
-        Reserva reserva = new Reserva(cliente, data, hora, moradaOrigem, moradaDestino, distancia);
-        reserva.add(reservas);
-    }
-
-    void removerReserva(Scanner ler) {
-
-    }
-
-    void Viagens(Scanner ler) {
-        /*Permitir trasnformar uma reserva em viagem
-         * Validar se a viagem já existe antes de inserir
-         * */
-
-        /*
-         * Criar um SUb menu para Registrar Viagens e Eliminar
-         * */
-        transformarReservaEmViagem(ler);
-        criarViagem(ler);
-        removerViagem(ler);
-
-    }
-
-    void transformarReservaEmViagem(Scanner ler) {
-        /*Ler dados que estão guardados*/
-        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
-        viagem.add(viagens);
-    }
-
-    void criarViagem(Scanner ler) {
-        System.out.println("Indique a hora de inicio:");
-        DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        System.out.println("Indique a hora:");
-        LocalTime hora = LocalTime.parse(ler.nextLine(), formatter);
-        System.out.println("Indique a data");
-        LocalDate dataViagem = LocalDate.parse(ler.nextLine(), formatterData);
-        System.out.println("Indique a morada de origem:");
-        String moradaOrigem = ler.nextLine();
-        System.out.println("Indique a morada de destino:");
-        String moradaDestino = ler.nextLine();
-        System.out.println("Indique a custo da viagem:");
-        double custoViagem = ler.nextDouble();
-        System.out.println("Indique a distancia percorrida:");
-        double distancia = ler.nextDouble();
-        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, moradaDestino, moradaOrigem, custoViagem, distancia, concluida);
-        viagem.add(viagens);
-    }
-
-    void removerViagem(Scanner ler) {);
-    }
-
-    void informacoes(Scanner ler) {
-        /*Pesquisar viagens de um cliente num intervalo de data dada pelo liente
-         *Apresentar valor total faturado por um motorista num intervalo de datas indicado pelo utilizador
-         * Apresentar a distância media em kms das viagens num intervalo de data
-         * Apresentar o destino mais solicitado (reservas e viagens) durante intervalo de data
-         * Apresentar lista de clientes em viagens a distância esteja dentro do indicado pelo utilizador
-         *
-         */
-        }
-    }
-
-    void registarCondutor(Scanner ler) {
-        System.out.println("Indique o nome do/a condutor/a");
-        String nome = ler.nextLine();
-        System.out.println("Indique a sua idade:");
-        int idade = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu genero:");
-        String sexo = ler.nextLine();
-        System.out.println("Indique o seu email:");
-        String email = ler.nextLine();
-        System.out.println("Indique o numero da carta de condução:");
-        int cartaDeConducao = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o numero de cartão de cidadão sem os últimos 4 dígitos:");
-        int cartaDeCidadao = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu número de contribuinte:");
-        int contribuinte = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique a sua morada:");
-        String morada = ler.nextLine();
-        System.out.println("Indique o seu número de telemóvel:");
-        int telefone = Integer.parseInt(ler.nextLine());
-        Condutor condutor = new Condutor(nome, idade, sexo, email, telefone, morada, cartaDeCidadao, contribuinte);
-        condutor.add(condutores);
-    }
-
-    void Viaturas(Scanner ler) {
-        /*
-         * Criar um Submenu para as opções
-         * */
-        String matricula = ""; /*pegar a matricula*/
-
-        registarViatura(ler);
-        pesquisarViaturaPelaMatricula(ler);
-        verListaDeClientes(ler, matricula);
-        removerViatura(ler);
-
-    }
-
-    private void verListaDeClientes(Scanner ler, String matricula) {
-    }
-    //Feito na classe Empresa.
-    void removerViatura(Scanner ler) {
-    }
-    //Feito na classe Empresa.
-    void pesquisarViaturaPelaMatricula(Scanner ler) {
-    }
-    //Feito na classe Empresa.
     void Reservas(Scanner ler) {
         /*Validar antes de inserir se a reserva já existe*/
 
@@ -517,7 +338,7 @@ public class Main {
             System.out.println("0. Concluir");
 
             opçao = Integer.parseInt(ler.nextLine());
-            
+
             switch (opçao){
                 case 1:
                     System.out.println("Indique o nome do cliente:");
@@ -606,64 +427,64 @@ public class Main {
 
     }
 
-void transformarReservaEmViagem(Scanner ler) {
+    void transformarReservaEmViagem(Scanner ler) {
 
-    if (reservas.isEmpty()) {
-        System.out.println("Não existe nenhuma reserva para transformar em viagem.");
-        return;
-    }
-
-
-    if (condutores.isEmpty()) {
-        System.out.println("Não existe nenhum condutor registado. Registe um condutor primeiro.");
-        return;
-    }
-
-    System.out.println("=== Escolha a Reserva a Transformar ===");
-    for (int i = 0; i < reservas.size(); i++) {
-        System.out.println((i + 1) + ". " + reservas.get(i).toString());
-    }
-
-    System.out.print("Introduza o número da reserva: ");
-    int indexReserva = ler.nextInt() - 1;
-    ler.nextLine();
-
-    if (indexReserva < 0 || indexReserva >= reservas.size()) {
-        System.out.println("Opção inválida.");
-        return;
-    }
-
-    Reserva reservaSelecionada = reservas.get(indexReserva);
-
-    for (Viagem v : viagens) {
-        if (v.getCliente().equals(reservaSelecionada.getCliente()) &&
-                v.getDataHoraInicio().equals(reservaSelecionada.getDataHoraInicio())) {
-            System.out.println("Erro: Esta viagem já foi registada anteriormente!");
+        if (reservas.isEmpty()) {
+            System.out.println("Não existe nenhuma reserva para transformar em viagem.");
             return;
         }
+
+
+        if (condutores.isEmpty()) {
+            System.out.println("Não existe nenhum condutor registado. Registe um condutor primeiro.");
+            return;
+        }
+
+        System.out.println("=== Escolha a Reserva a Transformar ===");
+        for (int i = 0; i < reservas.size(); i++) {
+            System.out.println((i + 1) + ". " + reservas.get(i).toString());
+        }
+
+        System.out.print("Introduza o número da reserva: ");
+        int indexReserva = ler.nextInt() - 1;
+        ler.nextLine();
+
+        if (indexReserva < 0 || indexReserva >= reservas.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+
+        Reserva reservaSelecionada = reservas.get(indexReserva);
+
+        for (Viagem v : viagens) {
+            if (v.getCliente().equals(reservaSelecionada.getCliente()) &&
+                    v.getDataHoraInicio().equals(reservaSelecionada.getDataHoraInicio())) {
+                System.out.println("Erro: Esta viagem já foi registada anteriormente!");
+                return;
+            }
+        }
+
+        System.out.println("=== Escolha o Condutor ===");
+        for (int i = 0; i < condutores.size(); i++) {
+            System.out.println((i + 1) + ". " + condutores.get(i).toString());
+        }
+
+        System.out.print("Introduza o número do condutor: ");
+        int indexCondutor = ler.nextInt() - 1;
+        ler.nextLine();
+
+        if (indexCondutor < 0 || indexCondutor >= condutores.size()) {
+            System.out.println("Condutor inválido.");
+            return;
+        }
+
+        Condutor condutorSelecionado = condutores.get(indexCondutor);
+
+        Viagem novaViagem = new Viagem(reservaSelecionada, condutorSelecionado);
+        viagens.add(novaViagem);
+
+        System.out.println("Sucesso! A reserva foi transformada em viagem.");
     }
-
-    System.out.println("=== Escolha o Condutor ===");
-    for (int i = 0; i < condutores.size(); i++) {
-        System.out.println((i + 1) + ". " + condutores.get(i).toString());
-    }
-
-    System.out.print("Introduza o número do condutor: ");
-    int indexCondutor = ler.nextInt() - 1;
-    ler.nextLine();
-
-    if (indexCondutor < 0 || indexCondutor >= condutores.size()) {
-        System.out.println("Condutor inválido.");
-        return;
-    }
-
-    Condutor condutorSelecionado = condutores.get(indexCondutor);
-    
-    Viagem novaViagem = new Viagem(reservaSelecionada, condutorSelecionado);
-    viagens.add(novaViagem);
-
-    System.out.println("Sucesso! A reserva foi transformada em viagem.");
-}
 
     void criarViagem(Scanner ler) {
         System.out.println("Indique a hora de inicio:");
@@ -685,7 +506,7 @@ void transformarReservaEmViagem(Scanner ler) {
         viagem.add(viagens);
     }
 
-    void removerViagem(Scanner ler) {);
+    void removerViagem(Scanner ler) {
     }
 
     void informacoes(Scanner ler) {
