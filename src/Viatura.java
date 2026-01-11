@@ -66,12 +66,18 @@ public class Viatura {
 
     @Override
     public String toString() {
-        return "Viatura{" +
-                "matricula='" + matricula + '\'' +
-                ", marca='" + marca + '\'' +
-                ", modelo='" + modelo + '\'' +
-                ", anoDeFabrico=" + anoDeFabrico +
-                '}';
+        String status = "";
+        if(disponivel)
+            status = "Disponível";
+        else
+            status = "Indisponível";
+        return "Viatura:\n" +
+                "Matricula = " + matricula + '\n' +
+                "Marca = " + marca + '\n' +
+                "Modelo = " + modelo + '\n' +
+                "Ano de Fabrico = " + anoDeFabrico + '\n' +
+                "Cor = " + cor + '\n' +
+                "Status = " + status + '\n';
     }
 
     /**
