@@ -235,7 +235,7 @@ public class EmpresaTVDE {
                 writer.newLine();
                 return true;
             } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro gravação ficheiro: " + e.getMessage())
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro gravação ficheiro: " + e.getMessage());
                 return true;
             }
         }
@@ -306,11 +306,11 @@ public class EmpresaTVDE {
 
         if (adicionou) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES))){
-                writer.write((condutor.paraFicheiro());
+                writer.write((condutor.paraFicheiro()));
                 writer.newLine();
                 return true;
             } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro gravação ficheiro: " + e.getMessage())
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro gravação ficheiro: " + e.getMessage());
                 return true;
             }
         }

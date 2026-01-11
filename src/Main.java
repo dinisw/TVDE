@@ -26,6 +26,8 @@ public class Main {
     //ArrayList<Viatura> viaturas = new ArrayList<>();
 
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE = "logsClientes.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR = "logsCondutor.txt";
 
 
 
@@ -204,7 +206,7 @@ public class Main {
             }
         } catch (Exception e) {
             System.out.println("Dados inválidos.");
-            empresaTVDE.adicionarLogsDeErros(empresaTVDE.CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro registo: " + e.getMessage())
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE, "Erro registo: " + e.getMessage());
 
 
         }
