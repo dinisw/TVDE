@@ -94,6 +94,20 @@ public class Condutor extends Pessoa{
         this.totalViagens ++;
     }
 
+    public String paraFicheiro() {
+        return getNome() + ";" +
+                getIdade() + ";" +
+                getSexo() + ";" +
+                getEmail() + ";" +
+                getTelefone() + ";" +
+                getMorada() + ";" +
+                getCartaoDeCidadao() + ";" +
+                getContribuinte() + ";" +
+                cartaDeConducao + ";" +
+                avaliacao + ";" +
+                totalViagens;
+    }
+
     /**
      * Método destinado a adicionar este condutor a uma lista de condutores.
      *
