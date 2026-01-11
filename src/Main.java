@@ -24,6 +24,11 @@ public class Main {
 
 
     ArrayList<Viatura> viaturas = new ArrayList<>();
+
+    private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
+
+
+
     ArrayList<Viagem> viagens = new ArrayList<>();
     ArrayList<Reserva>reservas = new ArrayList<>();
     Cliente cliente = new Cliente();
@@ -68,21 +73,18 @@ public class Main {
         } while (opcao != 0);
     }
 
-    /*função cores*/
-    public class ConsoleUtils {
+    /*Reset*/
+    public static final String RESET = "\u001B[0m";
 
-        /*Reset*/
-        public static final String RESET = "\u001B[0m";
+    /*Cores*/
+    public static final String AZUL = "\u001B[34m";
+    public static final String VERDE = "\u001B[32m";
+    public static final String AMARELO = "\u001B[33m";
+    public static final String VERMELHO = "\u001B[31m";
 
-        /*Cores*/
-        public static final String AZUL = "\u001B[34m";
-        public static final String VERDE = "\u001B[32m";
-        public static final String AMARELO = "\u001B[33m";
-        public static final String VERMELHO = "\u001B[31m";
+    /*Negrito*/
+    public static final String NEGRITO = "\u001B[1m";
 
-        /*Negrito*/
-        public static final String NEGRITO = "\u001B[1m";
-    }
 
     /*função centralizar texto*/
     public static void printCentralizado(String texto) {
@@ -98,20 +100,20 @@ public class Main {
     /*Função titulo principal*/
     public static void printTituloPrincipal(String texto) {
         System.out.println();
-        printCentralizado(ConsoleUtils.NEGRITO + ConsoleUtils.AZUL + texto + ConsoleUtils.RESET);
+        printCentralizado(NEGRITO + AZUL + texto + RESET);
         System.out.println();
     }
 
     /*Função titulo secundario */
     public static void printTituloSecundario(String texto) {
-        printCentralizado(ConsoleUtils.VERDE + texto + ConsoleUtils.RESET);
+        printCentralizado(VERDE + texto + RESET);
         System.out.println();
     }
 
 
     int menu(Scanner ler) {
-        System.out.println("========= Sistema de Viagens TVDE ===========");
-        printTituloSecundario("MENU");
+        printTituloPrincipal("========= Sistema de Viagens TVDE ===========");
+        printTituloSecundario(VERDE + "MENU" + RESET);
         System.out.println("1. Registar o/a Cliente");
         System.out.println("2. Registar o/a Condutor");
         System.out.println("3. Viaturas");
@@ -159,7 +161,6 @@ public class Main {
         int opcao;
         do {
             opcao = subMenuViaturas(ler);
-
             if (opcao == 1) {
                 registarViatura(ler);
             } else if (!viaturas.isEmpty() && opcao == 2) {
@@ -260,19 +261,24 @@ public class Main {
                     }
                 }
 
+                String cor = "";
+                System.out.println("Indique a cor da viatura:");
+                cor = ler.nextLine();
+                if (cor.equalsIgnoreCase("sair"))
+                    return;
+
                 if (existe) {
                     System.out.println("Erro: Essa matrícula já existe no sistema.");
                 } else {
+                    Viatura viatura = new Viatura(matricula, marca, modelo, Integer.parseInt(anoDeFabrico), cor, existe);
+                    viaturas.add(viatura);
+                    System.out.println("Viatura registada com sucesso!");
+                    empresaTVDE.adicionarViatura(viatura);
                     break;
                 }
             }
-
-            Viatura novaViatura = new Viatura(Integer.parseInt(anoDeFabrico), modelo, marca, matricula);
-            viaturas.add(novaViatura);
-            System.out.println("Viatura registada com sucesso!");
-
         } catch (Exception e) {
-            //Guardar em arquivo como log e.getMessage()
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS, e.getMessage() + ";");
         }
     }
 
