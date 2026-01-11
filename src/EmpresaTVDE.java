@@ -14,7 +14,11 @@ public class EmpresaTVDE {
     private ArrayList<Reserva> reservas;
     private ArrayList<Viatura> viaturas;
     private final String CAMINHO_FICHEIRO_VIATURAS = "viaturas.txt";
+    private final String CAMINHO_FICHEIRO_CLIENTES = "clientes.txt";
+    private final String CAMINHO_FICHEIRO_CONDUTORES = "condutores.txt";
     private final String CAMINHO_FICHEIRO_LOGS_VIATURAS = "logsViaturas.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_CLIENTE = "logsClientes.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_CONDUTOR = "logsCondutor.txt";
 
     Scanner ler = new Scanner(System.in);
 
@@ -40,17 +44,12 @@ public class EmpresaTVDE {
     /*CRUD LOGS*/
     public boolean adicionarLogsDeErros(String caminho, String erro) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho, true))) {
-            writer.write(erro);
+            writer.write(LocalDateTime.now() + "->" + erro);
             writer.newLine();
             return true;
         } catch (IOException e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(e.getMessage(), true))) {
-                writer.write(erro);
-                writer.newLine();
-                return true;
-            } catch (IOException ex) {
-                return false;
-            }
+            System.out.println("Erro ao gravar log: " + e.getMessage());
+            return false;
         }
     }
     // O CRUD DE VIATURAS
@@ -141,34 +140,30 @@ public class EmpresaTVDE {
     // CRUD de Cliente
     //CREATE
     public boolean adicionarCliente(Cliente cliente) {
-        System.out.println("Indique o seu nome:");
-        String nome = ler.nextLine();
-        System.out.println("Indique a sua idade:");
-        int idade = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu genero:");
-        String sexo = ler.nextLine();
-        System.out.println("Indique o seu email:");
-        String email = ler.nextLine();
-        System.out.println("Indique o seu número de telemóvel:");
-        int telefone = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique a sua morada:");
-        String morada = ler.nextLine();
-        System.out.println("Indique o seu número de cartão de cidadão (sem os últimos 4 dígitos):");
-        int cartaoDeCidadao = Integer.parseInt(ler.nextLine());
-        System.out.println("Indique o seu número de contribuinte.");
-        int contribuinte = Integer.parseInt(ler.nextLine());
-        if (procurarCliente(cliente.getContribuinte()) == null) {
-            return clientes.add(cliente);
+        if (cliente == null || procurarCliente(cliente.getContribuinte()) != null) {
+            return false;
+        }
+
+        boolean adicionou = clientes.add(cliente);
+
+        if (adicionou) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CLIENTES, true))) {
+                writer.write(cliente.paraFicheiro());
+                writer.newLine();
+                return true;
+            } catch (IOException e) {
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro gravação ficheiro: " + e.getMessage())
+                return true;
+            }
         }
         return false;
     }
 
     //READ
-    public Cliente procurarCliente(int contribuinte) {
+    public Cliente procurarCliente(int nif) {
         for (Cliente cliente : clientes) {
-            if (cliente.getContribuinte() == contribuinte) {
+            if (cliente.getContribuinte() == nif)
                 return cliente;
-            }
         }
         return null;
     }
@@ -185,62 +180,70 @@ public class EmpresaTVDE {
     }
 
     //UPDATE
-    public boolean atualizarCliente(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoCidadao, int contribuinte) {
-        Cliente cliente = procurarCliente(contribuinte);
-        {
-            if (cliente != null) {
-                cliente.setNome(nome);
-                cliente.setIdade(idade);
-                cliente.setSexo(sexo);
-                cliente.setEmail(email);
-                cliente.setTelefone(telefone);
-                cliente.setMorada(morada);
-                cliente.setCartaoDeCidadao(cartaoCidadao);
-                cliente.setContribuinte(contribuinte);
-                return true;
-            }
+    public boolean atualizarCliente(int nifOriginal, String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, int novoCC) {
+        Cliente cliente = procurarCliente(nifOriginal);
+        if (cliente != null) {
+            cliente.setNome(novoNome);
+            cliente.setIdade(novaIdade);
+            cliente.setSexo(novoSexo);
+            cliente.setEmail(novoEmail);
+            cliente.setTelefone(novoTelefone);
+            cliente.setMorada(novaMorada);
+            cliente.setCartaoDeCidadao(novoCC);
+            return true;
         }
         return false;
     }
 
     //DELETE
-    public boolean removerCliente(int contribuinte) {
-        Cliente cliente = procurarCliente(contribuinte);
+    public boolean removerCliente(int nif) {
+        Cliente cliente = procurarCliente(nif);
         if (cliente != null) {
-            for (Viagem viagem : viagens) {
-                if (viagem.getCliente().getContribuinte() == contribuinte) {
-                    System.out.println("O cliente pelo qual quer remover encontra-se com uma viagem registada.");
+            for (Viagem viagem : viagens)
+                if (viagem.getCliente().getContribuinte() == nif)
                     return false;
-                }
-            }
-            for (Reserva reserva : reservas) {
-                if (reserva.getCliente().getContribuinte() == contribuinte) {
-                    System.out.println("O Cliente pelo qual quer remover encontra-se com uma reserva registada.");
+            for (Reserva reserva : reservas)
+                if (reserva.getCliente().getContribuinte() == nif)
                     return false;
-                }
-            }
+
+            return clientes.remove(cliente);
         }
-        return clientes.remove(cliente);
+        return false;
     }
+
 
     // CRUD PARA CONDUTOR
     // CREATE
 
     public boolean adicionarCondutor(Condutor condutor) {
-        if (condutor.getNome() == null) {
-            System.out.println("Não existe nenhum condutor cadastrado");
+        if (condutor.getNome() == null || procurarCondutor(condutor.getContribuinte()) != null) {
             return false;
         }
-        return condutores.add(condutor);
-    }
+        boolean adicionou = condutores.add(condutor);
 
-    public Condutor procurarCondutor(int contribuinte) {
-        for (Condutor condutor : condutores) {
-            if (condutor.getContribuinte() == contribuinte) {
-                return condutor;
+        if (adicionou) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES))){
+                writer.write((condutor.paraFicheiro());
+                writer.newLine();
+                return true;
+            } catch (IOException e) {
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro gravação ficheiro: " + e.getMessage())
+                return true;
             }
         }
+        return false;
+    }
+    //READ
+    public Condutor procurarCondutor(int nif) {
+        for (Condutor condutor : condutores) {
+            if (condutor.getContribuinte() == nif)
+                return condutor;
+        }
         return null;
+    }
+
+    public  ArrayList<Condutor> getCondutores() {
+        return condutores;
     }
 
     //READ
@@ -254,36 +257,31 @@ public class EmpresaTVDE {
     }
 
     //UPDATE
-    public boolean atualizarCondutor(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoCidadao, int contribuinte, String cartaDeConducao) {
-        Condutor condutor = procurarCondutor(contribuinte);
+    public boolean atualizarCondutor(int nifOriginal, String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, String novaCarta) {
+        Condutor condutor = procurarCondutor(nifOriginal);
         if (condutor != null) {
-            condutor.setNome(nome);
-            condutor.setIdade(idade);
-            condutor.setSexo(sexo);
-            condutor.setEmail(email);
-            condutor.setTelefone(telefone);
-            condutor.setMorada(morada);
-            condutor.setCartaoDeCidadao(cartaoCidadao);
-            condutor.setContribuinte(contribuinte);
-            condutor.setCartaDeConducao(cartaDeConducao);
+            condutor.setNome(novoNome);
+            condutor.setIdade(novaIdade);
+            condutor.setSexo(novoSexo);
+            condutor.setEmail(novoEmail);
+            condutor.setTelefone(novoTelefone);
+            condutor.setMorada(novaMorada);
+            condutor.setCartaDeConducao(novaCarta);
             return true;
         }
         return false;
     }
 
     //DELETE
-    public boolean removerCondutor(int contribuinte) {
-        Condutor condutor = procurarCondutor(contribuinte);
+    public boolean removerCondutor(int nif) {
+        Condutor condutor = procurarCondutor(nif);
         if (condutor == null) {
-            return false;
+            for (Viagem viagem : viagens)
+                if (viagem.getCondutor().getContribuinte() == nif)
+                    return false;
+            return condutores.remove(condutor);
         }
-        for (Viagem viagem : viagens) {
-            if (viagem.getCondutor().getContribuinte() == contribuinte) {
-                System.out.println("Já existe um condutor associada a esta viagem");
-                return false;
-            }
-        }
-        return condutores.remove(condutor);
+        return false;
     }
 
     //Faturação total do condutor

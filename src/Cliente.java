@@ -84,6 +84,19 @@ public class Cliente extends Pessoa {
         this.totalGasto += valor;
     }
 
+    public String paraFicheiro() {
+        return getNome() + ";" +
+                getIdade() + ";" +
+                getSexo() + ";" +
+                getEmail() + ";" +
+                getTelefone() + ";" +
+                getMorada() + ";" +
+                getCartaoDeCidadao() + ";" +
+                getContribuinte() + ";" +
+                totalViagens + ";" +
+                totalGasto;
+    }
+
     /**
      * Método destinado a adicionar este cliente a uma lista de clientes.
      *

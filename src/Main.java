@@ -127,7 +127,80 @@ public class Main {
     }
 
     void registarCliente(Scanner ler) {
-        empresaTVDE.adicionarCliente(cliente);
+        try {
+            System.out.println("--- Novo Registo de Cliente (Escreva 'sair' para cancelar) ---");
+
+            System.out.println("Indique o nome:");
+            String nome = ler.nextLine();
+            if (nome.equalsIgnoreCase("sair")) return;
+
+            System.out.println("Indique a idade:");
+            String idadeStr = ler.nextLine();
+            if (idadeStr.equalsIgnoreCase("sair")) return;
+            int idade = Integer.parseInt(idadeStr);
+
+            System.out.println("Indique o seu género:");
+            String sexo = ler.nextLine();
+            if (sexo.equalsIgnoreCase("sair")) return;
+
+            System.out.println("Indique o seu email:");
+            String email = ler.nextLine();
+            if (email.equalsIgnoreCase("sair")) return;
+
+            System.out.println("Indique o número de telefone:");
+            String telStr = ler.next();
+            if (telStr.equalsIgnoreCase("sair")) return;
+            int telefone = Integer.parseInt(telStr);
+
+            System.out.println("Indique a sua morada:");
+            String morada = ler.nextLine();
+            if (morada.equalsIgnoreCase("sair")) return;
+
+            String ccStr;
+            int cc = 0;
+
+            while (true) {
+                System.out.println("Indique o número de cartão de cidadão (8 primeiros dígitos):");
+                ccStr = ler.nextLine();
+
+                if (ccStr.equalsIgnoreCase("sair")) {
+                    return;
+                }
+                if (ccStr.matches("\\d{8}")) {
+                    cc = Integer.parseInt(ccStr);
+                    break;
+                } else {
+                    System.out.println("Erro: O cartão de cidadão deve conter exatamente 8 número. Tente novamente.");
+                }
+            }
+
+            while (true) {
+                System.out.println("Indique o NIF (Contribuinte):");
+                String nifStr = ler.nextLine();
+
+                if (nifStr.equalsIgnoreCase("sair")) return;
+
+                if (!nifStr.matches("\\d{9}")) {
+                    System.out.println("Erro: O NIF deve conter exatamente 9 digitos numéricos.");
+                    continue;
+                }
+                int nif = Integer.parseInt(nifStr);
+
+                if (empresaTVDE.procurarCliente(nif) != null) {
+                    System.out.println("Erro : Esse NIF já está registado no Sistema. Tente outro.");
+                } else {
+                    Cliente novo = new Cliente(nome, idade, sexo, email, telefone, morada, cc, nif);
+                    empresaTVDE.adicionarCliente(novo);
+                    System.out.println("Cliente registado com sucesso!");
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Dados inválidos.");
+            empresaTVDE.adicionarLogsDeErros(empresaTVDE.CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro registo: " + e.getMessage())
+
+
+        }
     }
 
     private void Clientes(){
