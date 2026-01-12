@@ -98,10 +98,10 @@ public class Main {
             opcao = menu(ler);
             switch (opcao) {
                 case 1:
-                    registarCliente(ler);
+                    Clientes(ler);
                     break;
                 case 2:
-                    registarCondutor(ler);
+                    Condutores(ler);
                     break;
                 case 3:
                     Viaturas(ler);
