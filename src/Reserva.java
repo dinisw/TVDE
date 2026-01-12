@@ -49,6 +49,10 @@ public class Reserva {
         this.distancia = distancia;
     }
 
+    public String paraFicheiro() {
+        return this.cliente +  ";" +  this.viatura + ";" + this.dataHoraInicio + ";" + this.moradaOrigem + ";" + this.moradaDestino + ";" + this.distancia;
+    }
+
     /**
      * Obtém a data e hora da reserva.
      * @return A data e hora agendada da viagem.
