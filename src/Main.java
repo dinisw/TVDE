@@ -290,7 +290,7 @@ public class Main {
             System.out.printf(VERDE + "%d\t-\tRemover Cliente\n" + RESET, count);
         }
         System.out.println(VERDE + "0\t-\tVoltar" + RESET);
-        System.out.print("Opção: ");
+        System.out.print("Indique a opção que queira realizar: ");
         try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
     }
 
