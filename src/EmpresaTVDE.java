@@ -1,7 +1,7 @@
 import java.io.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class EmpresaTVDE {
@@ -169,7 +169,7 @@ public class EmpresaTVDE {
     // CRUD de Cliente
     //CREATE
     public boolean adicionarCliente(Cliente cliente) {
-        if (cliente == null || procurarCliente(cliente.getContribuinte()) != null)
+        if (cliente == null || procurarNifCliente(cliente.getContribuinte()) != null)
             return false;
 
         boolean adicionou = clientes.add(cliente);
@@ -223,9 +223,17 @@ public class EmpresaTVDE {
     }
 
     //READ
-    public Cliente procurarCliente(int nif) {
+    public Cliente procurarNifCliente(int nif) {
         for (Cliente cliente : clientes) {
             if (cliente.getContribuinte() == nif)
+                return cliente;
+        }
+        return null;
+    }
+
+    public Cliente procurarCartaoDeCidadaoCliente(int cc) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getCartaoDeCidadao() == cc)
                 return cliente;
         }
         return null;
@@ -244,8 +252,8 @@ public class EmpresaTVDE {
 
 
     //UPDATE
-    public boolean atualizarCliente(int nifOriginal, String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, int novoCC) {
-        Cliente cliente = procurarCliente(nifOriginal);
+    public boolean atualizarCliente(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, int novoCC,int nifOriginal) {
+        Cliente cliente = procurarNifCliente(nifOriginal);
         if (cliente != null) {
             cliente.setNome(novoNome);
             cliente.setIdade(novaIdade);
@@ -263,8 +271,8 @@ public class EmpresaTVDE {
 
     //DELETE
     public boolean removerCliente(int nif) {
-        Cliente cliente = procurarCliente(nif);
-        if (cliente != null)
+        Cliente cliente = procurarNifCliente(nif);
+        if (cliente == null)
             return false;
         if (clientes.remove(cliente)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CLIENTES))) {
@@ -297,7 +305,7 @@ public class EmpresaTVDE {
     // CREATE
 
     public boolean adicionarCondutor(Condutor condutor) {
-        if (condutor == null || procurarCondutor(condutor.getContribuinte()) != null) return false;
+        if (condutor == null || procurarNifCondutor(condutor.getContribuinte()) != null) return false;
 
         if (condutores.add(condutor)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES, true))) {
@@ -322,13 +330,19 @@ public class EmpresaTVDE {
                     try {
                         String nome = dados[0];
                         int idade = Integer.parseInt(dados[1]);
-                        // ... ler restantes campos ...
+                        String sexo = dados[2];
+                        String email = dados[3];
+                        int tel = Integer.parseInt(dados[4]);
+                        String morada = dados[5];
+                        int cc = Integer.parseInt(dados[6]);
                         int nif = Integer.parseInt(dados[7]);
-                        String carta = dados[8];
+                        String carta = dados [8];
 
-                        Condutor c = new Condutor(nome, idade, dados[2], dados[3], Integer.parseInt(dados[4]), dados[5], Integer.parseInt(dados[6]), nif);
-                        c.setCartaDeConducao(carta);
-                        condutores.add(c);
+
+
+                        Condutor condutor = new Condutor(nome, idade, sexo, email, tel, morada, cc, carta, nif);
+                        condutor.setCartaDeConducao(carta);
+                        condutores.add(condutor);
                     } catch (Exception e) {
                         adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro linha: " + linha);
                     }
@@ -342,9 +356,25 @@ public class EmpresaTVDE {
 
 
     //READ
-    public Condutor procurarCondutor(int nif) {
+    public Condutor procurarNifCondutor(int nif) {
         for (Condutor condutor : condutores) {
             if (condutor.getContribuinte() == nif)
+                return condutor;
+        }
+        return null;
+    }
+
+    public Condutor procurarCartaoDeCidadaoCondutor(int cc) {
+        for (Condutor condutor : condutores) {
+            if (condutor.getCartaoDeCidadao() == cc)
+                return condutor;
+        }
+        return null;
+    }
+
+    public Condutor procurarCartaDeConducaoCondutor(String carta) {
+        for (Condutor condutor : condutores) {
+            if (Objects.equals(condutor.getCartaDeConducao(), carta))
                 return condutor;
         }
         return null;
@@ -361,8 +391,8 @@ public class EmpresaTVDE {
     }
 
     //UPDATE
-    public boolean atualizarCondutor(int nifOriginal, String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, String novaCarta) {
-        Condutor condutor = procurarCondutor(nifOriginal);
+    public boolean atualizarCondutor(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, String novaCarta,int novoCartaoDeCidadao,int nifOriginal) {
+        Condutor condutor = procurarNifCondutor(nifOriginal);
         if (condutor != null) {
             condutor.setNome(novoNome);
             condutor.setIdade(novaIdade);
@@ -371,6 +401,7 @@ public class EmpresaTVDE {
             condutor.setTelefone(novoTelefone);
             condutor.setMorada(novaMorada);
             condutor.setCartaDeConducao(novaCarta);
+            condutor.setCartaoDeCidadao(novoCartaoDeCidadao);
 
             guardarAlteracoesCondutores();
             return true;
@@ -380,13 +411,13 @@ public class EmpresaTVDE {
 
     //DELETE
     public boolean removerCondutor(int nif) {
-        Condutor condutor = procurarCondutor(nif);
+        Condutor condutor = procurarNifCondutor(nif);
         if (condutor == null) return false;
 
         if (condutores.remove(condutor)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES, false))) {
-                for (Condutor cond : condutores) {
-                    writer.write(cond.paraFicheiro());
+                for (Condutor condutor2 : condutores) {
+                    writer.write(condutor2.paraFicheiro());
                     writer.newLine();
                 }
                 return true;
@@ -463,7 +494,7 @@ public class EmpresaTVDE {
                     String destino = dados[4];
                     double kms = Double.parseDouble(dados[5]);
 
-                    Cliente cliente = procurarCliente(contribuinte);
+                    Cliente cliente = procurarNifCliente(contribuinte);
                     Viatura viatura = procurarViatura(matricula);
 
                     if(cliente != null && viatura != null) {
@@ -558,8 +589,8 @@ public class EmpresaTVDE {
             while ((linha = reader.readLine()) != null){
                 String[] dados = linha.split(",");
                 if(dados.length >= 6) {
-                    Condutor condutor = procurarCondutor(Integer.parseInt(dados[0]));
-                    Cliente cliente = procurarCliente(Integer.parseInt(dados[1]));
+                    Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[0]));
+                    Cliente cliente = procurarNifCliente(Integer.parseInt(dados[1]));
                     Viatura viatura = procurarViatura(dados[2]);
                     if(condutor != null && cliente != null && viatura != null) {
                         LocalDateTime inicio = LocalDateTime.parse(dados[3]);

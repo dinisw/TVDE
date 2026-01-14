@@ -31,7 +31,7 @@ public class Condutor extends Pessoa{
      * @param cartaoDeCidadao Número do cartão de cidadão
      * @param contribuinte Número de contribuinte
      */
-    public Condutor(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, int contribuinte) {
+    public Condutor(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, String cartaDeConducao, int contribuinte) {
         super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
         this.cartaDeConducao = "";
         this.avaliacao = 0;
