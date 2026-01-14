@@ -855,9 +855,51 @@ public class Main {
 
     private void verListaDeClientes(Scanner ler, String matricula) {
     }
-
+    //region Reservas
     void Reservas(Scanner ler) {
-        /*Validar antes de inserir se a reserva já existe*/
+        int opcao;
+        do{
+            opcao = subMenuReservas(ler);
+                if (opcao == 1){
+                    System.out.println("caga nisso agr");
+                } else if (!reservas.isEmpty() && opcao == 2) {
+                    consultarReservas(ler);
+                } else if (!reservas.isEmpty() && opcao == 3) {
+                    removerReserva(ler);
+                } else if (!reservas.isEmpty() && opcao == 4) {
+                    alterarReserva(ler);
+                } else if (!reservas.isEmpty() && opcao == 0) {
+                    break;
+                } else {
+                    System.out.println("Opção Invalida, Tente novamente.");
+                }
+
+        }while(opcao!=0);
+    }
+    int subMenuReservas(Scanner ler) {
+        int count = 1;
+        limparConsola();
+        printTituloPrincipal();
+        printTituloSecundario("RESERVAS");
+        System.out.printf(VERDE + "%d\t-\tCriar Reserva\n" + RESET, count);
+        if (!reservas.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tConsultar Reserva\n" + RESET, count);
+        }
+        if (!reservas.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tRemover Reserva\n" + RESET, count);
+        }
+        if (!reservas.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tAlterar Reserva\n" + RESET, count);
+        }
+        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
+        System.out.print("Indique a opção que queira realizar: ");
+        String opcao = ler.nextLine();
+        return Integer.parseInt(opcao);
+    }
+    /*Validar antes de inserir se a reserva já existe*/
 
 
 
@@ -865,12 +907,10 @@ public class Main {
     Fazer um switch case
     * Criar um SUb menu para Registrar Reservas e Eliminar
     * */
-        //criarReserva(ler);
-        consultarReservas(ler);
-        alterarReserva(ler);
-        removerReserva(ler);
-    }
-
+    /*criarReserva(ler);
+    consultarReservas(ler);
+    alterarReserva(ler);
+    removerReserva(ler); */
     private void alterarReserva(Scanner ler) {
         System.out.println("Lista de Reservas:");
         for (Reserva reserva : reservas) {
@@ -972,7 +1012,7 @@ public class Main {
             }
         }
     }
-
+    //endregion
     void Viagens(Scanner ler) {
         /*Permitir trasnformar uma reserva em viagem
          * Validar se a viagem já existe antes de inserir
