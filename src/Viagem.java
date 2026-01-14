@@ -62,6 +62,10 @@ public class Viagem {
         this.moradaDestino = moradaDestino;
         this.custoViagem = custoViagem;
     }
+
+    public String paraFicheiro() {
+        return this.cliente + ";" + this.condutor + ";" + this.viatura + ";" + this.inicio + ";" + this.fim + ";" + this.moradaOrigem + ";" + this.moradaDestino  + ";" + this.custoViagem;
+    }
     /**
      * Obtém o cliente da viagem.
      * @return O objeto Cliente.
