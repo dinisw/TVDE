@@ -25,6 +25,9 @@ public class Main {
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE = "logsErrosClientes.txt";
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR = "logsErrosCondutor.txt";
+
+
+
     ArrayList<Viagem> viagens = new ArrayList<>();
     ArrayList<Reserva>reservas = new ArrayList<>();
     ArrayList<Condutor>condutores = new ArrayList<>();
@@ -210,9 +213,9 @@ public class Main {
                 } else {
                     Cliente cliente = new Cliente(nome, idade, sexo, email, telefone, morada, cc, nif);
                     if (empresaTVDE.adicionarCliente(cliente)) {
-                        System.out.println("Cliente registado com sucesso!");
+                    System.out.println("Cliente registado com sucesso!");
                         clientes = empresaTVDE.carregarClientes();
-                    }
+                }
                     break;
                 }
             }
@@ -352,29 +355,6 @@ public class Main {
                 System.out.println("Opção Inválida!");
             }
         } while (opcao != 0);
-    }
-
-    int subMenuClientes(Scanner ler) {
-        int count = 1;
-        limparConsola();
-        printTituloPrincipal();
-        printTituloSecundario("CLIENTES");
-        System.out.printf(VERDE + "%d\t-\tRegistar Cliente\n" + RESET, count);
-        if (!clientes.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tPesquisar Cliente\n" + RESET, count);
-        }
-        if (!clientes.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tRemover Cliente\n" + RESET, count);
-        }
-        if (!clientes.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tAtualizar Cliente\n" + RESET, count);
-        }
-        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
-        System.out.print("Indique a opção que queira realizar: ");
-        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
     }
 
     void registarCondutor(Scanner ler) {
@@ -657,6 +637,7 @@ public class Main {
         System.out.print("Indique a opção que queira realizar: ");
         try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
     }
+    
 
     public void limparConsola() {
         System.out.print("\033[H\033[2J");
@@ -725,7 +706,7 @@ public class Main {
 
     public boolean isMatriculaValida(String matricula) {
         if (matricula == null) return false;
-        String regex = "^[A-Z0-9]{6}$";
+        String regex = "^[A-Z0-9]{2}-[A-Z0-9]{2}-[A-Z0-9]{2}$";
 
         return matricula.trim().toUpperCase().matches(regex);
     }
@@ -761,7 +742,7 @@ public class Main {
 
             String matricula = "";
             while (true) {
-                System.out.println("Indique a matrícula no formato [XXXXXX]:");
+                System.out.println("Indique a matrícula no formato [XX-XX-XX]:");
                 matricula = ler.nextLine().toUpperCase();
 
                 if (matricula.equalsIgnoreCase("sair"))
