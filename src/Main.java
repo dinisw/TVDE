@@ -1,7 +1,12 @@
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -929,6 +934,8 @@ public class Main {
                 }
             } else if (!viaturas.isEmpty() && opcao == 3) {
                 removerViatura(ler);
+            } else if (!viaturas.isEmpty() && opcao == 4){
+
             } else if (opcao == 0) {
                 break;
             } else {
@@ -1059,7 +1066,7 @@ public class Main {
                 if (!existe) {
                     System.out.println("Erro: Essa matrícula não existe no sistema.");
                 } else {
-                    boolean resposta = empresaTVDE.deletarViaturas(matricula);
+                    boolean resposta = empresaTVDE.removerViaturas(matricula);
                     if(resposta) {
                         System.out.printf("Viatura com matrícula %s removida com sucesso.", matricula);
                         System.out.print("Digite uma tecla qualquer para continuar");
