@@ -983,18 +983,17 @@ public class Main {
 
     void criarReserva(Scanner ler, Cliente cliente, Viatura viatura) {
         System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
-        DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDateTime data = LocalDateTime.parse(ler.nextLine(), formatoData);
+        LocalDate dataParte = LocalDate.parse(ler.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
-        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
+        LocalTime horaParte = LocalTime.parse(ler.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+        LocalDateTime dataHoraInicio = LocalDateTime.of(dataParte, horaParte);
         System.out.println("Indique a sua atual morada:");
         String moradaOrigem = ler.nextLine();
         System.out.println("Indique o destino:");
         String moradaDestino = ler.nextLine();
         System.out.println("Indique a distância:");
         double distancia = ler.nextDouble();
-        Reserva reserva = new Reserva(cliente, viatura, data, hora, moradaOrigem, moradaDestino, distancia);
+        Reserva reserva = new Reserva(cliente, viatura, dataHoraInicio, moradaOrigem, moradaDestino, distancia);
         reserva.add(reservas);
     }
 
