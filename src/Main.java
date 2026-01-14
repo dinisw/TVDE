@@ -126,6 +126,77 @@ public class Main {
         return Integer.parseInt(opcao);
     }
 
+    //region Validações
+    public boolean isMatriculaValida(String matricula) {
+        if (matricula == null) return false;
+        String regex = "^[A-Z0-9]{6}$";
+
+        return matricula.trim().toUpperCase().matches(regex);
+    }
+    public boolean isNifValido(String nif) {
+        if (nif == null) return false;
+        String regex = "^\\d{9}$";
+
+        return nif.trim().matches(regex);
+    }
+    public boolean isCcValido(String cc) {
+        if (cc == null) return false;
+        String regex = "^\\d{8}$";
+
+        return cc.trim().matches(regex);
+    }
+    public boolean isIdadeValido(String idade) {
+        if (idade == null) return false;
+        String regex = "^(?:[1-9][0-9]?|1[0-2][0-9])$";
+
+        return idade.trim().matches(regex);
+    }
+    public boolean isSexoValido(String sexo) {
+        if (sexo == null) return false;
+        return sexo.equalsIgnoreCase("1") || sexo.equalsIgnoreCase("2") || sexo.equalsIgnoreCase("3");
+    }
+    public boolean isEmailValido(String email) {
+        if (email == null) return false;
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+        return email.trim().toLowerCase().matches(regex);
+    }
+    public boolean isTelefoneValido(String telefone) {
+        if (telefone == null) return false;
+        String regex = "^\\d{9}$";
+
+        return telefone.trim().matches(regex);
+    }
+    public boolean isMoradaValido(String morada) {
+        if (morada == null) return false;
+        String regex = "^.+ \\d{4}-\\d{3}$";
+
+        return morada.toLowerCase().matches(regex);
+    }
+    public boolean opcaoSair(String texto) {
+        if (texto == null) return false;
+        return texto.equalsIgnoreCase("sair");
+    }
+
+
+    public static String toCapitalize(String texto) {
+        if (texto == null || texto.isEmpty()) {
+            return texto;
+        }
+        String[] palavras = texto.split("\\s+");
+        StringBuilder resultado = new StringBuilder();
+
+        for (String palavra : palavras) {
+            if (palavra.length() > 0) {
+                resultado.append(Character.toUpperCase(palavra.charAt(0)))
+                        .append(palavra.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return resultado.toString().trim();
+    }
+    //endregion
+
     //region Clientes
     void Clientes(Scanner ler) {
         int opcao;
@@ -134,42 +205,18 @@ public class Main {
             if (opcao == 1) {
                 registarCliente(ler);
             } else if (!clientes.isEmpty() && opcao == 2) {
-                // Pesquisar Cliente
-                while (true) {
-                    System.out.println("--- Buscar Cliente (Escreva 'sair' para cancelar) ---");
-
-                    System.out.print("Indique o NIF: ");
-                    String nifStr = ler.nextLine();
-                    if (!nifStr.matches("\\d{9}")) {
-                        System.out.println("Erro: O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
-                        continue;
-                    }
-                    if (nifStr.equalsIgnoreCase("sair")) break;
-
-                    try {
-                        int nif = Integer.parseInt(nifStr);
-                        Cliente cliente = empresaTVDE.procurarNifCliente(nif);
-                        if (cliente != null) {
-                            System.out.println(cliente);
-                            System.out.println("Enter para continuar...");
-                            ler.nextLine();
-                            break;
-                        } else System.out.println("Cliente não encontrado.");
-                    } catch (NumberFormatException e) {
-                        System.out.println("NIF inválido.");
-                    }
-                }
-            } else if (!clientes.isEmpty() && opcao == 3) {
-                removerCliente(ler);
-            }else if (!clientes.isEmpty() && opcao == 4){
+                pesquisarCliente(ler);
+            }else if (!clientes.isEmpty() && opcao == 3){
                 atualizarCliente(ler);
+            } else if (!clientes.isEmpty() && opcao == 4) {
+                removerCliente(ler);
             } else if (opcao == 0) {
                 break;
             } else {
                 System.out.println("Opção Inválida!");
             }
         } while (opcao != 0);
-    }
+    } //Completo
 
     int subMenuClientes(Scanner ler) {
         int count = 1;
@@ -192,160 +239,346 @@ public class Main {
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
         try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
-    }
+    } //Completo
 
-    void registarCliente(Scanner ler) {
+    private void registarCliente(Scanner ler) {
         try {
-            System.out.println("--- Novo Registo de Cliente (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Novo Registo de Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
-            System.out.println("Indique o seu nome:");
-            String nome = ler.nextLine();
-            if (nome.equalsIgnoreCase("sair")) return;
-
-            System.out.println("Indique a sua idade:");
-            String idadeStr = ler.nextLine();
-            if (idadeStr.equalsIgnoreCase("sair")) return;
-            int idade = Integer.parseInt(idadeStr);
-
-            System.out.println("Indique o seu género:");
-            String sexo = ler.nextLine();
-            if (sexo.equalsIgnoreCase("sair")) return;
-
-            System.out.println("Indique o seu email:");
-            String email = ler.nextLine();
-            if (email.equalsIgnoreCase("sair")) return;
-
-            System.out.println("Indique o número de telefone:");
-            String telStr = ler.nextLine();
-            if (telStr.equalsIgnoreCase("sair")) return;
-            int telefone = Integer.parseInt(telStr);
-
-            System.out.println("Indique a sua morada:");
-            String morada = ler.nextLine();
-            if (morada.equalsIgnoreCase("sair")) return;
-
-            String ccStr;
-            int cc = 0;
+            String ccStr, sexo, email, morada;
+            int cc, idade, telefone, nif;
 
             while (true) {
-                System.out.println("Indique o número de cartão de cidadão (8 primeiros dígitos):");
-                ccStr = ler.nextLine();
+                System.out.print("Indique o NIF (Contribuinte): ");
+                String nifStr = ler.nextLine();
 
-                if (ccStr.equalsIgnoreCase("sair")) {
-                    return;
-                }
-                if (!ccStr.matches("\\d{8}")) {
-                    System.out.println("Erro: O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
-                    continue;
-                }
-
-                cc = Integer.parseInt(ccStr);
-
-                if (empresaTVDE.procurarCartaoDeCidadaoCliente(cc) != null) {
-                    System.out.println("Erro: Esse cartão de cidadão já está registado no sistema. Tente outro.");
-                } else {
-                    break;
-                }
-            }
-
-            String nifStr;
-            int nif = 0;
-
-            while (true) {
-                System.out.println("Indique o NIF (Contribuinte):");
-                nifStr = ler.nextLine();
-
-                if (nifStr.equalsIgnoreCase("sair")) {
-                    return;
-                }
-                if (!nifStr.matches("\\d{9}")) {
-                    System.out.println("Erro: O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                if (opcaoSair(nifStr)) return;
+                if (!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
                     continue;
                 }
 
                 nif = Integer.parseInt(nifStr);
 
                 if (empresaTVDE.procurarNifCliente(nif) != null) {
-                    System.out.println("Erro: Esse NIF já está registado no sistema. Tente outro.");
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse NIF já está registado no sistema. Tente outro.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
+                ccStr = ler.nextLine();
+
+                if (opcaoSair(ccStr)) return;
+                if (!isCcValido(ccStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
+                    continue;
+                }
+
+                cc = Integer.parseInt(ccStr);
+
+                if (empresaTVDE.procurarCartaoDeCidadaoCliente(cc) != null) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse cartão de cidadão já está registado no sistema. Tente outro.");
                 } else {
-                    Cliente cliente = new Cliente(nome, idade, sexo, email, telefone, morada, cc, nif);
-                    if (empresaTVDE.adicionarCliente(cliente)) {
-                        System.out.println("Cliente registado com sucesso!");
-                        clientes = empresaTVDE.carregarClientes();
-                        break;
-                    }
+                    break;
                 }
             }
+
+            System.out.print("Indique o seu nome: ");
+            String nome = ler.nextLine();
+            if (opcaoSair(nome)) return;
+
+            while (true) {
+                System.out.print("Indique a sua idade: ");
+                String idadeStr = ler.nextLine();
+                if (opcaoSair(idadeStr)) return;
+                if (!isIdadeValido(idadeStr)){
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A idade deve estar no formato correto. Tente novamente.");
+                    continue;
+                }
+                idade = Integer.parseInt(idadeStr);
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
+                sexo = ler.nextLine().toLowerCase();
+                if (opcaoSair(sexo)) return;
+                if (!isSexoValido(sexo)){
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O sexo informado não está entre os válidos. Tente novamente.");
+                    continue;
+                }
+                if(sexo.equalsIgnoreCase("1")) sexo = "Masculino";
+                if(sexo.equalsIgnoreCase("2")) sexo = "Feminino";
+                if(sexo.equalsIgnoreCase("3")) sexo = "Outro";
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique o seu email: ");
+                email = ler.nextLine();
+                if (opcaoSair(email)) return;
+                if (!isEmailValido(email)){
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O email informado não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique o número de telefone: ");
+                String telStr = ler.nextLine();
+                if (opcaoSair(telStr)) return;
+                if (!isTelefoneValido(telStr)){
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O telefone informado não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                telefone = Integer.parseInt(telStr);
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
+                morada = ler.nextLine();
+                if (opcaoSair(morada)) return;
+                if (!isMoradaValido(morada)){
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            Cliente cliente = new Cliente(toCapitalize(nome), idade, toCapitalize(sexo), email, telefone, morada, cc, nif);
+            if (empresaTVDE.adicionarCliente(cliente)) {
+                System.out.print(VERDE_BRILHANTE + "\n\nCliente registado com sucesso!\n\n" + RESET);
+                clientes = empresaTVDE.carregarClientes();
+            }
+
+
         } catch (Exception e) {
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE, e.getMessage());
         }
-    }
+    } //Completo
+
+    private void pesquisarCliente(Scanner ler){
+        while (true) {
+            System.out.print(ROXO + "\n\n--- Buscar Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+
+            System.out.print("Indique o NIF: ");
+            String nifStr = ler.nextLine();
+            if (!isNifValido(nifStr)) {
+                System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                continue;
+            }
+            if (opcaoSair(nifStr)) break;
+
+            try {
+                int nif = Integer.parseInt(nifStr);
+                Cliente cliente = empresaTVDE.procurarNifCliente(nif);
+                if (cliente != null) {
+                    System.out.println(cliente.toString());
+                    System.out.println("Enter para continuar...");
+                    ler.nextLine();
+                    break;
+                } else System.out.println("Cliente não encontrado.");
+            } catch (NumberFormatException e) {
+                System.out.println("NIF inválido.");
+            }
+        }
+    } //Completo
 
     void atualizarCliente(Scanner ler) {
         try {
-            System.out.println("--- Atualizar Cliente (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Atualizar Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
-                System.out.println("Indique o NIF (Contribuinte)");
+                System.out.print("Indique o NIF (Contribuinte): ");
                 String nifStr = ler.nextLine();
-                if (nifStr.equalsIgnoreCase("sair")) break;
+
+                if (opcaoSair(nifStr)) return;
+                if (!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                    continue;
+                }
 
                 int nif = Integer.parseInt(nifStr);
-                if (empresaTVDE.procurarNifCliente(nif) != null) {
-                    System.out.println("--- Atualização do Cliente (Escreva 'sair' para cancelar) ---");
-
-                    System.out.println("Indique o seu novo nome:");
-                    String nome = ler.nextLine();
-                    if (nome.equalsIgnoreCase("sair")) return;
-
-                    System.out.println("Indique a sua nova idade:");
-                    String idadeStr = ler.nextLine();
-                    if (idadeStr.equalsIgnoreCase("sair")) return;
-                    int idade = Integer.parseInt(idadeStr);
-
-                    System.out.println("Indique o seu novo género:");
-                    String sexo = ler.nextLine();
-                    if (sexo.equalsIgnoreCase("sair")) return;
-
-                    System.out.println("Indique o seu novo email:");
-                    String email = ler.nextLine();
-                    if (email.equalsIgnoreCase("sair")) return;
-
-                    System.out.println("Indique o novo número de telefone:");
-                    String telStr = ler.nextLine();
-                    if (telStr.equalsIgnoreCase("sair")) return;
-                    int telefone = Integer.parseInt(telStr);
-
-                    System.out.println("Indique a sua nova morada:");
-                    String morada = ler.nextLine();
-                    if (morada.equalsIgnoreCase("sair")) return;
-
-                    String ccStr;
-                    int cc = 0;
-
+                Cliente cliente = empresaTVDE.procurarNifCliente(nif);
+                if (cliente != null) {
                     while (true) {
-                        System.out.println("Indique o novo número de cartão de cidadão (8 primeiros dígitos):");
-                        ccStr = ler.nextLine();
+                        System.out.println("Escolha a opção que deseja atualizar:");
+                        System.out.println("1\t-\tNome");
+                        System.out.println("2\t-\tIdade");
+                        System.out.println("3\t-\tGénero");
+                        System.out.println("4\t-\tEmail");
+                        System.out.println("5\t-\tTelefone");
+                        System.out.println("6\t-\tMorada");
+                        System.out.println("7\t-\tCartão de Cidadão");
+                        System.out.println("0\t-\tSair");
+                        String opcao = ler.nextLine();
 
-                        if (ccStr.equalsIgnoreCase("sair")) {
-                            return;
-                        }
-                        if (!ccStr.matches("\\d{8}")) {
-                            System.out.println("Erro: O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
-                            continue;
-                        }
-                        cc = Integer.parseInt(ccStr);
+                        String nome = "", sexo = "", email = "", morada = "";
+                        int cc = 0, idade = 0, telefone = 0;
 
-                        if (empresaTVDE.atualizarCliente(nome, idade, sexo, email, telefone, morada, cc, nif)) {
-                            System.out.println("Cliente atualizado com sucesso.");
-                            clientes = empresaTVDE.carregarClientes();
-                            break;
-                        } else {
-                            System.out.println("Erro: Cliente não encontrado ou não pode ser atualizado.");
+                        switch (Integer.parseInt(opcao)) {
+                            case 1:
+                                System.out.print("Indique o seu nome: ");
+                                nome = ler.nextLine();
+                                if (opcaoSair(nome)) return;
+                                try {
+                                    cliente.setNome(nome);
+                                    System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
+                                } catch (Exception e) {
+                                    System.out.println("Erro: Cliente não encontrado ou não pode ser atualizado.");
+                                }
+                                break;
+                            case 2:
+                                while (true) {
+                                    System.out.print("Indique a sua idade: ");
+                                    String idadeStr = ler.nextLine();
+                                    if (opcaoSair(idadeStr)) return;
+                                    if (!isIdadeValido(idadeStr)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A idade deve estar no formato correto. Tente novamente.");
+                                        continue;
+                                    } else {
+                                        idade = Integer.parseInt(idadeStr);
+                                        cliente.setIdade(idade);
+                                        System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
+                                    }
+                                    break;
+                                }
+                                break;
+                            case 3:
+                                while (true) {
+                                    System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
+                                    sexo = ler.nextLine().toLowerCase();
+                                    if (opcaoSair(sexo)) return;
+                                    if (!isSexoValido(sexo)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O sexo informado não está entre os válidos. Tente novamente.");
+                                        continue;
+                                    }
+                                    if (sexo.equalsIgnoreCase("1")) sexo = "Masculino";
+                                    if (sexo.equalsIgnoreCase("2")) sexo = "Feminino";
+                                    if (sexo.equalsIgnoreCase("3")) sexo = "Outro";
+
+                                    cliente.setSexo(sexo);
+                                    System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
+                                    break;
+                                }
+                                break;
+                            case 4:
+                                while (true) {
+                                    System.out.print("Indique o seu email: ");
+                                    email = ler.nextLine();
+                                    if (opcaoSair(email)) return;
+                                    if (!isEmailValido(email)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O email informado não está no formato correto. Tente novamente.");
+                                        continue;
+                                    }
+                                    break;
+                                }
+                                break;
+                            case 5:
+                                while (true) {
+                                    System.out.print("Indique o número de telefone: ");
+                                    String telStr = ler.nextLine();
+                                    if (opcaoSair(telStr)) return;
+                                    if (!isTelefoneValido(telStr)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O telefone informado não está no formato correto. Tente novamente.");
+                                        continue;
+                                    }
+                                    telefone = Integer.parseInt(telStr);
+                                    break;
+                                }
+                                break;
+                            case 6:
+                                while (true) {
+                                    System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
+                                    morada = ler.nextLine();
+                                    if (opcaoSair(morada)) return;
+                                    if (!isMoradaValido(morada)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                                        continue;
+                                    }
+                                    break;
+                                }
+                                break;
+                            case 7:
+                                while (true) {
+                                    System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
+                                    String ccStr = ler.nextLine();
+
+                                    if (opcaoSair(ccStr)) return;
+                                    if (!isCcValido(ccStr)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
+                                        continue;
+                                    }
+
+                                    cc = Integer.parseInt(ccStr);
+
+                                    if (empresaTVDE.procurarCartaoDeCidadaoCliente(cc) != null) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse cartão de cidadão já está registado no sistema. Tente outro.");
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 0:
+                                return;
+                            default:
+                                System.out.print("Opção invalida. Tente novamente.");
+                                break;
                         }
+
                     }
-                    break;
+//                    System.out.println("Indique o seu novo nome:");
+//                    String nome = ler.nextLine();
+//                    if (nome.equalsIgnoreCase("sair")) return;
+//
+//                    System.out.println("Indique a sua nova idade:");
+//                    String idadeStr = ler.nextLine();
+//                    if (idadeStr.equalsIgnoreCase("sair")) return;
+//                    int idade = Integer.parseInt(idadeStr);
+//
+//                    System.out.println("Indique o seu novo género:");
+//                    String sexo = ler.nextLine();
+//                    if (sexo.equalsIgnoreCase("sair")) return;
+//
+//                    System.out.println("Indique o seu novo email:");
+//                    String email = ler.nextLine();
+//                    if (email.equalsIgnoreCase("sair")) return;
+//
+//                    System.out.println("Indique o novo número de telefone:");
+//                    String telStr = ler.nextLine();
+//                    if (telStr.equalsIgnoreCase("sair")) return;
+//                    int telefone = Integer.parseInt(telStr);
+//
+//                    System.out.println("Indique a sua nova morada:");
+//                    String morada = ler.nextLine();
+//                    if (morada.equalsIgnoreCase("sair")) return;
+//
+//                    String ccStr;
+//                    int cc = 0;
+//
+//                    while (true) {
+//                        System.out.println("Indique o novo número de cartão de cidadão (8 primeiros dígitos):");
+//                        ccStr = ler.nextLine();
+//
+//                        if (ccStr.equalsIgnoreCase("sair")) {
+//                            return;
+//                        }
+//                        if (!ccStr.matches("\\d{8}")) {
+//                            System.out.println("Erro: O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
+//                            continue;
+//                        }
+//                        cc = Integer.parseInt(ccStr);
                 }
+                clientes = empresaTVDE.carregarClientes();
+                break;
+//                    }
+//                    break;
+//                }
             }
         }catch(Exception e){
             System.out.println("Dados inválidos.");
@@ -355,19 +588,23 @@ public class Main {
 
     void removerCliente(Scanner ler) {
         try {
-            System.out.println("--- Remover Cliente (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Remover Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
-                System.out.println("Indique o NIF: ");
+                System.out.print("Indique o NIF: ");
                 String nifStr = ler.nextLine();
-                if (nifStr.equalsIgnoreCase("sair")) break;
-
+                if (opcaoSair(nifStr)) break;
                 int nif = Integer.parseInt(nifStr);
-                if (empresaTVDE.removerCliente(nif)) {
-                    System.out.println("Cliente removido com sucesso.");
-                    clientes = empresaTVDE.carregarClientes();
-                    break;
-                } else {
-                    System.out.println("Erro: Cliente não encontrado ou não pode ser removido.");
+                String nomeCliente = empresaTVDE.procurarNifCliente(nif).getNome();
+                System.out.printf("Tem certeza que deseja remover o cliente %s ? [S/N]", nomeCliente);
+                String validacao = ler.nextLine().trim().toUpperCase();
+                if(validacao.equalsIgnoreCase("S")){
+                    if (empresaTVDE.removerCliente(nif)) {
+                        System.out.printf("Cliente %s removido com sucesso.", nomeCliente);
+                        clientes = empresaTVDE.carregarClientes();
+                        break;
+                    } else {
+                        System.out.println("Erro: Cliente não encontrado ou não pode ser removido.");
+                    }
                 }
             }
         } catch (Exception e) {
@@ -385,7 +622,7 @@ public class Main {
                 registarCondutor(ler);
             } else if (!condutores.isEmpty() && opcao == 2) {
                 while (true) {
-                    System.out.println("--- Buscar Condutor (Escreva 'sair' para cancelar) ---");
+                    System.out.print(ROXO + "\n\n--- Buscar Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
                     System.out.println("Indique o NIF:");
                     String nifStr = ler.nextLine();
                     if (nifStr. equalsIgnoreCase("sair"))
@@ -441,7 +678,7 @@ public class Main {
 
     void registarCondutor(Scanner ler) {
         try {
-            System.out.println("--- Novo Condutor (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Novo Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
             System.out.println("Indique o nome:");
             String nome = ler.nextLine();
@@ -548,7 +785,7 @@ public class Main {
 
     void atualizarCondutor(Scanner ler) {
         try {
-            System.out.println("--- Atualizar Condutor (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Atualizar Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.println("Indique o NIF (Contribuinte)");
                 String nifStr = ler.nextLine();
@@ -556,7 +793,7 @@ public class Main {
 
                 int nif = Integer.parseInt(nifStr);
                 if (empresaTVDE.procurarNifCondutor(nif) != null) {
-                    System.out.println("--- Atualização do Condutor (Escreva 'sair' para cancelar) ---");
+                    System.out.print(ROXO + "\n\n--- Atualização do Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
                     System.out.println("Indique o seu novo nome:");
                     String nome = ler.nextLine();
@@ -638,7 +875,7 @@ public class Main {
 
     void removerCondutor (Scanner ler) {
         try {
-            System.out.println("--- Remover Condutor (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Remover Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.println("Indique o NIF: ");
                 String nifStr = ler.nextLine();
@@ -669,7 +906,7 @@ public class Main {
                 registarViatura(ler);
             } else if (!viaturas.isEmpty() && opcao == 2) {
                 while (true) {
-                    System.out.println("--- Bucar Viatura (Escreva 'sair' para cancelar) ---");
+                    System.out.print(ROXO + "\n\n--- Bucar Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
                     System.out.print("Indique a matrícula que deseja buscar no formato [XX-XX-XX]: ");
                     String matricula = ler.nextLine().toUpperCase();
 
@@ -720,16 +957,9 @@ public class Main {
         return Integer.parseInt(opcao);
     }
 
-    public boolean isMatriculaValida(String matricula) {
-        if (matricula == null) return false;
-        String regex = "^[A-Z0-9]{6}$";
-
-        return matricula.trim().toUpperCase().matches(regex);
-    }
-
     void registarViatura(Scanner ler) {
         try {
-            System.out.println("--- Novo Registo de Viatura (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Novo Registo de Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
             System.out.println("Indique a marca da viatura.");
             String marca = ler.nextLine();
@@ -804,7 +1034,7 @@ public class Main {
 
     private void removerViatura(Scanner ler) {
         try {
-            System.out.println("--- Remover Viatura (Escreva 'sair' para cancelar) ---");
+            System.out.print(ROXO + "\n\n--- Remover Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             String matricula = "";
             while (true) {
                 System.out.println("Indique a matrícula do veículo que deseja remover no formato [XX-XX-XX]: ");

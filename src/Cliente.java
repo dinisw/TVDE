@@ -111,17 +111,16 @@ public class Cliente extends Pessoa {
      */
     @Override
     public String toString() {
-        return "Cliente{" +
-                "Nome=" + getNome() +
-                ", Idade=" + getIdade() +
-                ", Sexo=" + getSexo() +
-                ", Email=" + getEmail() +
-                ", Telefone=" + getTelefone() +
-                ", Morada=" + getMorada() +
-                ", Carta de Cidadão=" + getCartaoDeCidadao() +
-                ", Contribuinte=" + getContribuinte() +
-                "totalViagens=" + totalViagens +
-                ", totalGasto=" + totalGasto +
-                '}';
+        return "CLIENTE\n\n" +
+                "Nome:  " + getNome() + '\n' +
+                "Idade:  " + getIdade() + '\n' +
+                "Sexo:  " + getSexo() + '\n' +
+                "Email:  " + getEmail() + '\n' +
+                "Telefone: " + getTelefone() + '\n' +
+                "Morada: " + getMorada() + '\n' +
+                "Cartão de Cidadão: " + getCartaoDeCidadao() + '\n' +
+                "Contribuinte: " + getContribuinte() + '\n' +
+                "Até agora já realizou: " + totalViagens + " viagens\n" +
+                "Valor Total Gasto em Viagens: " + totalGasto + '\n';
     }
 }

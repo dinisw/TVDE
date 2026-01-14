@@ -110,7 +110,8 @@ public class EmpresaTVDE {
                     }
                 }
             }
-            return viaturas;
+            if(!viaturas.isEmpty()) return viaturas;
+            else return new ArrayList<>();
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
@@ -215,7 +216,8 @@ public class EmpresaTVDE {
                     }
                 }
             }
-            return clientes;
+            if(!clientes.isEmpty()) return clientes;
+            else return new ArrayList<>();
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
@@ -347,7 +349,8 @@ public class EmpresaTVDE {
                     }
                 }
             }
-            return condutores;
+            if(!condutores.isEmpty()) return condutores;
+            else return new ArrayList<>();
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
