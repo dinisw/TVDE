@@ -857,19 +857,19 @@ public class Main {
         int opcao;
         do{
             opcao = subMenuReservas(ler);
-            if (opcao == 1){
-                System.out.println("caga nisso agr");
-            } else if (!reservas.isEmpty() && opcao == 2) {
-                consultarReservas(ler);
-            } else if (!reservas.isEmpty() && opcao == 3) {
-                removerReserva(ler);
-            } else if (!reservas.isEmpty() && opcao == 4) {
-                alterarReserva(ler);
-            } else if (!reservas.isEmpty() && opcao == 0) {
-                break;
-            } else {
-                System.out.println("Opção Invalida, Tente novamente.");
-            }
+                if (opcao == 1){
+                    System.out.println("caga nisso agr");
+                } else if (!reservas.isEmpty() && opcao == 2) {
+                    consultarReservas(ler);
+                } else if (!reservas.isEmpty() && opcao == 3) {
+                    removerReserva(ler);
+                } else if (!reservas.isEmpty() && opcao == 4) {
+                    alterarReserva(ler);
+                } else if (!reservas.isEmpty() && opcao == 0) {
+                    break;
+                } else {
+                    System.out.println("Opção Invalida, Tente novamente.");
+                }
 
         }while(opcao!=0);
     }
