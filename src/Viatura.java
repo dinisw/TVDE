@@ -29,7 +29,7 @@ public class Viatura {
     /**
      * Indica se a viatura está disponível para utilização.
      */
-    private boolean disponivel;
+    private boolean status;
 
     public Viatura(){
         matricula = "";
@@ -37,7 +37,7 @@ public class Viatura {
         modelo = "";
         anoDeFabrico = 0;
         cor = "";
-        disponivel = false;
+        status = false;
     }
 
     /**
@@ -49,25 +49,25 @@ public class Viatura {
      * @param marca        A marca da viatura.
      * @param matricula    A matrícula da viatura.
      * @param cor          A cor da viatura.
-     * @param disponivel   Se a viatura está disponível.
+     * @param status   Se a viatura está disponível.
      */
-    public Viatura(String matricula, String marca, String modelo, int anoDeFabrico, String cor, boolean disponivel) {
+    public Viatura(String matricula, String marca, String modelo, int anoDeFabrico, String cor, boolean status) {
         this.matricula = matricula;
         this.marca = marca;
         this.modelo = modelo;
         this.anoDeFabrico = anoDeFabrico;
         this.cor = cor;
-        this.disponivel = disponivel;
+        this.status = status;
     }
 
     public String paraFicheiro() {
-        return this.matricula + ";" + this.marca + ";" + this.modelo + ";" + this.anoDeFabrico + ";" + this.cor + ";" + this.disponivel;
+        return this.matricula + ";" + this.marca + ";" + this.modelo + ";" + this.anoDeFabrico + ";" + this.cor + ";" + this.status;
     }
 
     @Override
     public String toString() {
         String status = "";
-        if(disponivel)
+        if(this.status)
             status = "Disponível";
         else
             status = "Indisponível";
@@ -171,17 +171,17 @@ public class Viatura {
      *
      * @return true se a viatura estiver disponível, false caso contrário.
      */
-    public boolean isDisponivel() {
-        return disponivel;
+    public boolean isStatus() {
+        return status;
     }
 
     /**
      * Define o estado de disponibilidade da viatura.
      *
-     * @param disponivel O novo estado de disponibilidade (true para disponível).
+     * @param status O novo estado de disponibilidade (true para disponível).
      */
-    public void setDisponivel(boolean disponivel) {
-        this.disponivel = disponivel;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     /**

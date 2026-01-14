@@ -860,44 +860,44 @@ public class Main {
         int opcao;
         do{
             opcao = subMenuReservas(ler);
-                if (opcao == 1){
-                    System.out.println("caga nisso agr");
-                } else if (!reservas.isEmpty() && opcao == 2) {
-                    consultarReservas(ler);
-                } else if (!reservas.isEmpty() && opcao == 3) {
-                    removerReserva(ler);
-                } else if (!reservas.isEmpty() && opcao == 4) {
-                    alterarReserva(ler);
-                } else if (!reservas.isEmpty() && opcao == 0) {
-                    break;
-                } else {
-                    System.out.println("Opção Invalida, Tente novamente.");
-                }
+            if (opcao == 1){
+                criarReserva(ler);
+            } else if (!reservas.isEmpty() && opcao == 2) {
+                consultarReservas(ler);
+            } else if (!reservas.isEmpty() && opcao == 3) {
+                removerReserva(ler);
+            } else if (!reservas.isEmpty() && opcao == 4) {
+                alterarReserva(ler);
+               } else if (opcao == 0) {
+                break;
+            } else {
+                System.out.println("Opção Invalida, Tente novamente.");
+            }
 
-        }while(opcao!=0);
+        }while(opcao !=0);
     }
+
     int subMenuReservas(Scanner ler) {
         int count = 1;
         limparConsola();
         printTituloPrincipal();
         printTituloSecundario("RESERVAS");
         System.out.printf(VERDE + "%d\t-\tCriar Reserva\n" + RESET, count);
-        if (!reservas.isEmpty()) {
+        if (!condutores.isEmpty()) {
             count++;
-            System.out.printf(VERDE + "%d\t-\tConsultar Reserva\n" + RESET, count);
+            System.out.printf(VERDE + "%d\t-\tConsultar Reservas\n" + RESET, count);
         }
-        if (!reservas.isEmpty()) {
+        if (!condutores.isEmpty()) {
             count++;
             System.out.printf(VERDE + "%d\t-\tRemover Reserva\n" + RESET, count);
         }
-        if (!reservas.isEmpty()) {
+        if (!condutores.isEmpty()) {
             count++;
             System.out.printf(VERDE + "%d\t-\tAlterar Reserva\n" + RESET, count);
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
-        String opcao = ler.nextLine();
-        return Integer.parseInt(opcao);
+        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
     }
     /*Validar antes de inserir se a reserva já existe*/
 
@@ -907,10 +907,7 @@ public class Main {
     Fazer um switch case
     * Criar um SUb menu para Registrar Reservas e Eliminar
     * */
-    /*criarReserva(ler);
-    consultarReservas(ler);
-    alterarReserva(ler);
-    removerReserva(ler); */
+
     private void alterarReserva(Scanner ler) {
         System.out.println("Lista de Reservas:");
         for (Reserva reserva : reservas) {
@@ -979,11 +976,29 @@ public class Main {
             System.out.println(reserva);
         }
     }
-
-    void criarReserva(Scanner ler, Cliente cliente, Viatura viatura) {
+    public ArrayList<Viatura> getViaturasDisponiveis(){
+        ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
+        for(var viatura : viaturas){
+            if(viatura.isStatus()){
+                viaturasDisponiveis.add(viatura);
+            }
+        }
+        return viaturasDisponiveis;
+    }
+    void criarReserva(Scanner ler) {
+        ArrayList<Viatura> viaturasDisponiveis = getViaturasDisponiveis();
+        Viatura viaturaParaReserva = new Viatura();
+        for(var viatura : viaturasDisponiveis){
+            viaturaParaReserva = viatura;
+            break;
+        }
+        System.out.println("Indique o NIF do cliente para reserva");
+        String nif = ler.nextLine();
+        Cliente cliente = empresaTVDE.procurarNifCliente(Integer.parseInt(nif));
         System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
+        String data = ler.nextLine();
         DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDateTime data = LocalDateTime.parse(ler.nextLine(), formatoData);
+        LocalDateTime dataFormatada = LocalDateTime.parse(data, formatoData);
         System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
@@ -993,7 +1008,7 @@ public class Main {
         String moradaDestino = ler.nextLine();
         System.out.println("Indique a distância:");
         double distancia = ler.nextDouble();
-        Reserva reserva = new Reserva(cliente, viatura, data, hora, moradaOrigem, moradaDestino, distancia);
+        Reserva reserva = new Reserva(cliente, viaturaParaReserva, dataFormatada, hora, moradaOrigem, moradaDestino, distancia);
         reserva.add(reservas);
     }
 
@@ -1013,7 +1028,43 @@ public class Main {
         }
     }
     //endregion
+    //region viagens
     void Viagens(Scanner ler) {
+        int opcao;
+        do {
+            opcao = subMenuViagens(ler);
+            if (opcao == 1) {
+                //criarViagem(ler);
+            } else if (!viagens.isEmpty() && opcao == 2) {
+                //transformarReservaEmViagem(ler);
+            } else if (!viagens.isEmpty() && opcao == 3) {
+                removerViagem(ler);
+            } else if (opcao == 0) {
+                break;
+            } else {
+                System.out.println("Opção Inválida! Tente novamente!");
+            }
+        } while (opcao != 0);
+    }
+    int subMenuViagens(Scanner ler){
+        int count = 1;
+        limparConsola();
+        printTituloPrincipal();
+        printTituloSecundario("VIAGENS");
+        System.out.printf(VERDE + "%d\t-\tRegistar Viagens\n" + RESET, count);
+        if(!viaturas.isEmpty()){
+            count++;
+            System.out.printf(VERDE + "%d\t-\tTransformar Reserva Em Viagem\n" + RESET, count);
+        }
+        if(!viaturas.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tRemover Viagem\n" + RESET, count);
+        }
+        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
+        System.out.print("Indique a opção que queira realizar: ");
+        String opcao = ler.nextLine();
+        return Integer.parseInt(opcao);
+    }
         /*Permitir trasnformar uma reserva em viagem
          * Validar se a viagem já existe antes de inserir
          * */
@@ -1023,9 +1074,7 @@ public class Main {
          * */
         //transformarReservaEmViagem(ler);
         //criarViagem(ler);
-        removerViagem(ler);
 
-    }
 
     void transformarReservaEmViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
 
@@ -1109,6 +1158,7 @@ public class Main {
 
     void removerViagem(Scanner ler) {
     }
+    //endregion
 
     void informacoes(Scanner ler) {
         /*Pesquisar viagens de um cliente num intervalo de data dada pelo liente
