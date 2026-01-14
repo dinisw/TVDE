@@ -1,10 +1,12 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -1148,5 +1150,65 @@ public class Main {
         System.out.print("Indique a opção que queira realizar: ");
         String opcao = ler.nextLine();
         return Integer.parseInt(opcao);
+    }
+    //Pesquisar viagens de um cliente num intervalo de data dada pelo cliente
+    void pesquisarViagem(Scanner ler) {
+        try {
+            System.out.println("Indique o contribuinte do Cliente:");
+            int contribuinte = Integer.parseInt(ler.nextLine());
+            System.out.println("Indique a data que pretenda pesquisar no seguinte formato(dd/MM/aaaa)");
+            DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime inicio = LocalDateTime.parse(ler.nextLine(), formatterData);
+            System.out.println("Indique a segunda data no formato(dd/MM/aaaa)");
+            LocalDateTime fim = LocalDateTime.parse(ler.nextLine(), formatterData);
+            ArrayList<Viagem> resultado = empresaTVDE.pesquisarViagemClienteData(contribuinte, inicio, fim);
+            if (resultado != null) {
+                for (Viagem viagem : resultado) {
+                    System.out.println(viagem.toString());
+                }
+            }
+        }catch (DateTimeParseException e){
+            System.out.println("Erro no formato da data" + e.getMessage());
+        } catch (NumberFormatException e){
+            System.out.println("Erro ao inserir o contribuinte" + e.getMessage());
+        }
+    }
+    //Apresentar valor total faturado por um motorista num intervalo de datas indicado pelo utilizador
+    void totalFaturado(Scanner ler) {
+            try{
+                System.out.println("Indique o contribuinte do Condutor:");
+                int nifCondutor = Integer.parseInt(ler.nextLine());
+                for (Condutor condutor : condutores) {
+                    if(condutor.getContribuinte() != nifCondutor){
+                        break;
+                    }
+                }
+                System.out.println("Indique a data de inicio com o formato DD/MM/aaaa");
+                DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDateTime inicio = LocalDateTime.parse(ler.nextLine(), formatterData);
+                System.out.println("Indique a data de fim com o formato DD/MM/aaaa");
+                LocalDateTime fim = LocalDateTime.parse(ler.nextLine(), formatterData);
+                double total = empresaTVDE.calcularFaturacaoTotal(nifCondutor, inicio, fim);
+                System.out.println("Total faturado pelo condutor entre as datas (" + inicio + ") e (" + fim + ") é :" + total);
+            } catch(DateTimeParseException e){
+                System.out.println("Erro no formato da data" + e.getMessage());
+        }
+    }
+    //Apresentar a distância media em kms das viagens num intervalo de data
+    void distanciaMedia(Scanner ler) {
+        try {
+            System.out.println("Indique a data inicial em formato (dd/MM/aaaa): ");
+            DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime dataInicio = LocalDateTime.parse(ler.nextLine(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            System.out.println("Indique a data fim em formato (dd/MM/aaaa): ");
+            LocalDateTime dataFim = LocalDateTime.parse(ler.nextLine(), formatterData);
+            double media = empresaTVDE.calculaDistanciaMedia(dataInicio, dataFim);
+
+            if (media > 0) {
+                System.out.println("A distância média é de: " + media);
+            } else System.out.println("Não foi encontrado registos entre as datas de viagens inseridas");
+        }catch (DateTimeParseException e){
+            System.out.println("Erro no formato da data" + e.getMessage());
+        }
     }
 }
