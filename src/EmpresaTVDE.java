@@ -695,6 +695,44 @@ public class EmpresaTVDE {
         return media;
     }
 
+    public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
+        ArrayList<String> destinos = new ArrayList<>();
+
+        try (BufferedReader viagem = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+            String linha;
+            while ((linha = viagem.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
+                    if(dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
+                        destinos.add(dados[6]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler ficheiro da viagem: " + e.getMessage());
+        }
+
+        try(BufferedReader reserva = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))){
+            String linha;
+            while ((linha = reserva.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    LocalDateTime dataReserva = LocalDateTime.parse(dados[3]);
+                    if(dataReserva.isBefore(inicio) && !dataReserva.isAfter(fim)) {
+                        destinos.add(dados[6]);
+                    }
+                }
+            }
+        }catch (IOException ex) {
+            System.out.println("Erro ao ler ficheiro da reserva: " + ex.getMessage());
+        }
+        if(destinos.isEmpty()) {
+            return "Está vazio!";
+        }
+
+    }
+
     //getter gerais
     public ArrayList<Cliente> getClientes() {
         return clientes;
