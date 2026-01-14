@@ -357,29 +357,6 @@ public class Main {
         } while (opcao != 0);
     }
 
-    int subMenuClientes(Scanner ler) {
-        int count = 1;
-        limparConsola();
-        printTituloPrincipal();
-        printTituloSecundario("CLIENTES");
-        System.out.printf(VERDE + "%d\t-\tRegistar Cliente\n" + RESET, count);
-        if (!clientes.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tPesquisar Cliente\n" + RESET, count);
-        }
-        if (!clientes.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tRemover Cliente\n" + RESET, count);
-        }
-        if (!clientes.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tAtualizar Cliente\n" + RESET, count);
-        }
-        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
-        System.out.print("Indique a opção que queira realizar: ");
-        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
-    }
-
     void registarCondutor(Scanner ler) {
         try {
             System.out.println("--- Novo Condutor (Escreva 'sair' para cancelar) ---");
@@ -668,7 +645,7 @@ public class Main {
     }
 
     //region Viaturas
-    void Viaturas(Scanner ler){
+    private void Viaturas(Scanner ler){
         int opcao;
         do {
             opcao = subMenuViaturas(ler);
@@ -706,6 +683,7 @@ public class Main {
             }
         } while (opcao != 0);
     }
+
     int subMenuViaturas(Scanner ler){
         int count = 1;
         limparConsola();
@@ -1078,5 +1056,36 @@ public class Main {
          * Apresentar lista de clientes em viagens a distância esteja dentro do indicado pelo utilizador
          *
          */
+    }
+
+    int menuInformacoes(Scanner ler){
+        int count = 1;
+        limparConsola();
+        printTituloPrincipal();
+        printTituloSecundario("Informações");
+        if(!viagens.isEmpty()){
+            count++;
+            System.out.printf(VERDE + "%d\t-\tPesquisar Viagem\n" + RESET, count);
+        }
+        if(!condutores.isEmpty()){
+            count++;
+            System.out.printf(VERDE + "%d\t-\tPesquisar Valor Faturado por Motorista\n" + RESET, count);
+        }
+        if(!viaturas.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tDistância Média das Viagens\n" + RESET, count);
+        }
+        if(!reservas.isEmpty() || !viagens.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tDestino mais solicitado\n" + RESET, count);
+        }
+        if(!reservas.isEmpty() || !viagens.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tDestino mais solicitado\n" + RESET, count);
+        }
+        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
+        System.out.print("Indique a opção que queira realizar: ");
+        String opcao = ler.nextLine();
+        return Integer.parseInt(opcao);
     }
 }
