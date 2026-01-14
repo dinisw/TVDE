@@ -1,6 +1,3 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -20,22 +17,17 @@ import java.util.Scanner;
  */
 public class Main {
 
-    //ArrayList<Viatura> viaturas = new ArrayList<>();
-
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE = "logsErrosClientes.txt";
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR = "logsErrosCondutor.txt";
-    ArrayList<Viagem> viagens = new ArrayList<>();
-    ArrayList<Reserva>reservas = new ArrayList<>();
-    ArrayList<Condutor>condutores = new ArrayList<>();
-    ArrayList<Cliente> clientes = new ArrayList<>();
-    //Cliente cliente = new Cliente();
-    //Condutor condutor = new Condutor();
-    //Viatura viatura = new Viatura();
-    //Reserva reserva = new Reserva();
+
     EmpresaTVDE empresaTVDE = new EmpresaTVDE();
+    ArrayList<Cliente> clientes = empresaTVDE.carregarClientes();
+    ArrayList<Condutor> condutores = empresaTVDE.carregarCondutores();
     ArrayList<Viatura> viaturas = empresaTVDE.carregarViaturas();
-    //Antes de qualuqer coisa temos que carregar os itens da memória pra ca e guardar em um arraylist e depois irmos consultando
+    ArrayList<Reserva> reservas = new ArrayList<>();
+    ArrayList<Viagem> viagens = new ArrayList<>();
+
 
     //region Design
     /*Reset*/
@@ -134,6 +126,74 @@ public class Main {
         return Integer.parseInt(opcao);
     }
 
+    //region Clientes
+    void Clientes(Scanner ler) {
+        int opcao;
+        do {
+            opcao = subMenuClientes(ler);
+            if (opcao == 1) {
+                registarCliente(ler);
+            } else if (!clientes.isEmpty() && opcao == 2) {
+                // Pesquisar Cliente
+                while (true) {
+                    System.out.println("--- Buscar Cliente (Escreva 'sair' para cancelar) ---");
+
+                    System.out.print("Indique o NIF: ");
+                    String nifStr = ler.nextLine();
+                    if (!nifStr.matches("\\d{9}")) {
+                        System.out.println("Erro: O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                        continue;
+                    }
+                    if (nifStr.equalsIgnoreCase("sair")) break;
+
+                    try {
+                        int nif = Integer.parseInt(nifStr);
+                        Cliente cliente = empresaTVDE.procurarNifCliente(nif);
+                        if (cliente != null) {
+                            System.out.println(cliente);
+                            System.out.println("Enter para continuar...");
+                            ler.nextLine();
+                            break;
+                        } else System.out.println("Cliente não encontrado.");
+                    } catch (NumberFormatException e) {
+                        System.out.println("NIF inválido.");
+                    }
+                }
+            } else if (!clientes.isEmpty() && opcao == 3) {
+                removerCliente(ler);
+            }else if (!clientes.isEmpty() && opcao == 4){
+                atualizarCliente(ler);
+            } else if (opcao == 0) {
+                break;
+            } else {
+                System.out.println("Opção Inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    int subMenuClientes(Scanner ler) {
+        int count = 1;
+        limparConsola();
+        printTituloPrincipal();
+        printTituloSecundario("CLIENTES");
+        System.out.printf(VERDE + "%d\t-\tRegistar Cliente\n" + RESET, count);
+        if (!clientes.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tPesquisar Cliente\n" + RESET, count);
+        }
+        if (!clientes.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tAtualizar Cliente\n" + RESET, count);
+        }
+        if (!clientes.isEmpty()) {
+            count++;
+            System.out.printf(VERDE + "%d\t-\tRemover Cliente\n" + RESET, count);
+        }
+        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
+        System.out.print("Indique a opção que queira realizar: ");
+        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
+    }
+
     void registarCliente(Scanner ler) {
         try {
             System.out.println("--- Novo Registo de Cliente (Escreva 'sair' para cancelar) ---");
@@ -212,35 +272,13 @@ public class Main {
                     if (empresaTVDE.adicionarCliente(cliente)) {
                         System.out.println("Cliente registado com sucesso!");
                         clientes = empresaTVDE.carregarClientes();
+                        break;
                     }
-                    break;
                 }
             }
         } catch (Exception e) {
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE, e.getMessage());
-        }
-    }
-
-    void removerCliente(Scanner ler) {
-        try {
-            System.out.println("--- Remover Cliente (Escreva 'sair' para cancelar) ---");
-            while (true) {
-                System.out.println("Indique o NIF: ");
-                String nifStr = ler.nextLine();
-                if (nifStr.equalsIgnoreCase("sair")) break;
-
-                int nif = Integer.parseInt(nifStr);
-                if (empresaTVDE.removerCliente(nif)) {
-                    System.out.println("Cliente removido com sucesso.");
-                    clientes = empresaTVDE.carregarClientes();
-                    break;
-                } else {
-                    System.out.println("Erro: Cliente não encontrado ou não pode ser removido.");
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Erro de input.");
         }
     }
 
@@ -315,37 +353,61 @@ public class Main {
         }
     }
 
-    void Clientes(Scanner ler) {
+    void removerCliente(Scanner ler) {
+        try {
+            System.out.println("--- Remover Cliente (Escreva 'sair' para cancelar) ---");
+            while (true) {
+                System.out.println("Indique o NIF: ");
+                String nifStr = ler.nextLine();
+                if (nifStr.equalsIgnoreCase("sair")) break;
+
+                int nif = Integer.parseInt(nifStr);
+                if (empresaTVDE.removerCliente(nif)) {
+                    System.out.println("Cliente removido com sucesso.");
+                    clientes = empresaTVDE.carregarClientes();
+                    break;
+                } else {
+                    System.out.println("Erro: Cliente não encontrado ou não pode ser removido.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Erro de input.");
+        }
+    }
+    //endregion
+
+    //region Condutores
+    void Condutores (Scanner ler){
         int opcao;
         do {
-            opcao = subMenuClientes(ler);
+            opcao = subMenuCondutores(ler);
             if (opcao == 1) {
-                registarCliente(ler);
-            } else if (!clientes.isEmpty() && opcao == 2) {
-                // Pesquisar Cliente
+                registarCondutor(ler);
+            } else if (!condutores.isEmpty() && opcao == 2) {
                 while (true) {
-                    System.out.println("--- Buscar Cliente (Escreva 'sair' para cancelar) ---");
-                    System.out.print("Indique o NIF: ");
+                    System.out.println("--- Buscar Condutor (Escreva 'sair' para cancelar) ---");
+                    System.out.println("Indique o NIF:");
                     String nifStr = ler.nextLine();
-                    if (nifStr.equalsIgnoreCase("sair")) break;
+                    if (nifStr. equalsIgnoreCase("sair"))
+                        return;
 
                     try {
-                        int nif = Integer.parseInt(nifStr);
-                        Cliente cliente = empresaTVDE.procurarNifCliente(nif);
-                        if (cliente != null) {
-                            System.out.println(cliente);
+                        int nif =Integer.parseInt(nifStr);
+                        Condutor condutor = empresaTVDE.procurarNifCondutor(nif);
+                        if (condutor != null) {
+                            System.out.println(condutor);
                             System.out.println("Enter para continuar...");
                             ler.nextLine();
                             break;
-                        } else System.out.println("Cliente não encontrado.");
+                        } else System.out.println("Condutor não encontrado.");
                     } catch (NumberFormatException e) {
                         System.out.println("NIF inválido.");
                     }
                 }
-            } else if (!clientes.isEmpty() && opcao == 3) {
-                removerCliente(ler);
-            }else if (!clientes.isEmpty() && opcao == 4){
-                atualizarCliente(ler);
+            } else if (!condutores.isEmpty() && opcao == 3) {
+                removerCondutor(ler);
+            }else if (!condutores.isEmpty() && opcao == 4) {
+                atualizarCondutor(ler);
             } else if (opcao == 0) {
                 break;
             } else {
@@ -354,23 +416,23 @@ public class Main {
         } while (opcao != 0);
     }
 
-    int subMenuClientes(Scanner ler) {
+    int subMenuCondutores(Scanner ler) {
         int count = 1;
         limparConsola();
         printTituloPrincipal();
-        printTituloSecundario("CLIENTES");
-        System.out.printf(VERDE + "%d\t-\tRegistar Cliente\n" + RESET, count);
-        if (!clientes.isEmpty()) {
+        printTituloSecundario("CONDUTORES");
+        System.out.printf(VERDE + "%d\t-\tRegistar Condutores\n" + RESET, count);
+        if (!condutores.isEmpty()) {
             count++;
-            System.out.printf(VERDE + "%d\t-\tPesquisar Cliente\n" + RESET, count);
+            System.out.printf(VERDE + "%d\t-\tPesquisar Condutores\n" + RESET, count);
         }
-        if (!clientes.isEmpty()) {
+        if (!condutores.isEmpty()) {
             count++;
-            System.out.printf(VERDE + "%d\t-\tRemover Cliente\n" + RESET, count);
+            System.out.printf(VERDE + "%d\t-\tRemover Condutores\n" + RESET, count);
         }
-        if (!clientes.isEmpty()) {
+        if (!condutores.isEmpty()) {
             count++;
-            System.out.printf(VERDE + "%d\t-\tAtualizar Cliente\n" + RESET, count);
+            System.out.printf(VERDE + "%d\t-\tAtualizar Condutores\n" + RESET, count);
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
@@ -475,34 +537,12 @@ public class Main {
                     if (empresaTVDE.adicionarCondutor(condutor)) {
                         System.out.println("Condutor registado!");
                         condutores = empresaTVDE.carregarCondutores();
+                        break;
                     }
                 }
             }
         } catch (Exception e) {
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR, e.getMessage());
-        }
-    }
-
-    void removerCondutor (Scanner ler) {
-        try {
-            System.out.println("--- Remover Condutor (Escreva 'sair' para cancelar) ---");
-            while (true) {
-                System.out.println("Indique o NIF: ");
-                String nifStr = ler.nextLine();
-                if (nifStr.equalsIgnoreCase("sair")) break;
-
-                int nif = Integer.parseInt(nifStr);
-                if (empresaTVDE.removerCondutor(nif)) {
-                    System.out.println("Condutor removido com sucesso.");
-                    condutores = empresaTVDE.carregarCondutores();
-                    break;
-                } else {
-                    System.out.println("Erro: Condutor não encontrado ou não pode ser removido.");
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("Erro de input.");
         }
     }
 
@@ -596,72 +636,29 @@ public class Main {
         }
     }
 
-    void Condutores (Scanner ler){
-        int opcao;
-        do {
-            opcao = subMenuCondutores(ler);
-            if (opcao == 1) {
-                registarCondutor(ler);
-            } else if (!condutores.isEmpty() && opcao == 2) {
-                while (true) {
-                    System.out.println("--- Buscar Condutor (Escreva 'sair' para cancelar) ---");
-                    System.out.println("Indique o NIF:");
-                    String nifStr = ler.nextLine();
-                    if (nifStr. equalsIgnoreCase("sair"))
-                        return;
+    void removerCondutor (Scanner ler) {
+        try {
+            System.out.println("--- Remover Condutor (Escreva 'sair' para cancelar) ---");
+            while (true) {
+                System.out.println("Indique o NIF: ");
+                String nifStr = ler.nextLine();
+                if (nifStr.equalsIgnoreCase("sair")) break;
 
-                    try {
-                        int nif =Integer.parseInt(nifStr);
-                        Condutor condutor = empresaTVDE.procurarNifCondutor(nif);
-                        if (condutor != null) {
-                            System.out.println(condutor);
-                            System.out.println("Enter para continuar...");
-                            ler.nextLine();
-                            break;
-                        } else System.out.println("Condutor não encontrado.");
-                    } catch (NumberFormatException e) {
-                        System.out.println("NIF inválido.");
-                    }
+                int nif = Integer.parseInt(nifStr);
+                if (empresaTVDE.removerCondutor(nif)) {
+                    System.out.println("Condutor removido com sucesso.");
+                    condutores = empresaTVDE.carregarCondutores();
+                    break;
+                } else {
+                    System.out.println("Erro: Condutor não encontrado ou não pode ser removido.");
                 }
-            } else if (!condutores.isEmpty() && opcao == 3) {
-                removerCondutor(ler);
-            }else if (!condutores.isEmpty() && opcao == 4) {
-                atualizarCondutor(ler);
-            } else if (opcao == 0) {
-                break;
-            } else {
-                System.out.println("Opção Inválida!");
             }
-        } while (opcao != 0);
-    }
 
-    int subMenuCondutores(Scanner ler) {
-        int count = 1;
-        limparConsola();
-        printTituloPrincipal();
-        printTituloSecundario("CONDUTORES");
-        System.out.printf(VERDE + "%d\t-\tRegistar Condutores\n" + RESET, count);
-        if (!condutores.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tPesquisar Condutores\n" + RESET, count);
+        } catch (Exception e) {
+            System.out.println("Erro de input.");
         }
-        if (!condutores.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tRemover Condutores\n" + RESET, count);
-        }
-        if (!condutores.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tAtualizar Condutores\n" + RESET, count);
-        }
-        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
-        System.out.print("Indique a opção que queira realizar: ");
-        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
     }
-
-    public void limparConsola() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
+    //endregion
 
     //region Viaturas
     private void Viaturas(Scanner ler){
@@ -768,7 +765,7 @@ public class Main {
                     return;
 
                 if (!isMatriculaValida(matricula)) {
-                    System.out.println("Formato incorreto (use XX-XX-XX).");
+                    System.out.println("Formato incorreto. Tente novamente.");
                     continue;
                 }
 
@@ -789,7 +786,7 @@ public class Main {
                 if (existe) {
                     System.out.println("Erro: Essa matrícula já existe no sistema.");
                 } else {
-                    Viatura viatura = new Viatura(matricula.toUpperCase(), marca, modelo, Integer.parseInt(anoDeFabrico), cor, existe);
+                    Viatura viatura = new Viatura(matricula.toUpperCase(), marca, modelo, Integer.parseInt(anoDeFabrico), cor, true);
                     String resposta = empresaTVDE.adicionarViatura(viatura);
                     if(resposta.equals("Viatura inserida com Sucesso!")) {
                         System.out.println(resposta);
@@ -850,8 +847,6 @@ public class Main {
     }
     //endregion
 
-    private void verListaDeClientes(Scanner ler, String matricula) {
-    }
     //region Reservas
     void Reservas(Scanner ler) {
         int opcao;
@@ -1010,6 +1005,8 @@ public class Main {
         }
     }
     //endregion
+
+    //region Viagens
     void Viagens(Scanner ler) {
         /*Permitir trasnformar uma reserva em viagem
          * Validar se a viagem já existe antes de inserir
@@ -1024,7 +1021,33 @@ public class Main {
 
     }
 
+    void criarViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
+        System.out.println("Indique a hora de inicio:");
+        DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        System.out.println("Indique a hora:");
+        LocalTime hora = LocalTime.parse(ler.nextLine(), formatter);
+        System.out.println("Indique a data");
+        LocalDateTime dataViagem = LocalDateTime.parse(ler.nextLine(), formatterData);
+        System.out.println("Indique a morada de origem:");
+        String moradaOrigem = ler.nextLine();
+        System.out.println("Indique a morada de destino:");
+        String moradaDestino = ler.nextLine();
+        System.out.println("Indique a custo da viagem:");
+        double custoViagem = ler.nextDouble();
+        System.out.println("Indique a distancia percorrida:");
+        double distancia = ler.nextDouble();
+        boolean concluida = false;
+        viatura.setDisponivel(false);
+        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, concluida, moradaOrigem, moradaDestino, custoViagem);
+        viagem.add(viagens);
+    }
+
+    void removerViagem(Scanner ler) {
+    }
+
     void transformarReservaEmViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
+
 
         if (reservas.isEmpty()) {
             System.out.println("Não existe nenhuma reserva para transformar em viagem.");
@@ -1082,31 +1105,9 @@ public class Main {
 
         System.out.println("Sucesso! A reserva foi transformada em viagem.");
     }
+    //endregion
 
-    void criarViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
-        System.out.println("Indique a hora de inicio:");
-        DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        System.out.println("Indique a hora:");
-        LocalTime hora = LocalTime.parse(ler.nextLine(), formatter);
-        System.out.println("Indique a data");
-        LocalDateTime dataViagem = LocalDateTime.parse(ler.nextLine(), formatterData);
-        System.out.println("Indique a morada de origem:");
-        String moradaOrigem = ler.nextLine();
-        System.out.println("Indique a morada de destino:");
-        String moradaDestino = ler.nextLine();
-        System.out.println("Indique a custo da viagem:");
-        double custoViagem = ler.nextDouble();
-        System.out.println("Indique a distancia percorrida:");
-        double distancia = ler.nextDouble();
-        boolean concluida = false;
-        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, concluida, moradaOrigem, moradaDestino, custoViagem);
-        viagem.add(viagens);
-    }
-
-    void removerViagem(Scanner ler) {
-    }
-
+    //region Informações
     void informacoes(Scanner ler) {
         /*Pesquisar viagens de um cliente num intervalo de data dada pelo liente
          *Apresentar valor total faturado por um motorista num intervalo de datas indicado pelo utilizador
@@ -1146,5 +1147,13 @@ public class Main {
         System.out.print("Indique a opção que queira realizar: ");
         String opcao = ler.nextLine();
         return Integer.parseInt(opcao);
+    }
+    //endregion
+
+    public void limparConsola() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+    private void verListaDeClientes(Scanner ler, String matricula) {
     }
 }
