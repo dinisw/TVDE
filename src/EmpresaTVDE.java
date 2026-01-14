@@ -443,12 +443,21 @@ public class EmpresaTVDE {
     //Faturação total do condutor
     public double calcularFaturacaoTotal(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         double total = 0;
-        for (Viagem viagem : viagens) {
-            if (viagem.getCondutor().getContribuinte() == contribuinte) {
-                if (!viagem.getInicio().isBefore(inicio) && !viagem.getInicio().isBefore(fim)) {
-                    total += viagem.getCustoViagem();
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
+            String linha;
+            while((linha = reader.readLine()) != null){
+                String[] dados = linha.split(",");
+
+                if(dados.length >=8){
+                    int contribuinteLido = Integer.parseInt(dados[0]);
+                    LocalDateTime data = LocalDateTime.parse(dados[3]);
+                    if (contribuinteLido == contribuinte && data.isBefore(inicio) && data.isAfter(fim)) {
+                        total += Double.parseDouble(dados[7]);
+                    }
                 }
             }
+        }catch(IOException e){
+            System.out.println("Erro ao calcular faturação total: " + e.getMessage());
         }
         return total;
     }
@@ -641,6 +650,68 @@ public class EmpresaTVDE {
             throw new RuntimeException(e);
         }
         return false;
+    }
+    //Pesquisar viagens de um cliente num intervalo de data dada pelo cliente
+    public ArrayList<Viagem> pesquisarViagemClienteData(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
+        ArrayList<Viagem> viagemEncontrada = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+            String linha;
+
+            while((linha = reader.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    int contribuinteLido =  Integer.parseInt(dados[0]);
+                    if(contribuinteLido == contribuinte) {
+                        LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
+                        if(dataViagem.isBefore(inicio) && dataViagem.isAfter(fim)) {
+                            Cliente cliente = procurarNifCliente(contribuinte);
+                            Viatura viatura = procurarViatura(dados[3]);
+                            Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[2]));
+                            if(cliente != null && viatura != null && condutor != null) {
+                                Viagem viagem = new Viagem();
+                                viagem.setCliente(cliente);
+                                viagem.setCondutor(condutor);
+                                viagem.setViatura(viatura);
+                                viagem.setFim(fim);
+                                viagem.setInicio(inicio);
+                                viagem.setMoradaOrigem(dados[5]);
+                                viagem.setMoradaDestino(dados[4]);
+                                viagem.setCustoViagem(Double.parseDouble(dados[7]));
+                                viagemEncontrada.add(viagem);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Erro ao ler ficheiro: " + ex.getMessage());
+        }
+        return viagemEncontrada;
+    }
+
+    public double calculaDistanciaMedia(LocalDateTime inicio, LocalDateTime fim) {
+        double media = 0;
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+            double kMS=0;
+            int quantidadeViagens = 0;
+            String linha;
+            while((linha = reader.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    LocalDateTime dataViagem = LocalDateTime.parse(dados[0]);
+
+                    if(!dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
+                        kMS = Double.parseDouble(dados[1]);
+                        quantidadeViagens++;
+                    }
+                }
+                media = kMS/quantidadeViagens;
+            }
+        } catch (IOException ex) {
+            System.out.println("Erro ao ler ficheiro: " + ex.getMessage());
+        }
+        return media;
     }
 
     //getter gerais
