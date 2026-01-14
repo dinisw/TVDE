@@ -29,7 +29,7 @@ public class Viatura {
     /**
      * Indica se a viatura está disponível para utilização.
      */
-    private boolean status;
+    private boolean disponivel;
 
     public Viatura(){
         matricula = "";
@@ -37,7 +37,7 @@ public class Viatura {
         modelo = "";
         anoDeFabrico = 0;
         cor = "";
-        status = false;
+        disponivel = false;
     }
 
     /**
@@ -49,25 +49,25 @@ public class Viatura {
      * @param marca        A marca da viatura.
      * @param matricula    A matrícula da viatura.
      * @param cor          A cor da viatura.
-     * @param status   Se a viatura está disponível.
+     * @param disponivel   Se a viatura está disponível.
      */
-    public Viatura(String matricula, String marca, String modelo, int anoDeFabrico, String cor, boolean status) {
+    public Viatura(String matricula, String marca, String modelo, int anoDeFabrico, String cor, boolean disponivel) {
         this.matricula = matricula;
         this.marca = marca;
         this.modelo = modelo;
         this.anoDeFabrico = anoDeFabrico;
         this.cor = cor;
-        this.status = status;
+        this.disponivel = disponivel;
     }
 
     public String paraFicheiro() {
-        return this.matricula + ";" + this.marca + ";" + this.modelo + ";" + this.anoDeFabrico + ";" + this.cor + ";" + this.status;
+        return this.matricula + ";" + this.marca + ";" + this.modelo + ";" + this.anoDeFabrico + ";" + this.cor + ";" + this.disponivel;
     }
 
     @Override
     public String toString() {
         String status = "";
-        if(this.status)
+        if(this.disponivel)
             status = "Disponível";
         else
             status = "Indisponível";
@@ -83,7 +83,7 @@ public class Viatura {
     public ArrayList<Viatura> getViaturasDisponiveis(ArrayList<Viatura> viaturas){
         ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
         for(var viatura : viaturas){
-            if(viatura.status){
+            if(viatura.disponivel){
                 viaturasDisponiveis.add(viatura);
             }
         }
@@ -184,17 +184,17 @@ public class Viatura {
      *
      * @return true se a viatura estiver disponível, false caso contrário.
      */
-    public boolean isStatus() {
-        return status;
+    public boolean isDisponivel() {
+        return disponivel;
     }
 
     /**
      * Define o estado de disponibilidade da viatura.
      *
-     * @param status O novo estado de disponibilidade (true para disponível).
+     * @param disponivel O novo estado de disponibilidade (true para disponível).
      */
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
     }
 
     /**

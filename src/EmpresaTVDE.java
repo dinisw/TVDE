@@ -84,38 +84,38 @@ public class EmpresaTVDE {
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
                 if (dados.length >= 6) {
-                    String matricula = dados[0];
-                    String marca = dados[1];
-                    String modelo = dados[2];
-                    String cor = dados[4];
-                    boolean disponivel = false;
                     try {
-                        disponivel = Boolean.parseBoolean(dados[5]);
-                    } catch (IllegalArgumentException e) {
-                        disponivel = false;
-                    }
+                        String matricula = dados[0];
+                        String marca = dados[1];
+                        String modelo = dados[2];
+                        String cor = dados[4];
+                        boolean disponivel = false;
+                        try {
+                            disponivel = Boolean.parseBoolean(dados[5]);
+                        } catch (IllegalArgumentException e) {
+                            disponivel = false;
+                        }
 
-                    int ano = 0;
-                    try {
-                        ano = Integer.parseInt(dados[3]);
+                        int ano = 0;
+                        try {
+                            ano = Integer.parseInt(dados[3]);
+                        } catch (NumberFormatException e) {
+                            ano = 0;
+                        }
+                        Viatura viatura = new Viatura(matricula, marca, modelo, ano, cor, disponivel);
+                        viaturas.add(viatura);
                     } catch (NumberFormatException e) {
-                        ano = 0;
+                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro linha: " + linha);
+                        return new ArrayList<>();
                     }
-                    Viatura viatura = new Viatura(matricula, marca, modelo, ano, cor, disponivel);
-                    viaturas.add(viatura);
                 }
             }
-            return viaturas;
+            if(!viaturas.isEmpty()) return viaturas;
+            else return new ArrayList<>();
         } catch (IOException e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
-                writer.write("Erro ao ler viaturas: " + e.getMessage());
-                writer.newLine();
-                return null;
-            } catch (IOException ex) {
-                //System.out.println("Erro crítico: Falha ao ler ficheiro e falha ao gravar log.");
-            }
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro leitura ficheiro: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return null;
     }
 
     public boolean atualizarViatura(String matricula, String novaMarca, String novoModelo, int novoAnoDeFabrico, String novaCor, boolean novoStatus) {
@@ -219,10 +219,12 @@ public class EmpresaTVDE {
                         clientes.add(cliente);
                     } catch (NumberFormatException e) {
                         adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro linha: " + linha);
+                        return new ArrayList<>();
                     }
                 }
             }
-            return clientes;
+            if(!clientes.isEmpty()) return clientes;
+            else return new ArrayList<>();
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
@@ -351,11 +353,14 @@ public class EmpresaTVDE {
                         condutores.add(condutor);
                     } catch (Exception e) {
                         adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro linha: " + linha);
+                        return new ArrayList<>();
                     }
                 }
             }
-            return condutores;
+            if(!condutores.isEmpty()) return condutores;
+            else return new ArrayList<>();
         } catch (IOException e) {
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
         }
     }
