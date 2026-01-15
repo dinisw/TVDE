@@ -699,7 +699,7 @@ public class EmpresaTVDE {
         return media;
     }
 
-    /*public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
+    public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<String> destinos = new ArrayList<>();
 
         try (BufferedReader viagem = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
@@ -732,11 +732,48 @@ public class EmpresaTVDE {
             System.out.println("Erro ao ler ficheiro da reserva: " + ex.getMessage());
         }
         if(destinos.isEmpty()) {
-            return "Está vazio!";
+            return "Não existe reservas nem viagens entre as datas inseridas!";
         }
+        String destino = "";
+        int pedidos = 0;
+        int maxPedidos = 0;
+        for(String destino1 : destinos){
+            for(String destino2 : destinos){
+                if(destino1.equalsIgnoreCase(destino2)){
+                    pedidos++;
+                }
+            }
+            if (pedidos > maxPedidos){
+                maxPedidos = pedidos;
+                destino = destino1;
+            }
+        }
+        return "O destino mais popular é :" + destino + " pedido " + pedidos + "vezes.";
+    }
 
-    }    */
+    public ArrayList<Cliente> clientesPorDistancia(double distanciaMinima, double distanciaMaxima){
+        ArrayList<Cliente> clientesEncontrados = new ArrayList<>();
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CLIENTES))) {
+            String linha;
+            while ((linha = reader.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    double distancia =  Double.parseDouble(dados[1]);
 
+                    if(distancia >= distanciaMinima && distancia <= distanciaMaxima){
+                        int nifCliente = Integer.parseInt(dados[2]);
+                        Cliente cliente = procurarNifCliente(nifCliente);
+                        if(cliente != null){
+                            clientesEncontrados.add(cliente);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return clientesEncontrados;
+    }
     //getter gerais
     public ArrayList<Cliente> getClientes() {
         return clientes;
