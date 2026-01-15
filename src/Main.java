@@ -1,7 +1,6 @@
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -140,14 +139,12 @@ public class Main {
     }
     public boolean isMarcaValida (String marca) {
         if (marca == null) return false;
-        String regex = "^[A-Z]$";
+        return marca.trim().length() >=2;
+    } //! dinis fazer
+    public boolean isModeloValido (String modelo) {
+        if (modelo == null) return false;
 
-        return marca.trim().matches(regex);
-    }public boolean isCorValida (String cor) {
-        if (cor == null) return false;
-        String regex = "^[A-Z]$";
-
-        return cor.trim().matches(regex);
+        return !modelo.trim().isEmpty();
     }
     public boolean isAnoDeFabricoValido (String anoDeFabrico) {
         if (anoDeFabrico == null) return false;
@@ -155,17 +152,27 @@ public class Main {
 
         return anoDeFabrico.trim().matches(regex);
     }
-    public boolean isModeloValido (String modelo) {
-        if (modelo == null) return false;
+    public boolean isCorValida (String cor) {
+        if (cor == null) return false;
 
-        return modelo.trim().isEmpty();
+        return cor.trim().matches("^[a-zA-ZãõáéíóúçÃÕÁÉÍÓÚÇ ]+$");
+    } //! dinis fazer
+    public boolean isStatusValido (String status) {
+        if (status == null) return false;
+        return status.equalsIgnoreCase("1") || status.equalsIgnoreCase("2");
     }
+
     public boolean isNifValido(String nif) {
         if (nif == null) return false;
         String regex = "^\\d{9}$";
 
         return nif.trim().matches(regex);
     }
+    public boolean isNomeValido(String nome) {
+        if (nome== null) return false;
+
+        return nome.trim().matches("^[a-zA-ZãõáéíóúçÃÕÁÉÍÓÚÇ ]{2,}$");
+    } //! dinis fazer
     public boolean isCcValido(String cc) {
         if (cc == null) return false;
         String regex = "^\\d{8}$";
@@ -174,7 +181,7 @@ public class Main {
     }
     public boolean isCartaValido (String carta) {
         if (carta == null) return false;
-        String regex = "^[A-Z]-\\\\d{7}$";
+        String regex = "^[A-Z]-\\d{7}$";
 
         return carta.trim().matches(regex);
     }
@@ -400,12 +407,11 @@ public class Main {
 
             System.out.print("Indique o NIF: ");
             String nifStr = ler.nextLine();
+            if (opcaoSair(nifStr)) break;
             if (!isNifValido(nifStr)) {
                 System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
                 continue;
             }
-            if (opcaoSair(nifStr)) break;
-
             try {
                 int nif = Integer.parseInt(nifStr);
                 Cliente cliente = empresaTVDE.procurarNifCliente(nif);
@@ -414,7 +420,9 @@ public class Main {
                     System.out.println("Enter para continuar...");
                     ler.nextLine();
                     break;
-                } else System.out.println("Cliente não encontrado.");
+                } else {
+                    System.out.println("Cliente não encontrado.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("NIF inválido.");
             }
@@ -426,19 +434,18 @@ public class Main {
             System.out.print(ROXO + "\n\n--- Atualizar Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.print("Indique o NIF (Contribuinte): ");
-                String nifStr = ler.nextLine();
+                String nifStr = ler.nextLine().trim();
 
                 if (opcaoSair(nifStr)) return;
                 if (!isNifValido(nifStr)) {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
                     continue;
                 }
-
                 int nif = Integer.parseInt(nifStr);
                 Cliente cliente = empresaTVDE.procurarNifCliente(nif);
                 if (cliente != null) {
                     while (true) {
-                        System.out.println("Escolha a opção que deseja atualizar:");
+                        System.out.println("Escolha a opção que deseja atualizar: ");
                         System.out.println("1\t-\tNome");
                         System.out.println("2\t-\tIdade");
                         System.out.println("3\t-\tGénero");
@@ -449,44 +456,47 @@ public class Main {
                         System.out.println("0\t-\tSair");
                         String opcao = ler.nextLine();
 
-                        String nome = "", sexo = "", email = "", morada = "";
-                        int cc = 0, idade = 0, telefone = 0;
-
-                        switch (Integer.parseInt(opcao)) {
-                            case 1:
-                                System.out.print("Indique o seu nome: ");
-                                nome = ler.nextLine();
-                                if (opcaoSair(nome)) return;
-                                try {
-                                    cliente.setNome(nome);
-                                    System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
-                                } catch (Exception e) {
-                                    System.out.println("Erro: Cliente não encontrado ou não pode ser atualizado.");
-                                }
-                                break;
-                            case 2:
+                        switch (opcao) {
+                            case "1":
                                 while (true) {
-                                    System.out.print("Indique a sua idade: ");
-                                    String idadeStr = ler.nextLine();
-                                    if (opcaoSair(idadeStr)) return;
-                                    if (!isIdadeValido(idadeStr)) {
-                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A idade deve estar no formato correto. Tente novamente.");
+                                    System.out.print("Indique o seu nome: ");
+                                    String nome = ler.nextLine();
+                                    if (opcaoSair(nome)) break;
+                                    if (!isNomeValido(nome)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O nome que inseriu é inválido. Tente novamente.");
                                         continue;
                                     } else {
-                                        idade = Integer.parseInt(idadeStr);
-                                        cliente.setIdade(idade);
-                                        System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
+                                        cliente.setNome(nome);
+                                        empresaTVDE.guardarAlteracoesClientes();
+                                        System.out.println(VERDE_BRILHANTE + "\n\nNome atualizado com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 3:
+                            case "2":
+                                while (true) {
+                                    System.out.print("Indique a sua idade: ");
+                                    String idadeStr = ler.nextLine();
+                                    if (opcaoSair(idadeStr)) break;
+                                    if (!isIdadeValido(idadeStr)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A idade deve estar no formato correto. Tente novamente.");
+                                        continue;
+                                    } else {
+                                        int idade = Integer.parseInt(idadeStr);
+                                        cliente.setIdade(idade);
+                                        empresaTVDE.guardarAlteracoesClientes();
+                                        System.out.println(VERDE_BRILHANTE + "\n\nIdade atualizada com sucesso!\n\n" + RESET);
+                                    }
+                                    break;
+                                }
+                                break;
+                            case "3":
                                 while (true) {
                                     System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
-                                    sexo = ler.nextLine().toLowerCase();
-                                    if (opcaoSair(sexo)) return;
+                                    String sexo = ler.nextLine().toLowerCase();
+                                    if (opcaoSair(sexo)) break;
                                     if (!isSexoValido(sexo)) {
-                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O sexo informado não está entre os válidos. Tente novamente.");
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O género informado não está entre os válidos. Tente novamente.");
                                         continue;
                                     }
                                     if (sexo.equalsIgnoreCase("1")) sexo = "Masculino";
@@ -494,158 +504,138 @@ public class Main {
                                     if (sexo.equalsIgnoreCase("3")) sexo = "Outro";
 
                                     cliente.setSexo(sexo);
-                                    System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
+                                    empresaTVDE.guardarAlteracoesClientes();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nGénero atualizado com sucesso!\n\n" + RESET);
                                     break;
                                 }
                                 break;
-                            case 4:
+                            case "4":
                                 while (true) {
                                     System.out.print("Indique o seu email: ");
-                                    email = ler.nextLine();
-                                    if (opcaoSair(email)) return;
+                                    String email = ler.nextLine();
+                                    if (opcaoSair(email)) break;
                                     if (!isEmailValido(email)) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O email informado não está no formato correto. Tente novamente.");
                                         continue;
+                                    } else {
+                                        cliente.setEmail(email);
+                                        empresaTVDE.guardarAlteracoesClientes();
+                                        System.out.println(VERDE_BRILHANTE + "\n\nEmail atualizado com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 5:
+                            case "5":
                                 while (true) {
                                     System.out.print("Indique o número de telefone: ");
                                     String telStr = ler.nextLine();
-                                    if (opcaoSair(telStr)) return;
+                                    if (opcaoSair(telStr)) break;
                                     if (!isTelefoneValido(telStr)) {
-                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O telefone informado não está no formato correto. Tente novamente.");
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O número de telefone informado não está no formato correto. Tente novamente.");
                                         continue;
+                                    } else {
+                                        int telefone = Integer.parseInt(telStr);
+                                        cliente.setTelefone(telefone);
+                                        empresaTVDE.guardarAlteracoesClientes();
+                                        System.out.println(VERDE_BRILHANTE + "\n\nNúmero de telefone atualizado com sucesso!\n\n" + RESET);
                                     }
-                                    telefone = Integer.parseInt(telStr);
                                     break;
                                 }
                                 break;
-                            case 6:
+                            case "6":
                                 while (true) {
                                     System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
-                                    morada = ler.nextLine();
-                                    if (opcaoSair(morada)) return;
+                                    String morada = ler.nextLine();
+                                    if (opcaoSair(morada)) break;
                                     if (!isMoradaValido(morada)) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
                                         continue;
+
+                                    } else {
+                                        cliente.setMorada(morada);
+                                        empresaTVDE.guardarAlteracoesClientes();
+                                        System.out.println(VERDE_BRILHANTE + "\n\nMorada atualizada com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 7:
+                            case "7":
                                 while (true) {
                                     System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
                                     String ccStr = ler.nextLine();
 
-                                    if (opcaoSair(ccStr)) return;
+                                    if (opcaoSair(ccStr)) break;
                                     if (!isCcValido(ccStr)) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
                                         continue;
-                                    }
-
-                                    cc = Integer.parseInt(ccStr);
-
-                                    if (empresaTVDE.procurarCartaoDeCidadaoCliente(cc) != null) {
-                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse cartão de cidadão já está registado no sistema. Tente outro.");
                                     } else {
-                                        break;
+                                        int cc = Integer.parseInt(ccStr);
+                                        if (empresaTVDE.procurarCartaoDeCidadaoCliente(cc) != null && cliente.getCartaoDeCidadao() != cc) {
+                                            System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse cartão de cidadão já está registado noutro cliente.");
+                                            continue;
+                                        }
+
+                                        cliente.setCartaoDeCidadao(cc);
+                                        empresaTVDE.guardarAlteracoesClientes();
+                                        System.out.println(VERDE_BRILHANTE + "\n\nCartão de cidadão atualizado com sucesso!\n\n" + RESET);
                                     }
+                                   break;
                                 }
                                 break;
-                            case 0:
+                            case "0":
                                 return;
                             default:
                                 System.out.print("Opção invalida. Tente novamente.");
                                 break;
                         }
-
                     }
-//                    System.out.println("Indique o seu novo nome:");
-//                    String nome = ler.nextLine();
-//                    if (nome.equalsIgnoreCase("sair")) return;
-//
-//                    System.out.println("Indique a sua nova idade:");
-//                    String idadeStr = ler.nextLine();
-//                    if (idadeStr.equalsIgnoreCase("sair")) return;
-//                    int idade = Integer.parseInt(idadeStr);
-//
-//                    System.out.println("Indique o seu novo género:");
-//                    String sexo = ler.nextLine();
-//                    if (sexo.equalsIgnoreCase("sair")) return;
-//
-//                    System.out.println("Indique o seu novo email:");
-//                    String email = ler.nextLine();
-//                    if (email.equalsIgnoreCase("sair")) return;
-//
-//                    System.out.println("Indique o novo número de telefone:");
-//                    String telStr = ler.nextLine();
-//                    if (telStr.equalsIgnoreCase("sair")) return;
-//                    int telefone = Integer.parseInt(telStr);
-//
-//                    System.out.println("Indique a sua nova morada:");
-//                    String morada = ler.nextLine();
-//                    if (morada.equalsIgnoreCase("sair")) return;
-//
-//                    String ccStr;
-//                    int cc = 0;
-//
-//                    while (true) {
-//                        System.out.println("Indique o novo número de cartão de cidadão (8 primeiros dígitos):");
-//                        ccStr = ler.nextLine();
-//
-//                        if (ccStr.equalsIgnoreCase("sair")) {
-//                            return;
-//                        }
-//                        if (!ccStr.matches("\\d{8}")) {
-//                            System.out.println("Erro: O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
-//                            continue;
-//                        }
-//                        cc = Integer.parseInt(ccStr);
+                } else {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Cliente não encontrado.");
                 }
-                clientes = empresaTVDE.carregarClientes();
-                break;
-//                    }
-//                    break;
-//                }
             }
-        }catch(Exception e){
+        } catch (Exception e){
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE, e.getMessage());
         }
-    }
+    } //Completo Dinis :)
 
     void removerCliente(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Remover Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.print("Indique o NIF (Contribuinte): ");
-                String nifStr = ler.nextLine();
+                String nifStr = ler.nextLine().trim();
                 if (opcaoSair(nifStr)) break;
                 if (!isNifValido(nifStr)) {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
                     continue;
                 }
                 int nif = Integer.parseInt(nifStr);
-                String nomeCliente = empresaTVDE.procurarNifCliente(nif).getNome();
-                System.out.printf("Tem certeza que deseja remover o cliente %s ? [S/N]", nomeCliente);
-                String validacao = ler.nextLine().trim().toUpperCase();
-                if(validacao.equalsIgnoreCase("S")){
-                    if (empresaTVDE.removerCliente(nif)) {
-                        System.out.printf("Cliente %s removido com sucesso.", nomeCliente);
-                        clientes = empresaTVDE.carregarClientes();
-                        break;
+                Cliente cliente = empresaTVDE.procurarNifCliente(nif);
+                if (cliente != null) {
+                    System.out.printf("Tem certeza que deseja remover o cliente %s ? [S/N]: ", cliente.getContribuinte());
+                    String validacao = ler.nextLine().trim();
+
+                    if (validacao.equalsIgnoreCase("S")) {
+                        if (empresaTVDE.removerCliente(cliente.getContribuinte())) {
+                            System.out.printf("Cliente %s removido com sucesso.\n", cliente.getContribuinte());
+                            clientes = empresaTVDE.carregarClientes();
+                            break;
+                        } else {
+                            System.out.println("Erro: Cliente não encontrado ou não pode ser removido.");
+                        }
                     } else {
-                        System.out.println("Erro: Cliente não encontrado ou não pode ser removido.");
+                        System.out.println("Operação cancelada.");
+                        break;
                     }
+                } else {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro:" + RESET + " Cliente não encontrado.");
                 }
             }
         } catch (Exception e) {
-            System.out.println("Erro de input.");
+            System.out.println("Erro de input." + e.getMessage());
         }
-    } //Completo Dinis?? precisa de verificação :)
+    } //Completo Dinis :)
     //endregion
 
     //region Condutores
@@ -860,120 +850,230 @@ public class Main {
             while (true) {
                 System.out.println("Indique o NIF (Contribuinte): ");
                 String nifStr = ler.nextLine();
-                if (nifStr.equalsIgnoreCase("sair")) break;
 
-                int nif = Integer.parseInt(nifStr);
-                if (empresaTVDE.procurarNifCondutor(nif) != null) {
-                    System.out.print(ROXO + "\n\n--- Atualização do Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
-
-                    System.out.println("Indique o seu novo nome:");
-                    String nome = ler.nextLine();
-                    if (nome.equalsIgnoreCase("sair")) return;
-
-                    System.out.println("Indique a sua nova idade:");
-                    String idadeStr = ler.nextLine();
-                    if (idadeStr.equalsIgnoreCase("sair")) return;
-                    int idade = Integer.parseInt(idadeStr);
-
-                    System.out.println("Indique o seu novo género:");
-                    String sexo = ler.nextLine();
-                    if (sexo.equalsIgnoreCase("sair")) return;
-
-                    System.out.println("Indique o seu novo email:");
-                    String email = ler.nextLine();
-                    if (email.equalsIgnoreCase("sair")) return;
-
-                    String cartaStr;
-                    String carta = "";
-
-                    while (true) {
-                        System.out.println("Indique o novo número da carta de condução (9 dígitos numéricos):");
-                        cartaStr = ler.nextLine();
-
-                        if (cartaStr.equalsIgnoreCase("sair")) {
-                            return;
-                        }
-                        if (!cartaStr.matches("\\d{9}")) {
-                            System.out.println("Erro: A carta de condução deve conter exatamente 9 números. Tente novamente.");
-                            continue;
-                        }
-                        carta = (cartaStr);
-                        break;
-
-                    }
-
-                    String ccStr;
-                    int cc = 0;
-
-                    while (true) {
-                        System.out.println("Indique o novo número de cartão de cidadão (8 primeiros dígitos):");
-                        ccStr = ler.nextLine();
-
-                        if (ccStr.equalsIgnoreCase("sair")) {
-                            return;
-                        }
-                        if (!ccStr.matches("\\d{8}")) {
-                            System.out.println("Erro: O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
-                            continue;
-                        }
-                        cc = Integer.parseInt(ccStr);
-                        break;
-                    }
-                    System.out.println("Indique a nova sua morada:");
-                    String morada = ler.nextLine();
-                    if (morada.equalsIgnoreCase("sair")) return;
-
-                    System.out.println("Indique o novo número de telemóvel:");
-                    String telStr = ler.nextLine();
-                    if (telStr.equalsIgnoreCase("sair")) return;
-                    int telemovel = Integer.parseInt(telStr);
-
-                    if (empresaTVDE.atualizarCondutor(nome,idade,sexo,email,telemovel,morada,carta,cc,nif)) {
-                        System.out.println("Cliente atualizado com sucesso.");
-                        condutores = empresaTVDE.carregarCondutores();
-                        break;
-                    } else {
-                        System.out.println("Erro: Condutor não encontrado ou não pode ser atualizado.");
-                    }
+                if (opcaoSair(nifStr)) return;
+                if(!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                    continue;
                 }
 
+                int nif = Integer.parseInt(nifStr);
+                Condutor condutor = empresaTVDE.procurarNifCondutor(nif);
+                if (condutor != null) {
+                    while (true) {
+                        System.out.println("Escolha a opção que deseja atualizar: ");
+                        System.out.println("1\t-\tNome");
+                        System.out.println("2\t-\tIdade");
+                        System.out.println("3\t-\tGénero");
+                        System.out.println("4\t-\tEmail");
+                        System.out.println("5\t-\tTelefone");
+                        System.out.println("6\t-\tMorada");
+                        System.out.println("7\t-\tCartão de Cidadão");
+                        System.out.println("8\t-\tCarta de Condução");
+                        System.out.println("0\t-\tSair");
+                        String opcao = ler.nextLine();
 
+                        switch (opcao) {
+                            case "1":
+                            while (true) {
+                                System.out.print("Indique o seu nome: ");
+                                String nome = ler.nextLine();
+                                if (opcaoSair(nome)) break;
+                                if (!isNomeValido(nome)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O nome que inseriu é inválido. Tente novamente.");
+                                    continue;
+                                } else {
+                                    condutor.setNome(nome);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nNome atualizado com sucesso!\n\n" + RESET);
+                                }
+                                break;
+                            }
+                            break;
+                        case "2":
+                            while (true) {
+                                System.out.print("Indique a sua idade: ");
+                                String idadeStr = ler.nextLine();
+                                if (opcaoSair(idadeStr)) break;
+                                if (!isIdadeValido(idadeStr)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A idade deve estar no formato correto. Tente novamente.");
+                                    continue;
+                                } else {
+                                    int idade = Integer.parseInt(idadeStr);
+                                    condutor.setIdade(idade);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nIdade atualizada com sucesso!\n\n" + RESET);
+                                }
+                                break;
+                            }
+                            break;
+                        case "3":
+                            while (true) {
+                                System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
+                                String sexo = ler.nextLine().toLowerCase();
+                                if (opcaoSair(sexo)) break;
+                                if (!isSexoValido(sexo)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O género informado não está entre os válidos. Tente novamente.");
+                                    continue;
+                                }
+                                if (sexo.equalsIgnoreCase("1")) sexo = "Masculino";
+                                if (sexo.equalsIgnoreCase("2")) sexo = "Feminino";
+                                if (sexo.equalsIgnoreCase("3")) sexo = "Outro";
+
+                                condutor.setSexo(sexo);
+                                empresaTVDE.guardarAlteracoesCondutores();
+                                System.out.println(VERDE_BRILHANTE + "\n\nGénero atualizado com sucesso!\n\n" + RESET);
+                                break;
+                            }
+                            break;
+                        case "4":
+                            while (true) {
+                                System.out.print("Indique o seu email: ");
+                                String email = ler.nextLine();
+                                if (opcaoSair(email)) break;
+                                if (!isEmailValido(email)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O email informado não está no formato correto. Tente novamente.");
+                                    continue;
+                                } else {
+                                    condutor.setEmail(email);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nEmail atualizado com sucesso!\n\n" + RESET);
+                                }
+                                break;
+                            }
+                            break;
+                        case "5":
+                            while (true) {
+                                System.out.print("Indique o número de telefone: ");
+                                String telStr = ler.nextLine();
+                                if (opcaoSair(telStr)) break;
+                                if (!isTelefoneValido(telStr)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O número de telefone informado não está no formato correto. Tente novamente.");
+                                    continue;
+                                } else {
+                                    int telefone = Integer.parseInt(telStr);
+                                    condutor.setTelefone(telefone);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nNúmero de telefone atualizado com sucesso!\n\n" + RESET);
+                                }
+                                break;
+                            }
+                            break;
+                        case "6":
+                            while (true) {
+                                System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
+                                String morada = ler.nextLine();
+                                if (opcaoSair(morada)) break;
+                                if (!isMoradaValido(morada)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                                    continue;
+
+                                } else {
+                                    condutor.setMorada(morada);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nMorada atualizada com sucesso!\n\n" + RESET);
+                                }
+                                break;
+                            }
+                            break;
+                        case "7":
+                            while (true) {
+                                System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
+                                String ccStr = ler.nextLine();
+
+                                if (opcaoSair(ccStr)) break;
+                                if (!isCcValido(ccStr)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O cartão de cidadão deve conter exatamente 8 números. Tente novamente.");
+                                    continue;
+                                } else {
+                                    int cc = Integer.parseInt(ccStr);
+                                    if (empresaTVDE.procurarCartaoDeCidadaoCondutor(cc) != null && condutor.getCartaoDeCidadao() != cc) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse cartão de cidadão já está registado noutro condutor.");
+                                        continue;
+                                    }
+
+                                    condutor.setCartaoDeCidadao(cc);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nCartão de cidadão atualizado com sucesso!\n\n" + RESET);
+                                }
+                                break;
+                            }
+                            break;
+                        case "8":
+                            while (true) {
+                                System.out.print("Indique a carta de condução: ");
+                                String cartaStr = ler.nextLine();
+
+                                if (opcaoSair(cartaStr)) break;
+                                if (!isCartaValido(cartaStr)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A carta de condução informada não está no formato correto. Tente novamente.");
+                                    continue;
+                                }
+                                Condutor condutor1 = empresaTVDE.procurarCartaDeConducaoCondutor(cartaStr);
+                                if (condutor1 != null && !condutor.getCartaDeConducao().equalsIgnoreCase(cartaStr)) {
+                                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Essa carta de condução já está registada noutro condutor.");
+                                    continue;
+                                }
+                                    condutor.setCartaDeConducao(cartaStr);
+                                    empresaTVDE.guardarAlteracoesCondutores();
+                                    System.out.println(VERDE_BRILHANTE + "\n\nCarta de condução atualizada com sucesso!\n\n" + RESET);
+                                break;
+                            }
+                            break;
+                        case "0":
+                            return;
+                        default:
+                            System.out.print("Opção invalida. Tente novamente.");
+                            break;
+                    }
+                }
+            } else {
+                System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Condutor não encontrado.");
             }
-        }catch(Exception e){
-            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR, e.getMessage());
         }
+    } catch (Exception e){
+        System.out.println("Dados inválidos.");
+        empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR, e.getMessage());
     }
+} //Completo Dinis
 
     void removerCondutor (Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Remover Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.println("Indique o NIF (Contribuinte): ");
-                String nifStr = ler.nextLine();
-                if (opcaoSair(nifStr)) return;
+                String nifStr = ler.nextLine().trim();
+                if (opcaoSair(nifStr)) break;
                 if (!isNifValido(nifStr)) {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
                     continue;
                 }
                 int nif = Integer.parseInt(nifStr);
-                String nomeCondutor = empresaTVDE.procurarNifCondutor(nif).getNome();
-                System.out.printf("Tem certeza que deseja remover o cliente %s ? [S/N]", nomeCondutor);
-                String validacao = ler.nextLine().trim().toUpperCase();
-                if (validacao.equalsIgnoreCase("S")) {
-                    if (empresaTVDE.removerCondutor(nif)) {
-                        System.out.printf("Condutor %s removido com sucesso.", nomeCondutor);
-                        condutores = empresaTVDE.carregarCondutores();
-                        break;
+                Condutor condutor = empresaTVDE.procurarNifCondutor(nif);
+                if (condutor != null) {
+                System.out.printf("Tem certeza que deseja remover o condutor com NIF %s? [S/N]", condutor.getContribuinte());
+                String validacao = ler.nextLine().trim();
+
+                    if (validacao.equalsIgnoreCase("S")) {
+                        if (empresaTVDE.removerCondutor(condutor.getContribuinte())) {
+                            System.out.printf("Condutor %s removido com sucesso.", condutor.getContribuinte());
+                            condutores = empresaTVDE.carregarCondutores();
+                            break;
+                        } else {
+                            System.out.println("Erro: Condutor não encontrado ou não pode ser removido.");
+                        }
                     } else {
-                        System.out.println("Erro: Condutor não encontrado ou não pode ser removido.");
+                        System.out.println("Operação cancelada.");
+                        break;
                     }
+                } else {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro:" + RESET + " Condutor não encontrado.");
                 }
             }
-
         } catch (Exception e) {
-            System.out.println("Erro de input.");
+            System.out.println("Erro de input." + e.getMessage());
         }
-    } //Completo mas precisa de verificação Dinis :)
+    } //Completo Dinis :)
     //endregion
 
     //region Viaturas
@@ -986,16 +1086,16 @@ public class Main {
             } else if (!viaturas.isEmpty() && opcao == 2) {
                 pesquisarViatura(ler);
             } else if (!viaturas.isEmpty() && opcao == 3) {
-
+                atualizarViatura(ler);
             } else if (!viaturas.isEmpty() && opcao == 4){
                 removerViatura(ler);
             } else if (opcao == 0) {
                 break;
             } else {
-                System.out.println("Opção Inválida! Tente novamente!");
+                System.out.println("Opção Inválida!");
             }
         } while (opcao != 0);
-    }
+    } // Completo Dinis :)
 
     int subMenuViaturas(Scanner ler){
         int count = 1;
@@ -1007,104 +1107,125 @@ public class Main {
             count++;
             System.out.printf(VERDE + "%d\t-\tPesquisar Viatura pela Matrícula\n" + RESET, count);
         }
+        if(!viaturas.isEmpty()){
+            count++;
+            System.out.printf(VERDE + "%d\t-\tAtualizar Viatura pela Matrícula\n" + RESET, count);
+        }
         if(!viaturas.isEmpty()) {
             count++;
             System.out.printf(VERDE + "%d\t-\tRemover Viatura\n" + RESET, count);
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
-        String opcao = ler.nextLine();
-        return Integer.parseInt(opcao);
-    }
+        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
+    } //Completo Dinis :)
 
     void registarViatura(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Novo Registo de Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
-            System.out.println("Indique a marca da viatura.");
-            String marca = ler.nextLine();
-            if (marca.equalsIgnoreCase("sair"))
-                return;
-
-            System.out.println("Indique a modelo da viatura.");
-            String modelo = ler.nextLine();
-            if (modelo.equalsIgnoreCase("sair"))
-                return;
-
-            String anoDeFabrico = "";
+            String matricula, marca, modelo, cor;
+            int anoDeFabrico;
+            boolean status;
             while (true) {
-                System.out.println("Indique o ano de fabrico da viatura [XXXX].");
-                anoDeFabrico = ler.nextLine();
+                System.out.println("Indique a matrícula da viatura [XXXXXX]: ");
+                matricula = ler.nextLine();
 
-                if (anoDeFabrico.equalsIgnoreCase("sair"))
-                    return;
-
-                if (anoDeFabrico.matches("^(19|20)\\d{2}$")) {
-                    break;
-                } else {
-                    System.out.println("Ano inválido. Tente novamente.");
-                }
-            }
-
-            String matricula = "";
-            while (true) {
-                System.out.println("Indique a matrícula no formato [XXXXXX]:");
-                matricula = ler.nextLine().toUpperCase();
-
-                if (matricula.equalsIgnoreCase("sair"))
-                    return;
-
+                if (opcaoSair(matricula)) return;
                 if (!isMatriculaValida(matricula)) {
-                    System.out.println("Formato incorreto. Tente novamente.");
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A Matrícula deve conter exatamente 6 dígitos [XXXXXX]. Tente novamente.");
                     continue;
                 }
-
-                boolean existe = false;
-                for (Viatura viatura : viaturas) {
-                    if (viatura.getMatricula().equalsIgnoreCase(matricula)) {
-                        existe = true;
-                        break;
-                    }
+                if (empresaTVDE.procurarViatura(matricula) != null) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Essa matrícula já está registada no sistema. Tente outro.");
+                    continue;
                 }
-
-                String cor = "";
-                System.out.println("Indique a cor da viatura:");
-                cor = ler.nextLine();
-                if (cor.equalsIgnoreCase("sair"))
-                    return;
-
-                if (existe) {
-                    System.out.println("Erro: Essa matrícula já existe no sistema.");
-                } else {
-                    Viatura viatura = new Viatura(matricula.toUpperCase(), marca, modelo, Integer.parseInt(anoDeFabrico), cor, true);
-                    String resposta = empresaTVDE.adicionarViatura(viatura);
-                    if(resposta.equals("Viatura inserida com Sucesso!")) {
-                        System.out.println(resposta);
-                        viaturas.add(viatura);
-                        break;
-                    }else {
-                        break;
-                    }
-                }
+                break;
             }
+
+            while (true) {
+                System.out.println("Indique a marca da viatura: ");
+                marca = ler.nextLine();
+                if (opcaoSair(marca)) return;
+                if (!isMarcaValida(marca)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A marca deve ser escrito com letras. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("Indique a modelo da viatura: ");
+                modelo = ler.nextLine();
+                if (opcaoSair(modelo)) return;
+                if (!isModeloValido(modelo)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O modelo não pode ficar vazio. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("Indique o ano de fabrico da viatura [XXXX]: ");
+                String anoDeFabricoStr = ler.nextLine();
+                if (opcaoSair(anoDeFabricoStr)) return;
+                if (!isAnoDeFabricoValido(anoDeFabricoStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Ano de fabrico inválido [2000 a 2026]. Tente novamente.");
+                    continue;
+                }
+                anoDeFabrico = Integer.parseInt(anoDeFabricoStr);
+                break;
+            }
+            while (true) {
+                System.out.println("Indique a cor da viatura: ");
+                cor = ler.nextLine();
+                if (opcaoSair(cor)) return;
+                if (!isCorValida(cor)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A cor que inseriu é inválido. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("Indique o status da viatura:\n1\t-\tDisponível\n2\t-\tIndisponível\n");
+                String statusStr = ler.nextLine();
+                if (opcaoSair(statusStr)) return;
+                if (!isStatusValido(statusStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O status informado não está entre os válidos[1/2]. Tente novamente.");
+                    continue;
+                }
+                if (statusStr.equals("1")){
+                    status = true;
+                } else {
+                    status = false;
+                }
+                break;
+            }
+
+            Viatura viatura = new Viatura(matricula,marca,modelo,anoDeFabrico,cor,status);
+            if (empresaTVDE.adicionarViatura(viatura)) {
+                System.out.print(VERDE_BRILHANTE + "\n\nViatura registado com sucesso!\n\n" + RESET);
+                viaturas = empresaTVDE.carregarViaturas();
+            }
+
         } catch (Exception e) {
-            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS, e.getMessage() + ";");
+            System.out.println("Dados inválidos.");
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS, e.getMessage());
         }
-    }
+    } //Completo Dinis :)
 
     private void pesquisarViatura(Scanner ler) {
         while (true) {
             System.out.print(ROXO + "\n\n--- Buscar Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
-            System.out.println("Indique a matrícula: ");
+            System.out.println("Indique a matrícula[XXXXXX]: ");
             String matriculaStr = ler.nextLine().trim().toUpperCase();
             if (opcaoSair(matriculaStr)) break;
             if (!isMatriculaValida(matriculaStr)) {
-                System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A matrícula deve conter exatamente 6 dígitos [XX-XX-XX]. Tente novamente.");
+                System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A matrícula deve conter exatamente 6 dígitos [XXXXXX]. Tente novamente.");
                 continue;
             }
-
-
             try {
                 Viatura viatura = empresaTVDE.procurarViatura(matriculaStr);
                 if (viatura != null) {
@@ -1112,12 +1233,14 @@ public class Main {
                     System.out.println("Enter para continuar...");
                     ler.nextLine();
                     break;
-                } else System.out.println("Viatura não encontrada.");
+                } else {
+                    System.out.println("Viatura não encontrada.");
+                }
             } catch (Exception e) {
                 System.out.println("Matrícula inválida.");
             }
         }
-    }
+    } //Completo Dinis :)
 
     private void atualizarViatura (Scanner ler) {
         try {
@@ -1134,7 +1257,7 @@ public class Main {
                 Viatura viatura = empresaTVDE.procurarViatura(matriculaStr);
                 if (viatura != null) {
                     while (true) {
-                        System.out.println("Escolha a opção que deseja atualizar:" + "");
+                        System.out.println("Escolha a opção que deseja atualizar: ");
                         System.out.println("1\t-\tMarca");
                         System.out.println("2\t-\tModelo");
                         System.out.println("3\t-\tAno de Fabrico");
@@ -1143,154 +1266,146 @@ public class Main {
                         System.out.println("0\t-\tSair");
                         String opcao = ler.nextLine();
 
-                        String marca = "", modelo = "", cor = "", statusStr = "";
-                        int anoDeFabrico = 0;
-
-                        switch (Integer.parseInt(opcao)) {
-                            case 1:
+                        switch (opcao) {
+                            case "1":
                                 while (true) {
                                     System.out.println("Indique a marca: ");
-                                    marca = ler.nextLine();
+                                    String marca = ler.nextLine();
                                     if (opcaoSair(marca)) break;
                                     if (!isMarcaValida(marca)) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A marca deve ser escrito com letras. Tente novamente.");
                                         continue;
                                     } else {
                                         viatura.setMarca(marca);
+                                        empresaTVDE.guardarAlteracoesViaturas();
                                         System.out.println(VERDE_BRILHANTE + "\n\nMarca atualizado com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 2:
+                            case "2":
                                 while (true) {
                                     System.out.println("Indique o modelo: ");
-                                    modelo = ler.nextLine();
-                                    if (opcaoSair(modelo)) return;
+                                    String modelo = ler.nextLine();
+                                    if (opcaoSair(modelo)) break;
                                     if (!isModeloValido(modelo)) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O modelo não pode ficar vazio. Tente novamente.");
                                         continue;
                                     } else {
                                         viatura.setModelo(modelo);
+                                        empresaTVDE.guardarAlteracoesViaturas();
                                         System.out.println(VERDE_BRILHANTE + "\n\nModelo atualizado com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 3:
+                            case "3":
                                 while (true) {
                                     System.out.println("Indique o ano de fabrico: [2000 a 2026]");
                                     String anoDeFabricoStr = ler.nextLine();
-                                    if (opcaoSair(anoDeFabricoStr)) return;
+                                    if (opcaoSair(anoDeFabricoStr)) break;
                                     if (!isAnoDeFabricoValido(anoDeFabricoStr)) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Ano de fabrico inválido [2000 a 2026]. Tente novamente.");
                                         continue;
                                     } else {
-                                        anoDeFabrico = Integer.parseInt(anoDeFabricoStr);
+                                        int anoDeFabrico = Integer.parseInt(anoDeFabricoStr);
                                         viatura.setAnoDeFabrico(anoDeFabrico);
+                                        empresaTVDE.guardarAlteracoesViaturas();
                                         System.out.println(VERDE_BRILHANTE + "\n\nAno de fabrico atualizado com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 4:
+                            case "4":
                                 while (true) {
                                     System.out.println("Indique a cor: ");
-                                    cor = ler.nextLine();
-                                    if (opcaoSair(cor)) return;
+                                    String cor = ler.nextLine();
+                                    if (opcaoSair(cor)) break;
                                     if (!isCorValida(cor)) {
-                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A cor que inseriu é inválido. Tente novamente.");
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A cor que inseriu é inválida. Tente novamente.");
                                         continue;
                                     } else {
                                         viatura.setCor(cor);
+                                        empresaTVDE.guardarAlteracoesViaturas();
                                         System.out.println(VERDE_BRILHANTE + "\n\nCor atualizado com sucesso!\n\n" + RESET);
                                     }
                                     break;
                                 }
                                 break;
-                            case 5:
+                            case "5":
                                 while (true) {
                                     System.out.println("Indique o status da viatura:\n1\t-\tDisponível\n2\t-\tIndisponível\n");
-                                    statusStr = ler.nextLine().toLowerCase();
-                                    if (opcaoSair(statusStr)) return;
-
-                                    boolean status;
-
-                                    if (statusStr.equalsIgnoreCase("1")) {
-                                        status = true;
-                                    } else if (statusStr.equalsIgnoreCase("2")) {
-                                        status = false;
-                                    } else {
-                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O status informado não está entre os válidos. Tente novamente.");
+                                    String statusStr = ler.nextLine().trim();
+                                    if (opcaoSair(statusStr)) break;
+                                    if (!isStatusValido(statusStr)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O status informado não está entre os válidos[1/2]. Tente novamente.");
                                         continue;
                                     }
+                                    boolean status;
+                                    if (statusStr.equals("1")){
+                                        status = true;
+                                    } else {
+                                        status = false;
+                                    }
                                     viatura.setDisponivel(status);
-
+                                    empresaTVDE.guardarAlteracoesViaturas();
                                     System.out.println(VERDE_BRILHANTE + "\n\nStatus atualizado com sucesso!\n\n" + RESET);
                                     break;
                                 }
                                 break;
-
-                            case 0:
+                            case "0":
                                 return;
                             default:
                                 System.out.print("Opção invalida. Tente novamente.");
                                 break;
                         }
                     }
+                } else {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Viatura não encontrada.");
                 }
-                viaturas = empresaTVDE.carregarViaturas();
-                break;
             }
         } catch (Exception e) {
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS, e.getMessage());
         }
-    } // Completo Dinis mas precisa-se adicionar para guardar nos ficheiros :)
+    } // Completo Dinis :)
 
     private void removerViatura(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Remover Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
-            String matricula = "";
             while (true) {
-                System.out.println("Indique a matrícula do veículo que deseja remover no formato [XX-XX-XX]: ");
-                matricula = ler.nextLine().toUpperCase();
-
-                if (matricula.equalsIgnoreCase("sair"))
-                    break;
-
-                if (!isMatriculaValida(matricula)) {
-                    System.out.print("Formato incorreto - ");
+                System.out.println("Indique a matrícula do veículo que deseja remover no formato [XXXXXX]: ");
+                String matriculaStr = ler.nextLine().trim().toUpperCase();
+                if (opcaoSair(matriculaStr)) break;
+                if (!isMatriculaValida(matriculaStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A Matrícula deve conter exatamente 6 dígitos [XXXXXX]. Tente novamente.");
                     continue;
                 }
+                Viatura viatura = empresaTVDE.procurarViatura(matriculaStr);
+                if (viatura != null) {
+                    System.out.printf("Tem certeza que deseja remover a viatura %s ? [S/N]: ", viatura.getMatricula());
+                    String validacao = ler.nextLine().trim().toUpperCase();
 
-                boolean existe = false;
-                for (Viatura viatura : viaturas) {
-                    if (viatura.getMatricula().equalsIgnoreCase(matricula)) {
-                        existe = true;
+                    if (validacao.equalsIgnoreCase("S")) {
+                        if(empresaTVDE.removerViaturas(viatura.getMatricula())) {
+                            System.out.printf("Viatura %s removida com sucesso.\n", viatura.getMatricula());
+                            viaturas = empresaTVDE.carregarViaturas();
+                            break;
+                        } else {
+                            System.out.println("Erro: Viatura não encontrada ou não pode ser removida.");
+                        }
+                    } else {
+                        System.out.println("Operação cancelada.");
                         break;
                     }
-                }
-
-                if (!existe) {
-                    System.out.println("Erro: Essa matrícula não existe no sistema.");
                 } else {
-                    boolean resposta = empresaTVDE.removerViaturas(matricula);
-                    if(resposta) {
-                        System.out.printf("Viatura com matrícula %s removida com sucesso.", matricula);
-                        System.out.print("Digite uma tecla qualquer para continuar");
-                        viaturas = empresaTVDE.carregarViaturas();
-                        ler.nextLine();
-                        break;
-                    }else {
-                        break;
-                    }
+                    System.out.println(VERMELHO_BRILHANTE + "Erro:" + RESET + " Viatura não encontrada.");
                 }
             }
         } catch (Exception e) {
-            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS, e.getMessage() + ";");
+            System.out.println("Erro de input." + e.getMessage());
         }
-    }
+    } //Completo Dinis :)
     //endregion
 
     //region Reservas
@@ -1612,9 +1727,10 @@ public class Main {
             if (media > 0) {
                 System.out.println("A distância média é de: " + media);
             } else System.out.println("Não foi encontrado registos entre as datas de viagens inseridas");
-        }catch (DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             System.out.println("Erro no formato da data" + e.getMessage());
         }
-    private void verListaDeClientes(Scanner ler, String matricula) {
+    /*private void verListaDeClientes(Scanner ler, String matricula) {
+    } */
     }
 }

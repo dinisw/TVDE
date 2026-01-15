@@ -19,8 +19,8 @@ public class EmpresaTVDE {
     private final String CAMINHO_FICHEIRO_VIAGENS = "viagens.txt";
 
     private final String CAMINHO_FICHEIRO_LOGS_VIATURAS = "logsViaturas.txt";
-    private final String CAMINHO_FICHEIRO_LOGS_CLIENTE = "logsClientes.txt";
-    private final String CAMINHO_FICHEIRO_LOGS_CONDUTOR = "logsCondutor.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_CLIENTES = "logsClientes.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_CONDUTORES = "logsCondutor.txt";
     private final String CAMINHO_FICHEIRO_LOGS_RESERVAS = "logsReservas.txt";
     private final String CAMINHO_FICHEIRO_LOGS_VIAGENS = "logsViagens.txt";
 
@@ -49,30 +49,24 @@ public class EmpresaTVDE {
 
     //region CRUD VIATURAS
 
-    //region CREATE
-    public String adicionarViatura(Viatura viatura) {
-        if (viatura.getMatricula() == null || viatura.getMatricula().isEmpty()) {
-            return "Para inserir uma viatura é obrigatório a inserção da matrícula";
-        }
-        if (viaturas.add(viatura)) {
+    //CREATE
+    public boolean adicionarViatura(Viatura viatura) {
+        if (viatura == null || procurarViatura(viatura.getMatricula()) != null)
+            return false;
+
+        boolean adicionou = viaturas.add(viatura);
+        if (adicionou) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS, true))) {
                 writer.write(viatura.paraFicheiro());
                 writer.newLine();
-                return "Viatura inserida com Sucesso!";
+                return true;
             } catch (IOException e) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
-                    writer.write("Erro ao adicionar viaturas: " + e.getMessage());
-                    writer.newLine();
-                    return "Ocorreu um erro durante a inserção da viatura, tente novamente....";
-                } catch (IOException ex) {
-                    return "";
-                }
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, e.getMessage());
+                return true;
             }
         }
-        return "";
-    }
-    //endregion
-
+        return false;
+    } // Completo
     //READ
     public ArrayList<Viatura> carregarViaturas() {
         viaturas.clear();
@@ -83,83 +77,53 @@ public class EmpresaTVDE {
                 String[] dados = linha.split(";");
                 if (dados.length >= 6) {
                     try {
-                        String matricula = dados[0];
-                        String marca = dados[1];
-                        String modelo = dados[2];
-                        String cor = dados[4];
-                        boolean disponivel = false;
-                        try {
-                            disponivel = Boolean.parseBoolean(dados[5]);
-                        } catch (IllegalArgumentException e) {
-                            disponivel = false;
-                        }
-
+                        String matricula = dados[0].trim();
+                        String marca = dados[1].trim();
+                        String modelo = dados[2].trim();
                         int ano = 0;
                         try {
-                            ano = Integer.parseInt(dados[3]);
+                            ano = Integer.parseInt(dados[3].trim());
                         } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Ano inválido na linha: " + linha);
                             ano = 0;
                         }
+                        String cor = dados[4].trim();
+                        boolean disponivel = Boolean.parseBoolean(dados[5].trim());
+
                         Viatura viatura = new Viatura(matricula, marca, modelo, ano, cor, disponivel);
                         viaturas.add(viatura);
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro linha: " + linha);
-                        return new ArrayList<>();
                     }
                 }
             }
-            if(!viaturas.isEmpty()) return viaturas;
-            else return new ArrayList<>();
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro leitura ficheiro: " + e.getMessage());
-            return new ArrayList<>();
         }
-    }
+        return viaturas;
+    } //Completo Dinis
+    //UPDATE na main!
 
-    public boolean atualizarViatura(String matricula, String novaMarca, String novoModelo, int novoAnoDeFabrico, String novaCor, boolean novoStatus) {
+    //DELETE
+    public boolean removerViaturas(String matricula) {
         Viatura viatura = procurarViatura(matricula);
-        if (viatura != null) {
-            viatura.setMarca(novaMarca);
-            viatura.setModelo(novoModelo);
-            viatura.setAnoDeFabrico(novoAnoDeFabrico);
-            viatura.setCor(novaCor);
-            //viatura.setStatus(novoStatus);
-
+        if (viatura == null && viaturas.remove(viatura)) {
             guardarAlteracoesViaturas();
             return true;
         }
         return false;
-    }
-
-    //DELETE
-    public Boolean removerViaturas(String matricula) {
-        Viatura viatura = procurarViatura(matricula);
-        if (viatura == null)
-            return false;
-        if (viaturas.remove(viatura)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS))) {
-                for (Viatura viatura2 : viaturas) {
-                    writer.write(viatura2.paraFicheiro());
-                    writer.newLine();
-                }
-                return true;
-            } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro ao atualizar ficheiros" + e.getMessage());
-            }
-        }
-        return false;
-    }
+    } //Completo Dinis
 
     public Viatura procurarViatura(String matricula) {
         for (Viatura viatura : viaturas) {
-            if (viatura.getMatricula().equals(matricula)) {
+            if (viatura.getMatricula() != null && viatura.getMatricula().equalsIgnoreCase(matricula)) {
                 return viatura;
             }
         }
         return null;
-    }
+    } //Completo Dinis
 
-    private void guardarAlteracoesViaturas() {
+    public void guardarAlteracoesViaturas() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS))) {
             for (Viatura viatura : viaturas) {
                 writer.write(viatura.paraFicheiro());
@@ -168,10 +132,11 @@ public class EmpresaTVDE {
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro ao reescrever viaturas: " + e.getMessage());
         }
-    }
+    } //Completo Dinis
     //endregion
 
-    // CRUD de Cliente
+    //region CRUD CLIENTES
+
     //CREATE
     public boolean adicionarCliente(Cliente cliente) {
         if (cliente == null || procurarNifCliente(cliente.getContribuinte()) != null)
@@ -184,59 +149,93 @@ public class EmpresaTVDE {
                 writer.newLine();
                 return true;
             } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, e.getMessage());
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, e.getMessage());
                 return true;
             }
         }
         return false;
-    }
-
+    } //Completo
+    //READ
     public ArrayList<Cliente> carregarClientes() {
         clientes.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CLIENTES))) {
             String linha;
+
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
                 if (dados.length >= 8) {
                     try {
-                        String nome = dados[0];
-                        int idade = Integer.parseInt(dados[1]);
-                        String sexo = dados[2];
-                        String email = dados[3];
-                        int tel = Integer.parseInt(dados[4]);
-                        String morada = dados[5];
-                        int cc = Integer.parseInt(dados[6]);
-                        int nif = Integer.parseInt(dados[7]);
-
+                        String nome = dados[0].trim();
+                        int idade = 0;
+                        try {
+                            idade = Integer.parseInt(dados[1].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Idade inválido na linha: " + linha);
+                            idade = 0;
+                        }
+                        String sexo = dados[2].trim();
+                        String email = dados[3].trim();
+                        int tel = 0;
+                        try {
+                            tel = Integer.parseInt(dados[4].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Número de telemóvel inválido na linha: " + linha);
+                            tel = 0;
+                        }
+                        String morada = dados[5].trim();
+                        int cc = 0;
+                        try {
+                            cc = Integer.parseInt(dados[6].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Cartão de cidadão inválido na linha: " + linha);
+                            cc = 0;
+                        }
+                        int nif = 0;
+                        try {
+                            nif = Integer.parseInt(dados[7].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "NIF inválido na linha: " + linha);
+                            nif = 0;
+                        }
                         Cliente cliente = new Cliente(nome, idade, sexo, email, tel, morada, cc, nif);
-                        // Se tiver totalViagens e totalGasto, ler também:
                         if (dados.length >= 10) {
-                            cliente.setTotalViagens(Integer.parseInt(dados[8]));
-                            cliente.setTotalGasto(Double.parseDouble(dados[9]));
+                            try {
+                                cliente.setTotalViagens(Integer.parseInt(dados[8].trim()));
+                                cliente.setTotalGasto(Double.parseDouble(dados[9].trim()));
+                            } catch (NumberFormatException e) {
+                                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro ao ler histórico financeiro do cliente: " + nome);
+                            }
                         }
                         clientes.add(cliente);
                     } catch (NumberFormatException e) {
-                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro linha: " + linha);
-                        return new ArrayList<>();
+                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro linha: " + linha);
                     }
                 }
             }
-            if(!clientes.isEmpty()) return clientes;
-            else return new ArrayList<>();
         } catch (IOException e) {
-            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro leitura ficheiro: " + e.getMessage());
-            return new ArrayList<>();
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro leitura ficheiro: " + e.getMessage());
         }
-    }
+        return clientes;
+    } //Completo Dinis
+    //UPDATE na main!
 
-    //READ
+    //DELETE
+    public boolean removerCliente(int nif) {
+        Cliente cliente = procurarNifCliente(nif);
+        if (cliente != null && clientes.remove(cliente)) {
+            guardarAlteracoesClientes();
+            return true;
+        }
+        return false;
+    } //Completo Dinis
+
     public Cliente procurarNifCliente(int nif) {
         for (Cliente cliente : clientes) {
             if (cliente.getContribuinte() == nif)
                 return cliente;
         }
         return null;
-    }
+    } //Completo Dinis
 
     public Cliente procurarCartaoDeCidadaoCliente(int cc) {
         for (Cliente cliente : clientes) {
@@ -244,134 +243,116 @@ public class EmpresaTVDE {
                 return cliente;
         }
         return null;
-    }
+    } //Completo Dinis
 
-    //READ
-    public void listarClientes() {
-        if (clientes == null) {
-            System.out.println("Não existe nenhum cliente registado");
-        } else {
-            for (Cliente cliente : clientes) {
-                System.out.println(cliente.toString());
-            }
-        }
-    }
-
-
-    //UPDATE
-    public boolean atualizarCliente(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, int novoCC, int nifOriginal) {
-        Cliente cliente = procurarNifCliente(nifOriginal);
-        if (cliente != null) {
-            cliente.setNome(novoNome);
-            cliente.setIdade(novaIdade);
-            cliente.setSexo(novoSexo);
-            cliente.setEmail(novoEmail);
-            cliente.setTelefone(novoTelefone);
-            cliente.setMorada(novaMorada);
-            cliente.setCartaoDeCidadao(novoCC);
-
-            guardarAlteracoesClientes();
-            return true;
-        }
-        return false;
-    }
-
-    //DELETE
-    public boolean removerCliente(int nif) {
-        Cliente cliente = procurarNifCliente(nif);
-        if (cliente == null)
-            return false;
-        if (clientes.remove(cliente)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CLIENTES))) {
-                for (Cliente cliente2 : clientes) {
-                    writer.write(cliente2.paraFicheiro());
-                    writer.newLine();
-                }
-                return true;
-            } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro ao atualizar ficheiros" + e.getMessage());
-            }
-        }
-        return false;
-    }
-
-    //método para reescrever os ficheiros
-    private void guardarAlteracoesClientes() {
+    public void guardarAlteracoesClientes() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CLIENTES))) {
             for (Cliente cliente : clientes) {
                 writer.write(cliente.paraFicheiro());
                 writer.newLine();
             }
         } catch (IOException e) {
-            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro ao reescrever clientes: " + e.getMessage());
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro ao reescrever clientes: " + e.getMessage());
         }
-    }
+    }  //Completo
+//endregion
 
+    //region CRUD  CONDUTOR
 
-    // CRUD PARA CONDUTOR
     // CREATE
-
     public boolean adicionarCondutor(Condutor condutor) {
-        if (condutor == null || procurarNifCondutor(condutor.getContribuinte()) != null) return false;
+        if (condutor == null || procurarNifCondutor(condutor.getContribuinte()) != null)
+            return false;
 
-        if (condutores.add(condutor)) {
+        boolean adicionou = condutores.add(condutor);
+        if (adicionou) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES, true))) {
                 writer.write(condutor.paraFicheiro());
                 writer.newLine();
                 return true;
             } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, e.getMessage());
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, e.getMessage());
                 return true;
             }
         }
         return false;
-    }
-
+    } //Completo Dinis
+    //READ
     public ArrayList<Condutor> carregarCondutores() {
         condutores.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
             String linha;
+
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
                 if (dados.length >= 9) {
                     try {
-                        String nome = dados[0];
-                        int idade = Integer.parseInt(dados[1]);
-                        String sexo = dados[2];
-                        String email = dados[3];
-                        int tel = Integer.parseInt(dados[4]);
-                        String morada = dados[5];
-                        int cc = Integer.parseInt(dados[6]);
-                        int nif = Integer.parseInt(dados[7]);
-                        String carta = dados[8];
+                        String nome = dados[0].trim();
 
+                        int idade = 0;
+                        try {
+                            idade = Integer.parseInt(dados[1].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Idade inválido na linha: " + linha);
+                            idade = 0;
+                        }
+                        String sexo = dados[2].trim();
+                        String email = dados[3].trim();
+                        int tel = 0;
+                        try {
+                            tel = Integer.parseInt(dados[4].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Número de telemóvel inválido na linha: " + linha);
+                            tel = 0;
+                        }
+                        String morada = dados[5].trim();
+                        int cc = 0;
+                        try {
+                            cc = Integer.parseInt(dados[6].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Cartão de cidadão inválido na linha: " + linha);
+                            cc = 0;
+                        }
+                        int nif = 0;
+                        try {
+                            nif = Integer.parseInt(dados[7].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "NIF inválido na linha: " + linha);
+                            nif = 0;
+                        }
+                        String carta = dados[8].trim();
 
                         Condutor condutor = new Condutor(nome, idade, sexo, email, tel, morada, cc, carta, nif);
-                        condutor.setCartaDeConducao(carta);
                         condutores.add(condutor);
-                    } catch (Exception e) {
-                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro linha: " + linha);
-                        return new ArrayList<>();
+                    } catch (NumberFormatException e) {
+                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Erro linha: " + linha);
                     }
                 }
             }
-            if(!condutores.isEmpty()) return condutores;
-            else return new ArrayList<>();
         } catch (IOException e) {
-            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro leitura ficheiro: " + e.getMessage());
-            return new ArrayList<>();
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Erro leitura ficheiro: " + e.getMessage());
         }
-    }
+        return condutores;
+    } //Completo dinis :)
+    //UPDATE na main!
 
+    //DELETE
+    public boolean removerCondutor(int nif) {
+        Condutor condutor = procurarNifCondutor(nif);
+        if (condutor != null && condutores.remove(condutor)) {
+            guardarAlteracoesCondutores();
+            return true;
+        }
+        return false;
+    } //Completo Dinis :)
 
-    //READ
     public Condutor procurarNifCondutor(int nif) {
         for (Condutor condutor : condutores) {
             if (condutor.getContribuinte() == nif)
                 return condutor;
         }
         return null;
-    }
+    } //Completo Dinis
 
     public Condutor procurarCartaoDeCidadaoCondutor(int cc) {
         for (Condutor condutor : condutores) {
@@ -379,75 +360,27 @@ public class EmpresaTVDE {
                 return condutor;
         }
         return null;
-    }
+    } //Completo Dinis
 
     public Condutor procurarCartaDeConducaoCondutor(String carta) {
         for (Condutor condutor : condutores) {
-            if (Objects.equals(condutor.getCartaDeConducao(), carta))
+            if (condutor.getCartaDeConducao() != null && condutor.getCartaDeConducao().equalsIgnoreCase(carta)) {
                 return condutor;
-        }
-        return null;
-    }
-
-    //READ
-    public void listarCondutores() {
-        if (condutores == null) {
-            System.out.println("Não existe nenhum condutor cadastrado!");
-        }
-        for (Condutor condutor : condutores) {
-            System.out.println(condutor.toString());
-        }
-    }
-
-    //UPDATE
-    public boolean atualizarCondutor(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, String novaCarta, int novoCartaoDeCidadao, int nifOriginal) {
-        Condutor condutor = procurarNifCondutor(nifOriginal);
-        if (condutor != null) {
-            condutor.setNome(novoNome);
-            condutor.setIdade(novaIdade);
-            condutor.setSexo(novoSexo);
-            condutor.setEmail(novoEmail);
-            condutor.setTelefone(novoTelefone);
-            condutor.setMorada(novaMorada);
-            condutor.setCartaDeConducao(novaCarta);
-            condutor.setCartaoDeCidadao(novoCartaoDeCidadao);
-
-            guardarAlteracoesCondutores();
-            return true;
-        }
-        return false;
-    }
-
-    //DELETE
-    public boolean removerCondutor(int nif) {
-        Condutor condutor = procurarNifCondutor(nif);
-        if (condutor == null) return false;
-
-        if (condutores.remove(condutor)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES, false))) {
-                for (Condutor condutor2 : condutores) {
-                    writer.write(condutor2.paraFicheiro());
-                    writer.newLine();
-                }
-                return true;
-            } catch (IOException e) {
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, e.getMessage());
             }
         }
-        return false;
-    }
+        return null;
+    } //Completo Dinis
 
-    //método para reescrever o ficheiro de condutores
-    private void guardarAlteracoesCondutores() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES, false))) {
+    public void guardarAlteracoesCondutores() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES))) {
             for (Condutor condutor : condutores) {
                 writer.write(condutor.paraFicheiro());
                 writer.newLine();
             }
         } catch (IOException e) {
-            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro ao reescrever condutores: " + e.getMessage());
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Erro ao reescrever condutores: " + e.getMessage());
         }
-    }
+    } //Completo Dinis :)
 
     //Faturação total do condutor
     public double calcularFaturacaoTotal(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
@@ -470,8 +403,8 @@ public class EmpresaTVDE {
         }
         return total;
     }
-
-    // CRUD DA RESERVA
+//endregion
+    //region CRUD RESERVA
     //CREATE
     /*public boolean adicionarReserva(Reserva reserva) {
         if (reserva == null || (procurarNifReserva(reserva.getCliente().getContribuinte()) != null && !reserva.getViatura().isStatus()))
