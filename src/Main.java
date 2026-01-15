@@ -1391,6 +1391,22 @@ public class Main {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
+
+    void distanciaMedia(Scanner ler) {
+        try {
+            System.out.println("Indique a data inicial em formato (dd/MM/aaaa): ");
+            DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDateTime dataInicio = LocalDateTime.parse(ler.nextLine(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            System.out.println("Indique a data fim em formato (dd/MM/aaaa): ");
+            LocalDateTime dataFim = LocalDateTime.parse(ler.nextLine(), formatterData);
+            double media = empresaTVDE.calculaDistanciaMedia(dataInicio, dataFim);
+
+            if (media > 0) {
+                System.out.println("A distância média é de: " + media);
+            } else System.out.println("Não foi encontrado registos entre as datas de viagens inseridas");
+        }catch (DateTimeParseException e){
+            System.out.println("Erro no formato da data" + e.getMessage());
+        }
     private void verListaDeClientes(Scanner ler, String matricula) {
     }
 }
