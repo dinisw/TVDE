@@ -123,7 +123,7 @@ public class EmpresaTVDE {
             viatura.setModelo(novoModelo);
             viatura.setAnoDeFabrico(novoAnoDeFabrico);
             viatura.setCor(novaCor);
-            viatura.setStatus(novoStatus);
+            //viatura.setStatus(novoStatus);
 
             guardarAlteracoesViaturas();
             return true;
@@ -473,7 +473,7 @@ public class EmpresaTVDE {
 
     // CRUD DA RESERVA
     //CREATE
-    public boolean adicionarReserva(Reserva reserva) {
+    /*public boolean adicionarReserva(Reserva reserva) {
         if (reserva == null || (procurarNifReserva(reserva.getCliente().getContribuinte()) != null && !reserva.getViatura().isStatus()))
             return false;
         if (reservas.add(reserva)) {
@@ -487,7 +487,7 @@ public class EmpresaTVDE {
             }
         }
         return false;
-    }
+    } */
 
     //READ
     public ArrayList<Reserva> carregarReservas() {
@@ -699,7 +699,7 @@ public class EmpresaTVDE {
         return media;
     }
 
-    public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
+    /*public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<String> destinos = new ArrayList<>();
 
         try (BufferedReader viagem = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
@@ -735,7 +735,7 @@ public class EmpresaTVDE {
             return "Está vazio!";
         }
 
-    }
+    }    */
 
     //getter gerais
     public ArrayList<Cliente> getClientes() {

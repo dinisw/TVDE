@@ -72,11 +72,11 @@ public class Viatura {
         else
             status = "Indisponível";
         return "Viatura:\n" +
-                "Matricula = " + matricula + '\n' +
-                "Marca = " + marca + '\n' +
-                "Modelo = " + modelo + '\n' +
-                "Ano de Fabrico = " + anoDeFabrico + '\n' +
-                "Cor = " + cor + '\n' +
+                "Matricula = " + getMatricula() + '\n' +
+                "Marca = " + getMarca() + '\n' +
+                "Modelo = " + getModelo() + '\n' +
+                "Ano de Fabrico = " + getAnoDeFabrico() + '\n' +
+                "Cor = " + getCor() + '\n' +
                 "Status = " + status + '\n';
     }
 
