@@ -64,7 +64,14 @@ public class Viagem {
     }
 
     public String paraFicheiro() {
-        return this.cliente + ";" + this.condutor + ";" + this.viatura + ";" + this.inicio + ";" + this.fim + ";" + this.moradaOrigem + ";" + this.moradaDestino  + ";" + this.custoViagem;
+        return cliente.getContribuinte() + ";" +
+                condutor.getContribuinte() + ";" +
+                viatura.getMatricula() + ";" +
+                inicio + ";" +
+                fim + ";" +
+                moradaOrigem + ";" +
+                moradaDestino + ";" +
+                custoViagem;
     }
     /**
      * Obtém o cliente da viagem.

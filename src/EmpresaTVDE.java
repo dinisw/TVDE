@@ -54,9 +54,7 @@ public class EmpresaTVDE {
         if (viatura.getMatricula() == null || viatura.getMatricula().isEmpty()) {
             return "Para inserir uma viatura é obrigatório a inserção da matrícula";
         }
-        boolean adicionou = viaturas.add(viatura);
-
-        if (adicionou) {
+        if (viaturas.add(viatura)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS, true))) {
                 writer.write(viatura.paraFicheiro());
                 writer.newLine();
@@ -84,64 +82,70 @@ public class EmpresaTVDE {
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
                 if (dados.length >= 6) {
-                    String matricula = dados[0];
-                    String marca = dados[1];
-                    String modelo = dados[2];
-                    String cor = dados[4];
-                    boolean disponivel = false;
                     try {
-                        disponivel = Boolean.parseBoolean(dados[5]);
-                    } catch (IllegalArgumentException e) {
-                        disponivel = false;
-                    }
+                        String matricula = dados[0];
+                        String marca = dados[1];
+                        String modelo = dados[2];
+                        String cor = dados[4];
+                        boolean disponivel = false;
+                        try {
+                            disponivel = Boolean.parseBoolean(dados[5]);
+                        } catch (IllegalArgumentException e) {
+                            disponivel = false;
+                        }
 
-                    int ano = 0;
-                    try {
-                        ano = Integer.parseInt(dados[3]);
+                        int ano = 0;
+                        try {
+                            ano = Integer.parseInt(dados[3]);
+                        } catch (NumberFormatException e) {
+                            ano = 0;
+                        }
+                        Viatura viatura = new Viatura(matricula, marca, modelo, ano, cor, disponivel);
+                        viaturas.add(viatura);
                     } catch (NumberFormatException e) {
-                        ano = 0;
+                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro linha: " + linha);
+                        return new ArrayList<>();
                     }
-                    Viatura viatura = new Viatura(matricula, marca, modelo, ano, cor, disponivel);
-                    viaturas.add(viatura);
                 }
             }
-            return viaturas;
+            if(!viaturas.isEmpty()) return viaturas;
+            else return new ArrayList<>();
         } catch (IOException e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
-                writer.write("Erro ao ler viaturas: " + e.getMessage());
-                writer.newLine();
-                return null;
-            } catch (IOException ex) {
-                //System.out.println("Erro crítico: Falha ao ler ficheiro e falha ao gravar log.");
-            }
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro leitura ficheiro: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return null;
+    }
+
+    public boolean atualizarViatura(String matricula, String novaMarca, String novoModelo, int novoAnoDeFabrico, String novaCor, boolean novoStatus) {
+        Viatura viatura = procurarViatura(matricula);
+        if (viatura != null) {
+            viatura.setMarca(novaMarca);
+            viatura.setModelo(novoModelo);
+            viatura.setAnoDeFabrico(novoAnoDeFabrico);
+            viatura.setCor(novaCor);
+            //viatura.setStatus(novoStatus);
+
+            guardarAlteracoesViaturas();
+            return true;
+        }
+        return false;
     }
 
     //DELETE
-    public Boolean deletarViaturas(String matricula) {
-        Viatura viaturaEncontrada = null;
-        viaturaEncontrada = procurarViatura(matricula);
-
-        if (viaturaEncontrada == null) {
+    public Boolean removerViaturas(String matricula) {
+        Viatura viatura = procurarViatura(matricula);
+        if (viatura == null)
             return false;
-        }
-
-        try {
-            viaturas.remove(viaturaEncontrada);
-            return true;
-        } catch (Exception e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIATURAS, true))) {
-                writer.write("Erro remover viatura: " + e.getMessage());
-                writer.newLine();
-            } catch (IOException ex) {
-                return false;
+        if (viaturas.remove(viatura)) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS))) {
+                for (Viatura viatura2 : viaturas) {
+                    writer.write(viatura2.paraFicheiro());
+                    writer.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro ao atualizar ficheiros" + e.getMessage());
             }
-        }
-        try {
-            guardarAlteracoes();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         return false;
     }
@@ -155,13 +159,14 @@ public class EmpresaTVDE {
         return null;
     }
 
-    private void guardarAlteracoes() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS, false))) {
-
-            for (Viatura v : viaturas) {
-                writer.write(v.paraFicheiro());
+    private void guardarAlteracoesViaturas() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIATURAS))) {
+            for (Viatura viatura : viaturas) {
+                writer.write(viatura.paraFicheiro());
                 writer.newLine();
             }
+        } catch (IOException e) {
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro ao reescrever viaturas: " + e.getMessage());
         }
     }
     //endregion
@@ -212,10 +217,12 @@ public class EmpresaTVDE {
                         clientes.add(cliente);
                     } catch (NumberFormatException e) {
                         adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro linha: " + linha);
+                        return new ArrayList<>();
                     }
                 }
             }
-            return clientes;
+            if(!clientes.isEmpty()) return clientes;
+            else return new ArrayList<>();
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTE, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
@@ -252,7 +259,7 @@ public class EmpresaTVDE {
 
 
     //UPDATE
-    public boolean atualizarCliente(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, int novoCC,int nifOriginal) {
+    public boolean atualizarCliente(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, int novoCC, int nifOriginal) {
         Cliente cliente = procurarNifCliente(nifOriginal);
         if (cliente != null) {
             cliente.setNome(novoNome);
@@ -336,8 +343,7 @@ public class EmpresaTVDE {
                         String morada = dados[5];
                         int cc = Integer.parseInt(dados[6]);
                         int nif = Integer.parseInt(dados[7]);
-                        String carta = dados [8];
-
+                        String carta = dados[8];
 
 
                         Condutor condutor = new Condutor(nome, idade, sexo, email, tel, morada, cc, carta, nif);
@@ -345,11 +351,14 @@ public class EmpresaTVDE {
                         condutores.add(condutor);
                     } catch (Exception e) {
                         adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro linha: " + linha);
+                        return new ArrayList<>();
                     }
                 }
             }
-            return condutores;
+            if(!condutores.isEmpty()) return condutores;
+            else return new ArrayList<>();
         } catch (IOException e) {
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTOR, "Erro leitura ficheiro: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -391,7 +400,7 @@ public class EmpresaTVDE {
     }
 
     //UPDATE
-    public boolean atualizarCondutor(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, String novaCarta,int novoCartaoDeCidadao,int nifOriginal) {
+    public boolean atualizarCondutor(String novoNome, int novaIdade, String novoSexo, String novoEmail, int novoTelefone, String novaMorada, String novaCarta, int novoCartaoDeCidadao, int nifOriginal) {
         Condutor condutor = procurarNifCondutor(nifOriginal);
         if (condutor != null) {
             condutor.setNome(novoNome);
@@ -443,53 +452,54 @@ public class EmpresaTVDE {
     //Faturação total do condutor
     public double calcularFaturacaoTotal(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         double total = 0;
-        for (Viagem viagem : viagens) {
-            if (viagem.getCondutor().getContribuinte() == contribuinte) {
-                if (!viagem.getInicio().isBefore(inicio) && !viagem.getInicio().isBefore(fim)) {
-                    total += viagem.getCustoViagem();
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
+            String linha;
+            while((linha = reader.readLine()) != null){
+                String[] dados = linha.split(",");
+
+                if(dados.length >=8){
+                    int contribuinteLido = Integer.parseInt(dados[0]);
+                    LocalDateTime data = LocalDateTime.parse(dados[3]);
+                    if (contribuinteLido == contribuinte && data.isBefore(inicio) && data.isAfter(fim)) {
+                        total += Double.parseDouble(dados[7]);
+                    }
                 }
             }
+        }catch(IOException e){
+            System.out.println("Erro ao calcular faturação total: " + e.getMessage());
         }
         return total;
     }
 
     // CRUD DA RESERVA
     //CREATE
-    public boolean adicionarReserva(Reserva reserva) {
-        if (reserva.getViatura().getMatricula() == null && reserva.getDataHoraInicio() == null) {
+    /*public boolean adicionarReserva(Reserva reserva) {
+        if (reserva == null || (procurarNifReserva(reserva.getCliente().getContribuinte()) != null && !reserva.getViatura().isStatus()))
             return false;
-        }
-        boolean adicionar = reservas.add(reserva);
-        if (adicionar) {
+        if (reservas.add(reserva)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
                 writer.write(reserva.paraFicheiro());
                 writer.newLine();
-                System.out.println("Reserva adicionado com sucesso!");
                 return true;
             } catch (IOException e) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_RESERVAS))) {
-                    writer.write("Erro ao adicionar reservas: " + e.getMessage());
-                    writer.newLine();
-                    System.out.println("Erro ao inserir reservas!");
-                } catch (IOException ex) {
-                    return false;
-                }
+               adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, e.getMessage());
+               return true;
             }
         }
         return false;
-    }
+    } */
 
     //READ
-    public ArrayList<Reserva> reservas() {
+    public ArrayList<Reserva> carregarReservas() {
         reservas.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if (dados.length == 6) {
+                if (dados.length >= 6) {
                     int contribuinte = Integer.parseInt(dados[0]);
                     String matricula = dados[1];
-                    LocalDateTime data = LocalDateTime.parse(dados[2]);
+                    LocalDateTime datahora = LocalDateTime.parse(dados[2]);
                     String origem = dados[3];
                     String destino = dados[4];
                     double kms = Double.parseDouble(dados[5]);
@@ -497,12 +507,12 @@ public class EmpresaTVDE {
                     Cliente cliente = procurarNifCliente(contribuinte);
                     Viatura viatura = procurarViatura(matricula);
 
-                    if(cliente != null && viatura != null) {
-                        Reserva reserva = new Reserva();
+                    if (cliente != null && viatura != null) {
+                        Reserva reserva = new Reserva(cliente,viatura,datahora,origem,destino,kms);
                         reservas.add(reserva);
                     }
-                    }
                 }
+            }
             return reservas;
         } catch (IOException e) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_RESERVAS, true))) {
@@ -516,132 +526,216 @@ public class EmpresaTVDE {
         return null;
     }
 
-    public boolean eliminarReservas(int contribuinte) {
-        Reserva reservaEncontrada = null;
-        reservaEncontrada = procurarReserva(contribuinte);
-        if (reservaEncontrada == null) {
+    public Boolean removerReservas(int contribuinte) {
+        Reserva reserva = procurarNifReserva(contribuinte);
+        if (reserva == null)
             return false;
-        }
-        try {
-            reservas.remove(reservaEncontrada);
-            return true;
-        } catch (Exception e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_RESERVAS, true))) {
-                writer.write("Erro remover reserva: " + e.getMessage());
-                writer.newLine();
-            } catch (IOException ex) {
-                return false;
+        if (reservas.remove(reserva)) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS))) {
+                for (Reserva reserva2 : reservas) {
+                    writer.write(reserva2.paraFicheiro());
+                    writer.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro ao atualizar ficheiros" + e.getMessage());
             }
-        }
-        try {
-            guardarAlteracoes();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         return false;
     }
 
-    public Reserva procurarReserva(int contribuinte) {
+    public Reserva procurarNifReserva(int contribuinte) {
         for (Reserva reserva : reservas) {
             if (reserva.getCliente().getContribuinte() == contribuinte) {
                 return reserva;
             }
         }
         return null;
-    }public void guardarReservas() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, false))) {
-            for (Reserva r : reservas) {
-                writer.write(r.paraFicheiro());
+    }
+
+    public Reserva procurarMatriculaReserva(String matricula) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getViatura().getMatricula() == matricula) {
+                return reserva;
+            }
+        }
+        return null;
+    }
+
+    private void guardarAlteracoesReservas() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS))) {
+            for (Reserva reserva : reservas) {
+                writer.write(reserva.paraFicheiro());
                 writer.newLine();
             }
+        } catch (IOException e) {
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_RESERVAS, "Erro ao reescrever reservas: " + e.getMessage());
         }
     }
 
     public boolean adicionarViagem(Viagem viagem) {
-        for(Viagem v : viagens) {}
-        if(viagem.getViatura().getMatricula().equals(viagem.getViatura().getMatricula()) && viagem.getInicio().equals(viagem.getInicio())) {
-            return false;
+        for (Viagem viagem1 : viagens) {
+            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getInicio().equals(viagem1.getInicio())) {
+                return false;
+            }
         }
         boolean adicionar = viagens.add(viagem);
         if (adicionar) {
-            try(BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS))){
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS,true))) {
                 writer.write(viagem.paraFicheiro());
                 writer.newLine();
                 System.out.println("Viagem adicionado com sucesso!");
                 return true;
-            }catch (IOException e) {
-                try(BufferedWriter writer = new BufferedWriter(new FileWriter (CAMINHO_FICHEIRO_LOGS_VIAGENS))){
+            } catch (IOException e) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIAGENS))) {
                     writer.write("Erro ao adicionar uma viagem" + e.getMessage());
                     writer.newLine();
                     System.out.println("Ocorreu um erro ao adicionar uma viagem, tente novamente.");
-                }catch (IOException ex){
+                } catch (IOException ex) {
                     return false;
                 }
             }
         }
         return false;
     }
-    public ArrayList<Viagem> procurarViagens(int contribuinte) {
-        viagens.clear();
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
-            String linha;
 
-            while ((linha = reader.readLine()) != null){
-                String[] dados = linha.split(",");
-                if(dados.length >= 6) {
-                    Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[0]));
-                    Cliente cliente = procurarNifCliente(Integer.parseInt(dados[1]));
-                    Viatura viatura = procurarViatura(dados[2]);
-                    if(condutor != null && cliente != null && viatura != null) {
-                        LocalDateTime inicio = LocalDateTime.parse(dados[3]);
-                        LocalDateTime fim = LocalDateTime.parse(dados[4]);
-                        String moradaOrigem = dados[5];
-                        String moradaDestino = dados[6];
-                        double custoViagem = Double.parseDouble(dados[7]);
-                        Viagem viagem = new Viagem();
-                        viagens.add(viagem);
-                    }
-                }
-                return viagens;
-            }
-        } catch (IOException e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIAGENS))){
-                writer.write("Erro ao ler viagens: " + e.getMessage());
-                writer.newLine();
-                return null;
-        } catch (IOException ex) {
-                System.out.println("Erro crítico: Falha ao ler o ficheiro viagens.txt");
+    public Viagem procurarViagens(int contribuinte) {
+        for (Viagem viagem : viagens) {
+            if (viagem.getCliente().getContribuinte() == contribuinte) {
+                return viagem;
             }
         }
         return null;
     }
 
-    public boolean eliminarViagem(int contribuinte, LocalDateTime inicio) {
-        ArrayList<Viagem> viagemEncontrada = null;
-        viagemEncontrada = procurarViagens(contribuinte);
-
-        if(viagemEncontrada == null) {
-            return false;
-        }
-
-        try {
-            viagens.remove(viagemEncontrada);
-            return true;
-        } catch (Exception e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS))){
-                writer.write("Erro ao remover a viagem " + e.getMessage());
+    private void guardarAlteracoesViagens() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS))) {
+            for (Viagem viagem : viagens) {
+                writer.write(viagem.paraFicheiro());
                 writer.newLine();
-            } catch (IOException ex) {
-                return false;
             }
-        }
-        try {
-            guardarAlteracoes();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIAGENS, "Erro ao reescrever viagens: " + e.getMessage());
+        }
+    }
+
+    public boolean removerViagem(int contribuinte, LocalDateTime inicio) {
+        Viagem viagem = procurarViagens(contribuinte);
+        if (viagem == null)
+            return false;
+        if (viagens.remove(viagem)) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS))) {
+                for (Viagem viagem2 : viagens) {
+                    writer.write(viagem.paraFicheiro());
+                    writer.newLine();
+                }
+                return true;
+            } catch (IOException e) {
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, "Erro ao atualizar ficheiros" + e.getMessage());
+            }
         }
         return false;
     }
+    //Pesquisar viagens de um cliente num intervalo de data dada pelo cliente
+    public ArrayList<Viagem> pesquisarViagemClienteData(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
+        ArrayList<Viagem> viagemEncontrada = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+            String linha;
+
+            while((linha = reader.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    int contribuinteLido =  Integer.parseInt(dados[0]);
+                    if(contribuinteLido == contribuinte) {
+                        LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
+                        if(dataViagem.isBefore(inicio) && dataViagem.isAfter(fim)) {
+                            Cliente cliente = procurarNifCliente(contribuinte);
+                            Viatura viatura = procurarViatura(dados[3]);
+                            Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[2]));
+                            if(cliente != null && viatura != null && condutor != null) {
+                                Viagem viagem = new Viagem();
+                                viagem.setCliente(cliente);
+                                viagem.setCondutor(condutor);
+                                viagem.setViatura(viatura);
+                                viagem.setFim(fim);
+                                viagem.setInicio(inicio);
+                                viagem.setMoradaOrigem(dados[5]);
+                                viagem.setMoradaDestino(dados[4]);
+                                viagem.setCustoViagem(Double.parseDouble(dados[7]));
+                                viagemEncontrada.add(viagem);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Erro ao ler ficheiro: " + ex.getMessage());
+        }
+        return viagemEncontrada;
+    }
+
+    public double calculaDistanciaMedia(LocalDateTime inicio, LocalDateTime fim) {
+        double media = 0;
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+            double kMS=0;
+            int quantidadeViagens = 0;
+            String linha;
+            while((linha = reader.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    LocalDateTime dataViagem = LocalDateTime.parse(dados[0]);
+
+                    if(!dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
+                        kMS = Double.parseDouble(dados[1]);
+                        quantidadeViagens++;
+                    }
+                }
+                media = kMS/quantidadeViagens;
+            }
+        } catch (IOException ex) {
+            System.out.println("Erro ao ler ficheiro: " + ex.getMessage());
+        }
+        return media;
+    }
+
+    /*public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
+        ArrayList<String> destinos = new ArrayList<>();
+
+        try (BufferedReader viagem = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+            String linha;
+            while ((linha = viagem.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
+                    if(dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
+                        destinos.add(dados[6]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler ficheiro da viagem: " + e.getMessage());
+        }
+
+        try(BufferedReader reserva = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))){
+            String linha;
+            while ((linha = reserva.readLine()) != null){
+                String[] dados = linha.split(";");
+                if(dados.length >= 6) {
+                    LocalDateTime dataReserva = LocalDateTime.parse(dados[3]);
+                    if(dataReserva.isBefore(inicio) && !dataReserva.isAfter(fim)) {
+                        destinos.add(dados[6]);
+                    }
+                }
+            }
+        }catch (IOException ex) {
+            System.out.println("Erro ao ler ficheiro da reserva: " + ex.getMessage());
+        }
+        if(destinos.isEmpty()) {
+            return "Está vazio!";
+        }
+
+    }    */
 
     //getter gerais
     public ArrayList<Cliente> getClientes() {

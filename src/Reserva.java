@@ -40,7 +40,7 @@ public class Reserva {
      * @param moradaDestino A morada para onde o cliente quer ir.
      * @param distancia A distância da viagem.
      */
-    public Reserva(Cliente cliente, Viatura viatura, LocalDateTime dataHoraInicio, LocalTime hora, String moradaOrigem, String moradaDestino, double distancia) {
+    public Reserva(Cliente cliente, Viatura viatura, LocalDateTime dataHoraInicio, String moradaOrigem, String moradaDestino, double distancia) {
         this.cliente = cliente;
         this.viatura = viatura;
         this.dataHoraInicio = dataHoraInicio;
@@ -50,7 +50,12 @@ public class Reserva {
     }
 
     public String paraFicheiro() {
-        return this.cliente +  ";" +  this.viatura + ";" + this.dataHoraInicio + ";" + this.moradaOrigem + ";" + this.moradaDestino + ";" + this.distancia;
+        return cliente.getContribuinte() + ";" +
+                viatura.getMatricula() + ";" +
+                dataHoraInicio + ";" +
+                moradaOrigem + ";" +
+                moradaDestino + ";" +
+                distancia;
     }
 
     /**
