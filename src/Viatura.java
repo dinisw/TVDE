@@ -154,11 +154,7 @@ public class Viatura {
      * @param anoDeFabrico O novo ano de fabrico a ser definido.
      */
     public void setAnoDeFabrico(int anoDeFabrico) {
-        if (anoDeFabrico > 2000 && anoDeFabrico <= 2025) {
-            this.anoDeFabrico = anoDeFabrico;
-        } else {
-            System.out.println("Erro");
-        }
+       this.anoDeFabrico = anoDeFabrico;
     }
 
     /**
@@ -197,11 +193,4 @@ public class Viatura {
         this.disponivel = disponivel;
     }
 
-    /**
-     * Adiciona ou processa uma lista de viaturas.
-     *
-     * @param viaturas A lista (ArrayList) de viaturas a ser adicionada.
-     */
-    public void add(ArrayList<Viatura> viaturas) {
-    }
 }

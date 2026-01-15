@@ -93,16 +93,10 @@ public class Cliente extends Pessoa {
                 getMorada() + ";" +
                 getCartaoDeCidadao() + ";" +
                 getContribuinte() + ";" +
-                totalViagens + ";" +
-                totalGasto;
-    }
+                getTotalViagens() + ";" +
+                getTotalGasto();
 
-    /**
-     * Método destinado a adicionar este cliente a uma lista de clientes.
-     *
-     * @param clientes Lista de clientes
-     */
-    public void add(ArrayList<Cliente> clientes){}
+    }
 
     /**
      * Devolve uma representação textual do cliente.
