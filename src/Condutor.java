@@ -33,7 +33,7 @@ public class Condutor extends Pessoa{
      */
     public Condutor(String nome, int idade, String sexo, String email, int telefone, String morada, int cartaoDeCidadao, String cartaDeConducao, int contribuinte) {
         super(nome, idade, sexo, email, telefone, morada, cartaoDeCidadao, contribuinte);
-        this.cartaDeConducao = "";
+        this.cartaDeConducao = cartaDeConducao;
         this.avaliacao = 0;
         this.totalViagens = 0;
     }
@@ -103,17 +103,7 @@ public class Condutor extends Pessoa{
                 getMorada() + ";" +
                 getCartaoDeCidadao() + ";" +
                 getContribuinte() + ";" +
-                cartaDeConducao + ";" +
-                avaliacao + ";" +
-                totalViagens;
-    }
-
-    /**
-     * Método destinado a adicionar este condutor a uma lista de condutores.
-     *
-     * @param condutores Lista de condutores
-     */
-    public void add(ArrayList<Condutor> condutores){
+                getCartaDeConducao();
     }
 
     /**
