@@ -159,11 +159,6 @@ public class Reserva {
     }
 
     /**
-     * Adiciona ou processa uma lista de reservas.
-     * @param reservas A lista (ArrayList) de reservas a ser adicionada.
-     */
-    public void add(ArrayList<Reserva> reservas){}
-    /**
      * Devolve uma representação em texto da reserva.
      * @return Uma string com os detalhes da reserva.
      */

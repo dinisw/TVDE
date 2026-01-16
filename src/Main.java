@@ -1941,11 +1941,15 @@ public class Main {
     }
 
     void criarViagem(Scanner ler) {
+        System.out.print(ROXO + "\n\n--- Nova Viagem (Escreva 'sair' para cancelar) ---\n\n" + RESET);
         try {
-            System.out.print(ROXO + "\n\n--- Nova Viagem (Escreva 'sair' para cancelar) ---\n\n" + RESET);
-            String moradaOrigem, moradaDestino, dataStr, cliente = "", viatura = "", condutor = "";
+            String moradaOrigem, moradaDestino, dataStr;
             int indexCliente, indexViatura, indexCondutor;
+            Cliente cliente;
+            Viatura viatura;
+            Condutor condutor;
             LocalDate dataInicio;
+            LocalTime horaReserva;
             while (true) {
                 System.out.print("Indique a data que pretende reservar (dd/MM/yyyy): ");
                 dataStr = ler.nextLine();
@@ -1964,6 +1968,26 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data informada não está no formato correto. Exemplo: 25/12/2026");
                 }
             }
+
+            while (true) {
+                System.out.print("Indique a hora que pretende reservar (HH:mm): ");
+                String horaStr = ler.nextLine();
+
+                if (opcaoSair(horaStr)) return;
+
+                try {
+                    horaReserva = LocalTime.parse(
+                            horaStr,
+                            DateTimeFormatter.ofPattern("HH:mm")
+                    );
+
+                    break;
+
+                } catch (DateTimeParseException e) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A hora informada não está no formato correto. Exemplo: 14:30");
+                }
+            }
+
             while (true) {
                 System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
                 moradaOrigem = ler.nextLine();
@@ -1997,9 +2021,9 @@ public class Main {
                     System.out.println((i + 1) + ". " + clientes.get(i).toString());
                 }
                 System.out.print("Introduza o número do cliente: ");
-                indexCliente = ler.nextInt() - 1;
-                ler.nextLine();
-                if (opcaoSair(cliente)) {
+                String opcao = ler.nextLine();
+                indexCliente = Integer.parseInt(opcao) - 1;
+                if (opcaoSair(opcao)) {
                     return;
                 }
 
@@ -2007,6 +2031,7 @@ public class Main {
                     System.out.println("Cliente inválido.");
                     continue;
                 }
+                cliente = clientes.get(indexCliente);
                 break;
             }
 
@@ -2021,9 +2046,9 @@ public class Main {
                     System.out.println((i + 1) + ". " + viaturas.get(i).toString());
                 }
                 System.out.print("Introduza o número do cliente: ");
-                indexViatura = ler.nextInt() - 1;
-                ler.nextLine();
-                if (opcaoSair(viatura)) {
+                String opcao = ler.nextLine();
+                indexViatura = Integer.parseInt(opcao) - 1;
+                if (opcaoSair(opcao)) {
                     return;
                 }
 
@@ -2031,6 +2056,7 @@ public class Main {
                     System.out.println("Viatura inválida.");
                     continue;
                 }
+                viatura = viaturas.get(indexViatura);
                 break;
             }
 
@@ -2045,9 +2071,9 @@ public class Main {
                     System.out.println((i + 1) + ". " + condutores.get(i).toString());
                 }
                 System.out.print("Introduza o número do condutor: ");
-                indexCondutor = ler.nextInt() - 1;
-                ler.nextLine();
-                if (opcaoSair(condutor)) {
+                String opcao = ler.nextLine();
+                indexCondutor = Integer.parseInt(opcao) - 1;
+                if (opcaoSair(opcao)) {
                     if (indexCondutor < 0 || indexCondutor >= condutores.size()) {
                         System.out.println("Condutor inválido.");
                         return;
@@ -2055,8 +2081,9 @@ public class Main {
                     break;
                 }
 
+                condutor = condutores.get(indexCondutor);
 
-                Viagem viagem = new Viagem();
+                Viagem viagem = new Viagem(cliente, condutor, viatura, dataInicio, horaReserva, concluida, moradaOrigem, moradaDestino, custoViagem);
                 if (empresaTVDE.adicionarViagem(viagem)) {
                     System.out.print(VERDE_BRILHANTE + "\n\nViagem criada com sucesso!\n\n" + RESET);
                     viagens = empresaTVDE.carregarViagem();
@@ -2502,6 +2529,11 @@ public class Main {
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGENS, "destinoMaisPopular - " + e.getMessage());
         }
     }
+
+    /**
+     * Método responsável por buscar lista de cliente por uma distancia escolhida pelo utilizador
+     * @param ler
+     */
     private void verListaDeClientes(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Ver lista de clientes por distância (Escreva 'sair' para cancelar) ---\n\n" + RESET);

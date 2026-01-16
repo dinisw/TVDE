@@ -87,13 +87,6 @@ public class Condutor extends Pessoa{
         this.totalViagens = totalViagens;
     }
 
-    /**
-     * Incrementa o número total de viagens do condutor em uma unidade.
-     */
-    public void addViagem(){
-        this.totalViagens ++;
-    }
-
     public String paraFicheiro() {
         return getNome() + ";" +
                 getIdade() + ";" +
