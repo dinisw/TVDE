@@ -272,7 +272,7 @@ public class EmpresaTVDE {
      * Carrega todos os clientes listados em memória e em ficheiro.
      * Verifica se o cliente está vazio.
      * Cria uma ‘String’ de dados numa array dividindo-os por ';'.
-     * 
+     * Caso de erro ao inserir algum dado, digita uma mensagem de erro e adiciona as logs dos erros para o ficheiro dos clientes.
      * @return lista de clientes.
      */
     public ArrayList<Cliente> carregarClientes() {
@@ -335,10 +335,16 @@ public class EmpresaTVDE {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro leitura ficheiro: " + e.getMessage());
         }
         return clientes;
-    } //Completo Dinis
-    //UPDATE na main!
+    }
 
     //DELETE
+
+    /**
+     * Método para remover cliente utilizando o nif.
+     * O Objeto Cliente é utilizado para chamar o outro metodo procurarNifCliente.
+     * @param nif A variável para identifica o cliente a remover.
+     * @return {@code true} caso o cliente nao estaja vazio, e que consiga remover o cliente identificado pelo nif.
+     */
     public boolean removerCliente(int nif) {
         Cliente cliente = procurarNifCliente(nif);
         if (cliente != null && clientes.remove(cliente)) {
@@ -346,7 +352,14 @@ public class EmpresaTVDE {
             return true;
         }
         return false;
-    } //Completo Dinis
+    }
+
+    /**
+     * Método para procurar um cliente pelo contribuinte inserido pelo usuário.
+     * @param nif identificação do cliente e poder procurá-lo.
+     * @return {@code null} caso o contribuinte não seja igual ao registado
+     * @return cliente caso o contribuinte seja igual ao registado.
+     */
 
     public Cliente procurarNifCliente(int nif) {
         for (Cliente cliente : clientes) {
@@ -354,16 +367,26 @@ public class EmpresaTVDE {
                 return cliente;
         }
         return null;
-    } //Completo Dinis
+    }
 
+    /**
+     * Método para procurar um cliente pelo número do catão de cidadão.
+     * @param cc utilizado para procurar o cliente.
+     * @return um cliente caso a condição seja verdadeira.
+     */
     public Cliente procurarCartaoDeCidadaoCliente(int cc) {
         for (Cliente cliente : clientes) {
             if (cliente.getCartaoDeCidadao() == cc)
                 return cliente;
         }
         return null;
-    } //Completo Dinis
+    }
 
+    /**
+     * Método para guardar todas alterações feitas pelo usuário.
+     * Escreve o ficheiro todas as alterações, feito linha a linha.
+     * Caso dê erro envia as 'logs' de erro para um ficheiro de texto de cliente.
+     */
     public void guardarAlteracoesClientes() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CLIENTES))) {
             for (Cliente cliente : clientes) {
@@ -373,12 +396,19 @@ public class EmpresaTVDE {
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CLIENTES, "Erro ao reescrever clientes: " + e.getMessage());
         }
-    }  //Completo
+    }
 //endregion
 
     //region CRUD  CONDUTOR
 
     // CREATE
+
+    /**
+     * Método para adicionar um condutor.
+     * Escreve para o ficheiro de condutor linha a linha todos as informações colocadas pelo utilizador.
+     * @param condutor utilizado para a identificação do condutor e obter todos os parametros da classe.
+     * @return {@code true} caso consiga adicionar um novo condutor.
+     */
     public boolean adicionarCondutor(Condutor condutor) {
         if (condutor == null || procurarNifCondutor(condutor.getContribuinte()) != null)
             return false;
@@ -395,9 +425,18 @@ public class EmpresaTVDE {
             }
         }
         return false;
-    } //Completo Dinis
+    }
 
     //READ
+
+    /**
+     * Método para ler todos os condutores em memória.
+     * Lê o ficheiro de condutores.
+     * Cria uma 'String' em array dividindo os dados com um ';'.
+     * Enquanto a linha for diferente de vazio grava todos os dados inseridos pelo utilizador.
+     * Cria um objeto de condutor com todos os parâmetros utilizados pela mesma classe.
+     * Caso de erro, grava em ficheiro as 'logs' de erros.
+     */
     public ArrayList<Condutor> carregarCondutores() {
         condutores.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
@@ -453,10 +492,14 @@ public class EmpresaTVDE {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Erro leitura ficheiro: " + e.getMessage());
         }
         return condutores;
-    } //Completo dinis :)
-    //UPDATE na main!
-
+    }
     //DELETE
+
+    /**
+     * Método de remover condutor.
+     * @param nif Utilizado para encontrar o condutor que o utilizador quer remover
+     * @return {@code true} caso o condutor não esteja vazio e seja removido, guardando as alterações.
+     */
     public boolean removerCondutor(int nif) {
         Condutor condutor = procurarNifCondutor(nif);
         if (condutor != null && condutores.remove(condutor)) {
@@ -464,24 +507,39 @@ public class EmpresaTVDE {
             return true;
         }
         return false;
-    } //Completo Dinis :)
+    }
 
+    /**
+     * Método para procurar o condutor pelo nif.
+     * @param nif Utilizado para o programa procurar o condutor.
+     * @return condutor caso o contribuinte inserido pelo utilizador seja igual ao gravado.
+     */
     public Condutor procurarNifCondutor(int nif) {
         for (Condutor condutor : condutores) {
             if (condutor.getContribuinte() == nif)
                 return condutor;
         }
         return null;
-    } //Completo Dinis
+    }
 
+    /**
+     * Método para encontrar um condutor pelo número do cartão de cidadão.
+     * @param cc Utilizado para encontrar o condutor.
+     * @return condutor caso o número de cartão de cidadão gravado seja igual ao inserido pelo utilizador.
+     */
     public Condutor procurarCartaoDeCidadaoCondutor(int cc) {
         for (Condutor condutor : condutores) {
             if (condutor.getCartaoDeCidadao() == cc)
                 return condutor;
         }
         return null;
-    } //Completo Dinis
+    }
 
+    /**
+     * Método para encontrar o condutor pela carta de condução.
+     * @param carta Utilizado para encontrar os condutores.
+     * @return condutor caso a carta de condução não seja vazio e a carta de condução, seja igual ao inserido pelo utilizador.
+     */
     public Condutor procurarCartaDeConducaoCondutor(String carta) {
         for (Condutor condutor : condutores) {
             if (condutor.getCartaDeConducao() != null && condutor.getCartaDeConducao().equalsIgnoreCase(carta)) {
@@ -489,8 +547,12 @@ public class EmpresaTVDE {
             }
         }
         return null;
-    } //Completo Dinis
+    }
 
+    /**
+     * Método para guardar todas as alterações dos condutores pelo utilizador.
+     * Guarda em ficheiro linha a linha nos condutores.
+     */
     public void guardarAlteracoesCondutores() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_CONDUTORES))) {
             for (Condutor condutor : condutores) {
@@ -500,9 +562,18 @@ public class EmpresaTVDE {
         } catch (IOException e) {
             adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_CONDUTORES, "Erro ao reescrever condutores: " + e.getMessage());
         }
-    } //Completo Dinis :)
+    }
 
     //Faturação total do condutor
+
+    /**
+     * Método para calcular a faturação total dos condutores.
+     * Lê o ficheiro de condutores linha a linha.
+     * @param contribuinte Contribuinte já gravado.
+     * @param inicio Data de início já inserida pelo utilizador no registo.
+     * @param fim Data de fim já inserida pelo utilizador no registo.
+     * @return total a faturação total do condutor.
+     */
     public double calcularFaturacaoTotal(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         double total = 0;
         try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
@@ -528,6 +599,14 @@ public class EmpresaTVDE {
     //endregion
     //region CRUD RESERVA
     //CREATE
+
+    /**
+     * Regista uma reserva e acrescenta-a ao ficheiro de histórico de reservas.
+     * O método utiliza o modo {@code append: true} para não sobrescrever dados antigos.
+     * * @param reserva Objeto {@link Reserva} contendo os detalhes do serviço.
+     * @return {@code true} se a operação de agendamento for concluída;
+     * {@code false} se o objeto reserva for nulo.
+     */
     public boolean adicionarReserva(Reserva reserva) {
         if (reserva == null)
             return false;
@@ -543,6 +622,13 @@ public class EmpresaTVDE {
     }
 
     //READ
+
+    /**
+     * Método para carregar todas as reservas em memória.
+     * Lê o ficheiro de reservas linha a linha.
+     * Caso o cliente não esteja vazio e viatura também, s
+     * @return todas as reservas gravadas pelo utilizador
+     */
     public ArrayList<Reserva> carregarReservas() {
         reservas.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))) {
@@ -579,6 +665,14 @@ public class EmpresaTVDE {
         return null;
     }
 
+    /**
+     * Remove uma reserva do sistema com base no NIF do contribuinte e atualiza o ficheiro.
+     * Procura a reserva associada, elimina-a da lista em memória e, em caso de sucesso,
+     * reescreve o ficheiro de reservas para persistir a alteração.
+     * * @param contribuinte O NIF do cliente associado à reserva a remover.
+     * @return {@code true} se a reserva foi encontrada e removida;
+     * {@code false} caso contrário ou se ocorrer um erro de I/O.
+     */
     public Boolean removerReservas(int contribuinte) {
         Reserva reserva = procurarNifReserva(contribuinte);
         if (reserva == null)
@@ -597,6 +691,11 @@ public class EmpresaTVDE {
         return false;
     }
 
+    /**
+     * Método para procurar uma reserva.
+     * @param contribuinte utilizado para procurar a reserva já gravada.
+     * @return reserva caso o contribuinte inserido pelo utilizador seja igual ao gravado.
+     */
     public Reserva procurarNifReserva(int contribuinte) {
         for (Reserva reserva : reservas) {
             if (reserva.getCliente().getContribuinte() == contribuinte) {
@@ -606,6 +705,11 @@ public class EmpresaTVDE {
         return null;
     }
 
+    /**
+     * Método para guardar todas as alterações de reservas.
+     * Guarda em ficheiro de texto com o nome de reservas todas as alterações.
+     * Caso haver erro, grava em ficheiro o erro ocorrido.
+     */
     public void guardarAlteracoesReservas() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS))) {
             for (Reserva reserva : reservas) {
@@ -617,6 +721,12 @@ public class EmpresaTVDE {
         }
     }
 
+    /**
+     * Método para adicionar a viagem.
+     * Grava em ficheiro linha a linha todas as informações inseridas pelo utilizador.
+     * @param viagem Utilizado para conseguir gravar todos os parâmetros da classe.
+     * @return {@code false} caso a matrícula seja igual à viagem já inserida.
+     */
     public boolean adicionarViagem(Viagem viagem) {
         for (Viagem viagem1 : viagens) {
             if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getInicio().equals(viagem1.getInicio())) {
@@ -643,6 +753,11 @@ public class EmpresaTVDE {
         return false;
     }
 
+    /**
+     * Método para carregar as viagens já gravadas em memória e ficheiro.
+     * Lê o ficheiro de viagem linha a linha.
+     * @return as viagens carregadas.
+     */
     public ArrayList<Viagem> carregarViagem() {
         viagens.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
@@ -693,7 +808,12 @@ public class EmpresaTVDE {
         return viagens;
     }
 
-
+    /**
+     * Método para procurar as viagens.
+     * @param contribuinte utilizado para procurar o cliente associada à contribuinte inserida pelo usuário.
+     * @param dataInicio utilizado para procurar a data inserida pelo utilizador.
+     * @return viagens caso o contribuinte seja igual ao inserido e também igual à data.
+     */
     public Viagem procurarViagens(int contribuinte, LocalDateTime dataInicio) {
         for (Viagem viagem : viagens) {
             if (viagem.getCliente().getContribuinte() == contribuinte && viagem.getInicio().equals(dataInicio)) {
@@ -703,6 +823,11 @@ public class EmpresaTVDE {
         return null;
     }
 
+    /**
+     * Método para guardar todas as alterações de viagens.
+     * Grava em ficheiro todas as alterações.
+     * Caso dê erro envia uma mensagem e grava no ficheiro os erros.
+     */
     public void guardarAlteracoesViagens() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS))) {
             for (Viagem viagem : viagens) {
@@ -714,6 +839,12 @@ public class EmpresaTVDE {
         }
     }
 
+    /**
+     * Método para remover viagem.
+     * @param contribuinte Utilizado para encontrar a viagem.
+     * @param inicio Utilizado para encontrar a data associada a viagem.
+     * @return false caso a viagem esteja vazia, caso contrario remove o ficheiro.
+     */
     public boolean removerViagem(int contribuinte, LocalDateTime inicio) {
         Viagem viagem = procurarViagens(contribuinte, inicio);
         if (viagem == null)
@@ -733,6 +864,14 @@ public class EmpresaTVDE {
     }
 
     //Pesquisar viagens de um cliente num intervalo de data dada pelo cliente
+
+    /**
+     * Método
+     * @param contribuinte
+     * @param inicio
+     * @param fim
+     * @return
+     */
     public ArrayList<Viagem> pesquisarViagemClienteData(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<Viagem> viagemEncontrada = new ArrayList<>();
 
