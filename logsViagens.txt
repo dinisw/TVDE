@@ -1,0 +1,2 @@
+Erro ao ler as viagens: viagens.txt (No such file or directory)
+2026-01-16T22:22:02.906695->Erro ficheiro: viagens.txt (No such file or directory)
