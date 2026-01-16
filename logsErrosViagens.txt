@@ -1,0 +1,1 @@
+2026-01-16T18:26:53.194121->totalFaturado -java.time.format.DateTimeParseException: Text '12/01/2026' could not be parsed: Unable to obtain LocalDateTime from TemporalAccessor: {},ISO resolved to 2026-01-12 of type java.time.format.Parsed
