@@ -2494,7 +2494,7 @@ public class Main {
 
                 if (opcaoSair(distanciaMaxStr)) return;
                 if (!isDistanciaValida(distanciaMaxStr)) {
-                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A distância só aceita númeoros. Tente novamente.");
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A distância só aceita números. Tente novamente.");
                     continue;
                 }
                 distanciaMax = Double.parseDouble(distanciaMaxStr);

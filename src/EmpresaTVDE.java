@@ -385,17 +385,18 @@ public class EmpresaTVDE {
     //Faturação total do condutor
     public double calcularFaturacaoTotal(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         double total = 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             String linha;
             while((linha = reader.readLine()) != null){
-                String[] dados = linha.split(",");
-
+                String[] dados = linha.split(";");
                 if(dados.length >=8){
-                    int contribuinteLido = Integer.parseInt(dados[0]);
+                    try{
+                    int contribuinteLido = Integer.parseInt(dados[1]);
                     LocalDateTime data = LocalDateTime.parse(dados[3]);
-                    if (contribuinteLido == contribuinte && data.isBefore(inicio) && data.isAfter(fim)) {
-                        total += Double.parseDouble(dados[7]);
-                    }
+                        if (contribuinteLido == contribuinte && (data.isAfter(inicio) || data.isEqual(inicio)) && (data.isBefore(fim) || data.isEqual(fim))) {
+                            total += Double.parseDouble(dados[8]);
+                        }
+                    }catch (Exception e) { continue; }
                 }
             }
         }catch(IOException e){
@@ -525,37 +526,50 @@ public boolean adicionarReserva(Reserva reserva) {
         viagens.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             String linha;
-
             while ((linha = reader.readLine()) != null) {
-                String[] dados = linha.split(",");
-                if (dados.length == 7) {
-                    int contribuinte = Integer.parseInt(dados[0]);
-                    String matricula = dados[1];
-                    String moradaOrigem = dados[3];
-                    String moradaDestino = dados[4];
-                    LocalDateTime dataInicio = LocalDateTime.parse(dados[5]);
-                    LocalDateTime horaInicio = LocalDateTime.parse(dados[6]);
+                String[] dados = linha.split(";");
+                if (dados.length >= 9) {
+                    try {
+                        int nifCliente = 0;
+                        try{
+                            nifCliente = Integer.parseInt(dados[0].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIAGENS, "NIF inválido na linha: " +linha);
+                            nifCliente = 0;
+                        }
+                        int nifCondutor = 0;
+                        try{
+                            nifCondutor = Integer.parseInt(dados[1].trim());
+                        } catch (NumberFormatException e) {
+                            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIAGENS, "NIF inválido na linha: " +linha);
+                            nifCondutor = 0;
+                        }
+                        String matricula = dados[2].trim();
+                        LocalDateTime inicio = LocalDateTime.parse(dados[3].trim());
+                        LocalDateTime fim = LocalDateTime.parse(dados[4].trim());
+                        boolean concluida = Boolean.parseBoolean(dados[5].trim());
+                        String origem = dados[6].trim();
+                        String destino = dados[7].trim();
+                        double custo = Double.parseDouble(dados[8].trim());
 
-                    Cliente cliente = procurarNifCliente(contribuinte);
-                    Viatura viatura = procurarViatura(matricula);
+                        Cliente cliente = procurarNifCliente(nifCliente);
+                        Condutor condutor = procurarNifCondutor(nifCondutor);
+                        Viatura viatura = procurarViatura(matricula);
 
-                    if (cliente != null && viatura != null) {
-                        Viagem viagem = new Viagem();
-                        viagem.add(viagens);
+                        if (cliente != null && condutor != null && viatura != null) {
+                            Viagem viagem = new Viagem(cliente, condutor, viatura, inicio, null, concluida, origem, destino, custo);
+                            viagem.setFim(fim);
+                            viagens.add(viagem);
+                        }
+                    } catch (Exception e) {
+                        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIAGENS, "Erro dados linha: " + linha);
                     }
                 }
             }
-            return viagens;
         } catch (IOException e) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIAGENS, true))) {
-                writer.write("Erro ao ler as viagens: " + e.getMessage());
-                writer.newLine();
-                return null;
-            } catch (IOException ex) {
-                System.out.println("Erro crítico: Falha ao ler ficheiro e falha ao gravar log.");
-            }
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIAGENS, "Erro ficheiro: " + e.getMessage());
         }
-        return null;
+        return viagens;
     }
 
 
@@ -713,12 +727,12 @@ public boolean adicionarReserva(Reserva reserva) {
 
     public ArrayList<Cliente> clientesPorDistancia(double distanciaMinima, double distanciaMaxima){
         ArrayList<Cliente> clientesEncontrados = new ArrayList<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CLIENTES))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))) {
             String linha;
             while ((linha = reader.readLine()) != null){
                 String[] dados = linha.split(";");
                 if(dados.length >= 6) {
-                    double distancia =  Double.parseDouble(dados[1]);
+                    double distancia =  Double.parseDouble(dados[5]);
 
                     if(distancia >= distanciaMinima && distancia <= distanciaMaxima){
                         int nifCliente = Integer.parseInt(dados[2]);
