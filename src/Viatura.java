@@ -72,13 +72,26 @@ public class Viatura {
         else
             status = "Indisponível";
         return "Viatura:\n" +
-                "Matricula = " + matricula + '\n' +
-                "Marca = " + marca + '\n' +
-                "Modelo = " + modelo + '\n' +
-                "Ano de Fabrico = " + anoDeFabrico + '\n' +
-                "Cor = " + cor + '\n' +
+                "Matricula = " + getMatricula() + '\n' +
+                "Marca = " + getMarca() + '\n' +
+                "Modelo = " + getModelo() + '\n' +
+                "Ano de Fabrico = " + getAnoDeFabrico() + '\n' +
+                "Cor = " + getCor() + '\n' +
                 "Status = " + status + '\n';
     }
+
+    public ArrayList<Viatura> getViaturasDisponiveis(ArrayList<Viatura> viaturas){
+        ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
+        for(var viatura : viaturas){
+            if(viatura.disponivel){
+                viaturasDisponiveis.add(viatura);
+            }
+        }
+        return viaturasDisponiveis;
+    }
+
+
+
 
     /**
      * Obtém a matrícula da viatura.
@@ -141,11 +154,7 @@ public class Viatura {
      * @param anoDeFabrico O novo ano de fabrico a ser definido.
      */
     public void setAnoDeFabrico(int anoDeFabrico) {
-        if (anoDeFabrico > 2000 && anoDeFabrico <= 2025) {
-            this.anoDeFabrico = anoDeFabrico;
-        } else {
-            System.out.println("Erro");
-        }
+       this.anoDeFabrico = anoDeFabrico;
     }
 
     /**
@@ -184,11 +193,4 @@ public class Viatura {
         this.status = status;
     }
 
-    /**
-     * Adiciona ou processa uma lista de viaturas.
-     *
-     * @param viaturas A lista (ArrayList) de viaturas a ser adicionada.
-     */
-    public void add(ArrayList<Viatura> viaturas) {
-    }
 }
