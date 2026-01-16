@@ -406,21 +406,19 @@ public class EmpresaTVDE {
 //endregion
     //region CRUD RESERVA
     //CREATE
-    /*public boolean adicionarReserva(Reserva reserva) {
-        if (reserva == null || (procurarNifReserva(reserva.getCliente().getContribuinte()) != null && !reserva.getViatura().isStatus()))
-            return false;
-        if (reservas.add(reserva)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
-                writer.write(reserva.paraFicheiro());
-                writer.newLine();
-                return true;
-            } catch (IOException e) {
-               adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, e.getMessage());
-               return true;
-            }
-        }
+public boolean adicionarReserva(Reserva reserva) {
+    if (reserva == null)
         return false;
-    } */
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
+        writer.write(reserva.paraFicheiro());
+        writer.newLine();
+        return true;
+    } catch (IOException e) {
+        adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_RESERVAS, e.getMessage());
+        return true;
+    }
+}
 
     //READ
     public ArrayList<Reserva> carregarReservas() {
@@ -441,7 +439,7 @@ public class EmpresaTVDE {
                     Viatura viatura = procurarViatura(matricula);
 
                     if (cliente != null && viatura != null) {
-                        Reserva reserva = new Reserva(cliente,viatura,datahora,origem,destino,kms);
+                        Reserva reserva = new Reserva(cliente, viatura, datahora, origem, destino, kms);
                         reservas.add(reserva);
                     }
                 }
@@ -486,16 +484,7 @@ public class EmpresaTVDE {
         return null;
     }
 
-    public Reserva procurarMatriculaReserva(String matricula) {
-        for (Reserva reserva : reservas) {
-            if (reserva.getViatura().getMatricula() == matricula) {
-                return reserva;
-            }
-        }
-        return null;
-    }
-
-    private void guardarAlteracoesReservas() {
+    public void guardarAlteracoesReservas() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS))) {
             for (Reserva reserva : reservas) {
                 writer.write(reserva.paraFicheiro());
@@ -514,7 +503,7 @@ public class EmpresaTVDE {
         }
         boolean adicionar = viagens.add(viagem);
         if (adicionar) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS,true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS, true))) {
                 writer.write(viagem.paraFicheiro());
                 writer.newLine();
                 System.out.println("Viagem adicionado com sucesso!");
@@ -532,16 +521,54 @@ public class EmpresaTVDE {
         return false;
     }
 
-    public Viagem procurarViagens(int contribuinte) {
+    public ArrayList<Viagem> carregarViagem() {
+        viagens.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
+            String linha;
+
+            while ((linha = reader.readLine()) != null) {
+                String[] dados = linha.split(",");
+                if (dados.length == 7) {
+                    int contribuinte = Integer.parseInt(dados[0]);
+                    String matricula = dados[1];
+                    String moradaOrigem = dados[3];
+                    String moradaDestino = dados[4];
+                    LocalDateTime dataInicio = LocalDateTime.parse(dados[5]);
+                    LocalDateTime horaInicio = LocalDateTime.parse(dados[6]);
+
+                    Cliente cliente = procurarNifCliente(contribuinte);
+                    Viatura viatura = procurarViatura(matricula);
+
+                    if (cliente != null && viatura != null) {
+                        Viagem viagem = new Viagem();
+                        viagem.add(viagens);
+                    }
+                }
+            }
+            return viagens;
+        } catch (IOException e) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIAGENS, true))) {
+                writer.write("Erro ao ler as viagens: " + e.getMessage());
+                writer.newLine();
+                return null;
+            } catch (IOException ex) {
+                System.out.println("Erro crítico: Falha ao ler ficheiro e falha ao gravar log.");
+            }
+        }
+        return null;
+    }
+
+
+    public Viagem procurarViagens(int contribuinte, LocalDateTime dataInicio) {
         for (Viagem viagem : viagens) {
-            if (viagem.getCliente().getContribuinte() == contribuinte) {
+            if (viagem.getCliente().getContribuinte() == contribuinte && viagem.getInicio().equals(dataInicio)) {
                 return viagem;
             }
         }
         return null;
     }
 
-    private void guardarAlteracoesViagens() {
+    public void guardarAlteracoesViagens() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS))) {
             for (Viagem viagem : viagens) {
                 writer.write(viagem.paraFicheiro());
@@ -553,7 +580,7 @@ public class EmpresaTVDE {
     }
 
     public boolean removerViagem(int contribuinte, LocalDateTime inicio) {
-        Viagem viagem = procurarViagens(contribuinte);
+        Viagem viagem = procurarViagens(contribuinte, inicio);
         if (viagem == null)
             return false;
         if (viagens.remove(viagem)) {
@@ -706,6 +733,23 @@ public class EmpresaTVDE {
             throw new RuntimeException(e);
         }
         return clientesEncontrados;
+    }
+
+    boolean alterarDataReserva(LocalDateTime dataAntiga, int dia, int mes, int ano){
+        for (Reserva reserva : reservas){
+            LocalDateTime dataNova = reserva.getDataHoraInicio().withDayOfMonth(dia).withMonth(mes).withYear(ano);
+            reserva.setDataHoraInicio(dataNova);
+            return true;
+        }
+        return false;
+    }
+    boolean alterarHoraReserva(LocalDateTime horaAntiga, int hora, int minuto){
+        for (Reserva reserva : reservas){
+            LocalDateTime horaNova = reserva.getDataHoraInicio().withHour(hora).withMinute(minuto);
+            reserva.setDataHoraInicio(horaNova);
+            return true;
+        }
+        return false;
     }
     //getter gerais
     public ArrayList<Cliente> getClientes() {
