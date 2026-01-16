@@ -71,13 +71,13 @@ public class Viatura {
             status = "Disponível";
         else
             status = "Indisponível";
-        return "Viatura:\n" +
-                "Matricula = " + getMatricula() + '\n' +
-                "Marca = " + getMarca() + '\n' +
-                "Modelo = " + getModelo() + '\n' +
-                "Ano de Fabrico = " + getAnoDeFabrico() + '\n' +
-                "Cor = " + getCor() + '\n' +
-                "Status = " + status + '\n';
+        return "VIATURA\n\n" +
+                "Matricula:  " + getMatricula() + '\n' +
+                "Marca :  " + getMarca() + '\n' +
+                "Modelo:  " + getModelo() + '\n' +
+                "Ano de Fabrico:  " + getAnoDeFabrico() + '\n' +
+                "Cor:  " + getCor() + '\n' +
+                "Status: " + status + '\n';
     }
 
     public ArrayList<Viatura> getViaturasDisponiveis(ArrayList<Viatura> viaturas){

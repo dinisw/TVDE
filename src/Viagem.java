@@ -67,11 +67,31 @@ public class Viagem {
         return cliente.getContribuinte() + ";" +
                 condutor.getContribuinte() + ";" +
                 viatura.getMatricula() + ";" +
-                inicio + ";" +
-                fim + ";" +
-                moradaOrigem + ";" +
-                moradaDestino + ";" +
-                custoViagem;
+                getInicio() + ";" +
+                getFim() + ";" +
+                isConcluida() + ";" +
+                getMoradaOrigem() + ";" +
+                getMoradaDestino() + ";" +
+                getCustoViagem();
+    }
+
+    @Override
+    public String toString() {
+        String status = "";
+        if(this.concluida)
+            status = "Concluído";
+        else
+            status = "Não concluído";
+        return "VIAGEM\n\n" +
+                "Início:  " + getInicio() + '\n' +
+                "Fim:  " + getFim() + '\n' +
+                "Status:  " + status + '\n' +
+                "Origem:  " + getMoradaOrigem() + '\n' +
+                "Destino:  " + getMoradaDestino() + '\n' +
+                "Custo da viagem:  " + getCustoViagem() + '\n' +
+                "Nome do cliente:  " + cliente.getNome() + '\n' +
+                "Nome do Condutor:  " + condutor.getNome() + '\n' +
+                "Viatura: " + viatura.getMatricula() + " " + viatura.getCor()+ " " + viatura.getMarca() + " " + viatura.getModelo();
     }
     /**
      * Obtém o cliente da viagem.
