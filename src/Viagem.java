@@ -26,6 +26,8 @@ public class Viagem {
     private boolean concluida;
     /** Atributo do custo da viagem.*/
     private double custoViagem;
+    /** Atribuição para a distância.*/
+    private double distancia;
 
     public Viagem() {
         cliente = new Cliente();
@@ -37,6 +39,7 @@ public class Viagem {
         moradaDestino = "";
         concluida = false;
         custoViagem = 0;
+        distancia = 0;
     }
     /**
      * Construtor com parâmetros da classe Viagem.
@@ -61,6 +64,7 @@ public class Viagem {
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
         this.custoViagem = custoViagem;
+        this.distancia = distancia;
     }
 
     public String paraFicheiro() {
@@ -72,7 +76,8 @@ public class Viagem {
                 isConcluida() + ";" +
                 getMoradaOrigem() + ";" +
                 getMoradaDestino() + ";" +
-                getCustoViagem();
+                getCustoViagem() + ";" +
+                getDistancia();
     }
 
     @Override
@@ -88,6 +93,7 @@ public class Viagem {
                 "Status:  " + status + '\n' +
                 "Origem:  " + getMoradaOrigem() + '\n' +
                 "Destino:  " + getMoradaDestino() + '\n' +
+                "Distância:  " + getDistancia() + '\n' +
                 "Custo da viagem:  " + getCustoViagem() + '\n' +
                 "Nome do cliente:  " + cliente.getNome() + '\n' +
                 "Nome do Condutor:  " + condutor.getNome() + '\n' +
@@ -219,9 +225,19 @@ public class Viagem {
     public void setCustoViagem(double custoViagem) {
         this.custoViagem = custoViagem;
     }
+
     /**
-     * Adiciona ou processa uma lista de viagens.
-     * @param viagens A lista (ArrayList) de viagens a ser adicionada.
+     * Obtém a distância da viagem.
+     * @return A double da distância da viagem.
      */
-    public void add(ArrayList<Viagem> viagens){}
+    public double getDistancia() {
+        return distancia;
+    }
+    /**
+     * Define a distância da viagem.
+     * @param distancia A nova distância da viagem.
+     */
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
 }

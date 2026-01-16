@@ -80,19 +80,6 @@ public class Viatura {
                 "Status: " + status + '\n';
     }
 
-    public ArrayList<Viatura> getViaturasDisponiveis(ArrayList<Viatura> viaturas){
-        ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
-        for(var viatura : viaturas){
-            if(viatura.status){
-                viaturasDisponiveis.add(viatura);
-            }
-        }
-        return viaturasDisponiveis;
-    }
-
-
-
-
     /**
      * Obtém a matrícula da viatura.
      *
