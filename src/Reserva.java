@@ -61,10 +61,20 @@ public class Reserva {
     public String paraFicheiro() {
         return cliente.getContribuinte() + ";" +
                 viatura.getMatricula() + ";" +
-                dataHoraInicio + ";" +
-                moradaOrigem + ";" +
-                moradaDestino + ";" +
-                distancia;
+                getDataHoraInicio() + ";" +
+                getMoradaOrigem() + ";" +
+                getMoradaDestino() + ";" +
+                getDistancia();
+    }
+
+    @Override
+    public String toString() {
+        return "RESERVAS\n\n" +
+                "Início:  " + getDataHoraInicio() + '\n' +
+                "Origem:  " + getMoradaOrigem() + '\n' +
+                "Destino:  " + getMoradaDestino() + '\n' +
+                "Nome do cliente:  " + cliente.getNome() + '\n' +
+                "Viatura: " + viatura.getMatricula() + " " + viatura.getCor()+ " " + viatura.getMarca() + " " + viatura.getModelo();
     }
 
     /**
@@ -166,15 +176,4 @@ public class Reserva {
      * Devolve uma representação em texto da reserva.
      * @return Uma string com os detalhes da reserva.
      */
-    @Override
-    public String toString() {
-        return "Reserva{" +
-                "cliente=" + cliente +
-                ", viatura=" + viatura +
-                ", dataHoraInicio=" + dataHoraInicio +
-                ", moradaOrigem='" + moradaOrigem + '\'' +
-                ", moradaDestino='" + moradaDestino + '\'' +
-                ", distancia=" + distancia +
-                '}';
-    }
 }

@@ -136,11 +136,11 @@ public class Cliente extends Pessoa {
                 "Idade:  " + getIdade() + '\n' +
                 "Sexo:  " + getSexo() + '\n' +
                 "Email:  " + getEmail() + '\n' +
-                "Telefone: " + getTelefone() + '\n' +
-                "Morada: " + getMorada() + '\n' +
-                "Cartão de Cidadão: " + getCartaoDeCidadao() + '\n' +
-                "Contribuinte: " + getContribuinte() + '\n' +
-                "Até agora já realizou: " + totalViagens + " viagens\n" +
-                "Valor Total Gasto em Viagens: " + totalGasto + '\n';
+                "Telefone:  " + getTelefone() + '\n' +
+                "Morada:  " + getMorada() + '\n' +
+                "Cartão de Cidadão:  " + getCartaoDeCidadao() + '\n' +
+                "Contribuinte:  " + getContribuinte() + '\n' +
+                "Até agora já realizou:  " + totalViagens + " viagens\n" +
+                "Valor Total Gasto em Viagens:  " + totalGasto + '\n';
     }
 }
