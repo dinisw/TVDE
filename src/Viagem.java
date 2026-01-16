@@ -2,7 +2,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Declaração da classe Viagem.
@@ -15,9 +14,9 @@ public class Viagem {
     /** A viatura utilizada na viagem. */
     private Viatura viatura;
     /** Atribuição da data e hora do início viagem.*/
-    private LocalDateTime inicio;
+    private LocalDateTime datanIcio;
     /** Atribuição da data e hora do fim da viagem. */
-    private LocalDateTime fim;
+    private LocalDateTime dataFim;
     /** Atribuição da morada da origem.*/
     private String moradaOrigem;
     /** Atribuição da morada do destino.*/
@@ -27,14 +26,14 @@ public class Viagem {
     /** Atributo do custo da viagem.*/
     private double custoViagem;
 
-    public Viagem() {
-        cliente = new Cliente();
-        condutor = new Condutor();
-        viatura = new Viatura();
-        inicio = LocalDateTime.now();
-        fim = LocalDateTime.now();
-        moradaOrigem = "";
-        moradaDestino = "";
+    public Viagem(String moradaOrigem, String moradaDestino, LocalDate dataInicio, LocalTime horaInicio, String cliente, String viatura, String condutor) {
+        this.cliente = new Cliente();
+        this.condutor = new Condutor();
+        this.viatura = new Viatura();
+        datanIcio = LocalDateTime.now();
+        dataFim = LocalDateTime.now();
+        this.moradaOrigem = "";
+        this.moradaDestino = "";
         concluida = false;
         custoViagem = 0;
     }
@@ -55,14 +54,19 @@ public class Viagem {
         this.cliente = cliente;
         this.condutor = condutor;
         this.viatura = viatura;
-        this.inicio = inicio;
-        this.fim = fim;
+        this.datanIcio = datanIcio;
+        this.dataFim = dataFim;
         this.concluida = concluida;
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
         this.custoViagem = custoViagem;
     }
 
+    /**
+     * O metodo expande os principais atributos do objeto separados por ponto e vírgula (`;`),
+     * criando uma representação adequada para armazenamento ou exportação para ficheiro.
+     * @return uma String contendo os dados do objeto separados por `;`, pronta para escrita em ficheiro
+     */
     public String paraFicheiro() {
         return cliente.getContribuinte() + ";" +
                 condutor.getContribuinte() + ";" +
@@ -93,6 +97,7 @@ public class Viagem {
                 "Nome do Condutor:  " + condutor.getNome() + '\n' +
                 "Viatura: " + viatura.getMatricula() + " " + viatura.getCor()+ " " + viatura.getMarca() + " " + viatura.getModelo();
     }
+
     /**
      * Obtém o cliente da viagem.
      * @return O objeto Cliente.
@@ -139,29 +144,29 @@ public class Viagem {
      * Obtém a data e hora da viagem.
      * @return A data e hora da viagem.
      */
-    public LocalDateTime getInicio() {
-        return inicio;
+    public LocalDateTime getDatanIcio() {
+        return datanIcio;
     }
     /**
      * Define a data e hora da viagem.
-     * @param inicio A nova data e hora da viagem.
+     * @param datanIcio A nova data e hora da viagem.
      */
-    public void setInicio(LocalDateTime inicio) {
-        this.inicio = inicio;
+    public void setDatanIcio(LocalDateTime datanIcio) {
+        this.datanIcio = datanIcio;
     }
     /**
      * Obtém a data e hora da viagem.
      * @return A data e hora da viagem.
      */
-    public LocalDateTime getFim() {
-        return fim;
+    public LocalDateTime getDataFim() {
+        return dataFim;
     }
     /**
      * Define a data e hora da viagem.
-     * @param fim A nova data hora da viagem.
+     * @param dataFim A nova data hora da viagem.
      */
-    public void setFim(LocalDateTime fim) {
-        this.fim = fim;
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
     }
     /**
      * Verifica se a viagem está concluída.

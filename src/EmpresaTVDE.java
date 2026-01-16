@@ -1,7 +1,6 @@
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -599,14 +598,6 @@ public class EmpresaTVDE {
     //endregion
     //region CRUD RESERVA
     //CREATE
-
-    /**
-     * Regista uma reserva e acrescenta-a ao ficheiro de histórico de reservas.
-     * O método utiliza o modo {@code append: true} para não sobrescrever dados antigos.
-     * * @param reserva Objeto {@link Reserva} contendo os detalhes do serviço.
-     * @return {@code true} se a operação de agendamento for concluída;
-     * {@code false} se o objeto reserva for nulo.
-     */
     public boolean adicionarReserva(Reserva reserva) {
         if (reserva == null)
             return false;
@@ -729,7 +720,7 @@ public class EmpresaTVDE {
      */
     public boolean adicionarViagem(Viagem viagem) {
         for (Viagem viagem1 : viagens) {
-            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getInicio().equals(viagem1.getInicio())) {
+            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getDatanIcio().equals(viagem1.getDatanIcio())) {
                 return false;
             }
         }
@@ -890,12 +881,12 @@ public class EmpresaTVDE {
                             Viatura viatura = procurarViatura(dados[3]);
                             Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[2]));
                             if (cliente != null && viatura != null && condutor != null) {
-                                Viagem viagem = new Viagem();
+                                Viagem viagem = new Viagem(moradaOrigem, moradaDestino, dataInicio, horaInicio, cliente, viatura, condutor);
                                 viagem.setCliente(cliente);
                                 viagem.setCondutor(condutor);
                                 viagem.setViatura(viatura);
-                                viagem.setFim(fim);
-                                viagem.setInicio(inicio);
+                                viagem.setDataFim(fim);
+                                viagem.setDatanIcio(inicio);
                                 viagem.setMoradaOrigem(dados[5]);
                                 viagem.setMoradaDestino(dados[4]);
                                 viagem.setCustoViagem(Double.parseDouble(dados[7]));
@@ -915,9 +906,6 @@ public class EmpresaTVDE {
         double media = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             double kMS = 0;
-            for(var reserva : reservas){
-                kMS += reserva.getDistancia();
-            }
             int quantidadeViagens = 0;
             String linha;
             while ((linha = reader.readLine()) != null) {

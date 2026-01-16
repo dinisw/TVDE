@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ public class Reserva {
     /** A distância estimada ou calculada da viagem. */
     private double distancia;
 
-    public Reserva() {
-        cliente = new Cliente();
-        viatura = new Viatura();
-        dataHoraInicio = LocalDateTime.now();
-        moradaOrigem = "";
-        moradaDestino = "";
+    public Reserva(LocalDate dataReserva, LocalTime horaReserva, String moradaOrigem, String moradaDestino, int cc) {
+        this.cliente = new Cliente();
+        this.viatura = new Viatura();
+        this.dataHoraInicio = LocalDateTime.now();
+        this.moradaOrigem = "";
+        this.moradaDestino = "";
         distancia = 0;
     }
 
@@ -49,6 +50,14 @@ public class Reserva {
         this.distancia = distancia;
     }
 
+    public Reserva(LocalDate dataReserva, LocalTime horaReserva, String moradaOrigem, String moradaDestino, String viatura, String cliente) {
+    }
+
+    /**
+     * O metodo expande os principais atributos do objeto separados por ponto e vírgula (`;`),
+     * criando uma representação adequada para armazenamento ou exportação para ficheiro.
+     * @return uma String contendo os dados do objeto separados por `;`, pronta para escrita em ficheiro
+     */
     public String paraFicheiro() {
         return cliente.getContribuinte() + ";" +
                 viatura.getMatricula() + ";" +

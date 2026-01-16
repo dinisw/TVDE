@@ -12,6 +12,13 @@ public class Cliente extends Pessoa {
     /** Valor total gasto pelo cliente em viagens. */
     private double totalGasto;
 
+    /**
+     * Construtor padrão da classe Cliente.
+     **
+     * Inicializa todos os atributos com valores padrão
+     * Este construtor permite criar objetos Cliente sem fornecer parâmetros,
+     * podendo ser posteriormente preenchidos através de setters ou outros métodos.
+     */
     public Cliente() {
         totalViagens = 0;
         totalGasto = 0;
@@ -84,6 +91,26 @@ public class Cliente extends Pessoa {
         this.totalGasto += valor;
     }
 
+    /**
+     * Converte os dados do condutor em uma string formatada para gravação em ficheiro.
+     *
+     * Os atributos do condutor são concatenados em uma única linha, separados por ponto e vírgula (';'),
+     * na seguinte ordem:
+     * - Nome
+     * - Idade
+     * - Sexo
+     * - Email
+     * - Telefone
+     * - Morada
+     * - Cartão de Cidadão
+     * - Contribuinte
+     * - Total de viagens realizadas
+     * - Total gasto em viagens
+     *
+     * Esta representação é adequada para gravação em ficheiros CSV ou outros ficheiros de texto estruturados.
+     *
+     * @return uma string contendo todos os dados do condutor separados por ';'
+     */
     public String paraFicheiro() {
         return getNome() + ";" +
                 getIdade() + ";" +
@@ -95,7 +122,6 @@ public class Cliente extends Pessoa {
                 getContribuinte() + ";" +
                 getTotalViagens() + ";" +
                 getTotalGasto();
-
     }
 
     /**
