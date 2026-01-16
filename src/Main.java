@@ -1164,7 +1164,7 @@ public class Main {
             int anoDeFabrico;
             boolean status;
             while (true) {
-                System.out.println("Indique a matrícula da viatura [XXXXXX]: ");
+                System.out.println("Indique a matrícula da viatura no formato [XXXXXX]: ");
                 matricula = ler.nextLine();
 
                 if (opcaoSair(matricula)) return;
@@ -1239,7 +1239,7 @@ public class Main {
                 break;
             }
 
-            Viatura viatura = new Viatura(matricula,marca,modelo,anoDeFabrico,cor,status);
+            Viatura viatura = new Viatura(matricula.toUpperCase(),marca,modelo,anoDeFabrico,cor,status);
             if (empresaTVDE.adicionarViatura(viatura)) {
                 System.out.print(VERDE_BRILHANTE + "\n\nViatura registado com sucesso!\n\n" + RESET);
                 viaturas = empresaTVDE.carregarViaturas();
