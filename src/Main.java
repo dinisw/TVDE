@@ -1471,6 +1471,21 @@ public class Main {
     }
 }
 
+    /**
+     * Permite remover um condutor existente do sistema de forma interativa via console.
+     *
+     * O metodo realiza os seguintes passos:
+     * - Solicita ao utilizador o NIF do condutor que deseja remover
+     * - Permite digitar "sair" a qualquer momento para cancelar a operação
+     * - Valida o NIF informado usando o metodo isNifValido
+     * - Se o condutor for encontrado, pede confirmação antes da remoção
+     *   (S para confirmar, outro valor cancela a operação)
+     * - Remove o condutor do sistema usando empresaTVDE.removerCondutor
+     * - Atualiza a lista interna de condutores após remoção
+     * - Exibe mensagens de erro caso o NIF não seja encontrado ou a remoção falhe
+     *
+     * @param ler Scanner usado para ler a entrada do utilizador
+     */
     void removerCondutor(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Remover Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
