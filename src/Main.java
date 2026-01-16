@@ -31,8 +31,8 @@ public class Main {
     ArrayList<Cliente> clientes = empresaTVDE.carregarClientes();
     ArrayList<Condutor> condutores = empresaTVDE.carregarCondutores();
     ArrayList<Viatura> viaturas = empresaTVDE.carregarViaturas();
-    ArrayList<Reserva> reservas = new ArrayList<>();
-    ArrayList<Viagem> viagens = new ArrayList<>();
+    ArrayList<Reserva> reservas = empresaTVDE.carregarReservas();
+    ArrayList<Viagem> viagens = empresaTVDE.carregarViagem();
 
 
     //region Design
@@ -1450,6 +1450,7 @@ public class Main {
     //endregion
 
     //region Reservas
+
     void Reservas(Scanner ler) {
         int opcao;
         do{
@@ -1499,7 +1500,10 @@ public class Main {
     void criarReserva(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Nova Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
-            String moradaOrigem, moradaDestino, horaStr, dataStr, cliente = "", viatura = "", nifStr;
+            String moradaOrigem, moradaDestino, horaStr, dataStr, nifStr;
+            Viatura viatura;
+            Cliente cliente;
+            double distancia;
             int nif, indexCliente, indexViatura = 0;
             LocalDate dataReserva;
             LocalTime horaReserva;
@@ -1535,9 +1539,9 @@ public class Main {
 
                 System.out.println("=== Escolha o Cliente ===");
                 System.out.print("Introduza o número do cliente que deseja selecionar: ");
-                indexCliente = ler.nextInt() - 1;
-                ler.nextLine();
-                if (opcaoSair(cliente)) {
+                String opcao = ler.nextLine();
+                indexCliente = Integer.parseInt(opcao) - 1;
+                if (opcaoSair(opcao)) {
                     return;
                 }
 
@@ -1545,7 +1549,7 @@ public class Main {
                     System.out.println("Cliente inválido.");
                     continue;
                 }
-                Cliente cliente1 = clientes.get(indexCliente);
+                cliente = clientes.get(indexCliente);
                 break;
             }
 
@@ -1560,9 +1564,9 @@ public class Main {
                 }
                 System.out.println("=== Escolha a viatura ===");
                 System.out.print("Introduza o número da viatura que deseja selecionar: ");
-                indexViatura = ler.nextInt() - 1;
-                ler.nextLine();
-                if (opcaoSair(viatura)) {
+                String opcao = ler.nextLine();
+                indexViatura = Integer.parseInt(opcao) - 1;
+                if (opcaoSair(opcao)) {
                     return;
                 }
 
@@ -1570,7 +1574,7 @@ public class Main {
                     System.out.println("Viatura inválida.");
                     continue;
                 }
-                Viatura viatura1 = viaturas.get(indexViatura);
+                viatura = viaturas.get(indexViatura);
                 break;
             }
 
@@ -1638,7 +1642,20 @@ public class Main {
                 }
                 break;
             }
-            Reserva reserva = new Reserva();
+
+            while (true) {
+                System.out.print("Indique a distância em Kms: ");
+                String distanciaStr = ler.nextLine();
+                if (opcaoSair(distanciaStr)) return;
+                if (!isDistanciaValida(distanciaStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A distância não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                distancia = Double.parseDouble(distanciaStr);
+                break;
+            }
+
+            Reserva reserva = new Reserva(cliente, viatura, dataReserva.atTime(horaReserva), moradaOrigem, moradaDestino, distancia);
             if (empresaTVDE.adicionarReserva(reserva)) {
                 System.out.print(VERDE_BRILHANTE + "\n\nReserva criada com sucesso!\n\n" + RESET);
                 reservas = empresaTVDE.carregarReservas();
@@ -1649,8 +1666,8 @@ public class Main {
         }
     }
     private void alterarReserva(Scanner ler) {
+        System.out.println(ROXO + "\n\n--- Alterar Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
         try {
-            System.out.println(ROXO + "\n\n--- Alterar Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.print("Indique o NIF (Contribuinte): ");
                 String nifStr = ler.nextLine().trim();
@@ -1684,10 +1701,11 @@ public class Main {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
                                         continue;
                                     }
+                                    reserva.setMoradaOrigem(moradaOrigem);
                                     empresaTVDE.guardarAlteracoesReservas();
-                                    break;
+                                    System.out.println(VERDE_BRILHANTE + "\n\nMorada de origem atualizada com sucesso!\n\n" + RESET);
+                                    return;
                                 }
-                                break;
                             case "2":
                                 while (true) {
                                     System.out.print("Indique a morada de destino por exemplo [Rua de Santa catarina, 123 - 3210-450]: ");
@@ -1697,10 +1715,11 @@ public class Main {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada inserida não está no formato correto. Tente novamente.");
                                         continue;
                                     }
+                                    reserva.setMoradaDestino(moradaDestino);
                                     empresaTVDE.guardarAlteracoesReservas();
-                                    break;
+                                    System.out.println(VERDE_BRILHANTE + "\n\nMorada de destino atualizada com sucesso!\n\n" + RESET);
+                                    return;
                                 }
-                                break;
                             case "3":
                                 while (true) {
                                     try {
@@ -1718,17 +1737,14 @@ public class Main {
                                         if (empresaTVDE.alterarDataReserva(atual, d, m, a)) {
                                             System.out.println("Data alterada! Hora mantêm-se!");
                                             empresaTVDE.guardarAlteracoesReservas();
+                                            return;
                                         } else {
                                             System.out.println("Reserva não encontrada.");
                                         }
-
-                                        break;
-
                                     } catch (DateTimeParseException e) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data informada não está no formato correto. Exemplo: 25/12/2026");
                                     }
                                 }
-                                break;
                             case "4":
                                 while (true) {
                                     try {
@@ -1743,17 +1759,14 @@ public class Main {
                                         if (empresaTVDE.alterarHoraReserva(atual, hora, minuto)) {
                                             System.out.println("Hora alterada! Data mantêm-se!");
                                             empresaTVDE.guardarAlteracoesReservas();
+                                            return;
                                         } else {
                                             System.out.println("Reserva não encontrada.");
                                         }
-
-                                        break;
-
                                     } catch (DateTimeParseException e) {
                                         System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A hora informada não está no formato correto. Exemplo: 14:30");
                                     }
                                 }
-                                break;
                             case "5":
                                 while (true) {
                                     System.out.println("=== Escolha o Cliente ===");
@@ -1775,8 +1788,10 @@ public class Main {
                                             System.out.println("Cliente inválido.");
                                             continue;
                                         }
+                                        reserva.setCliente(cliente);
+                                        System.out.println(VERDE_BRILHANTE + "\n\nCliente atualizado com sucesso!\n\n" + RESET);
                                         empresaTVDE.guardarAlteracoesReservas();
-                                        break;
+                                        return;
                                     }
                                 }
                             case "6":
@@ -1801,8 +1816,10 @@ public class Main {
                                             System.out.println("Viatura inválida.");
                                             continue;
                                         }
+                                        reserva.setViatura(viatura);
+                                        System.out.println(VERDE_BRILHANTE + "\n\nViatura atualizada com sucesso!\n\n" + RESET);
                                         empresaTVDE.guardarAlteracoesReservas();
-                                        break;
+                                        return;
                                     }
                                 }
                             case "0":
@@ -2136,6 +2153,11 @@ public class Main {
     //endregion
 
     //region Informações
+
+    /**
+     * Menu informações
+     * @param ler
+     */
     void informacoes(Scanner ler) {
         int opcao;
         do {
@@ -2158,6 +2180,11 @@ public class Main {
         } while (opcao != 0);
     }
 
+    /**
+     * Submenu informações
+     * @param ler
+     * @return retorna um inteiro com a opção selecionada
+     */
     int subMenuInformacoes(Scanner ler) {
         limparConsola();
         printTituloPrincipal();
@@ -2206,10 +2233,19 @@ public class Main {
             return -1;
         }
     }
+
+    /**
+     * Função para limpar o console
+     */
     public void limparConsola() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
+
+    /**
+     * Método que pesquisa as viagens de um cliente em um intervalo de datas
+     * @param ler
+     */
     void pesquisarViagem(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Pesquisar viagens (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -2283,6 +2319,11 @@ public class Main {
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGENS, "pesquisarViagem - " + e.getMessage());
         }
     }
+
+    /**
+     * Calcula o valor total faturado por um condutor
+     * @param ler
+     */
     void totalFaturado(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Ver total faturado por condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -2351,6 +2392,11 @@ public class Main {
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGENS, "totalFaturado -" + e.getMessage());
         }
     }
+
+    /**
+     * Calcula a distância média em um intervalo de datas
+     * @param ler
+     */
     void distanciaMedia(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Ver distância média por viagens (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -2403,6 +2449,11 @@ public class Main {
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGENS, "distanciaMedia - " + e.getMessage());
         }
     }
+
+    /**
+     * Consulta o destino mais solicitado entre todas as viagens
+     * @param ler
+     */
     void destinoMaisPopular(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Ver destino mais solicitado (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -2492,7 +2543,7 @@ public class Main {
 
                 if (opcaoSair(distanciaMaxStr)) return;
                 if (!isDistanciaValida(distanciaMaxStr)) {
-                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A distância só aceita númeoros. Tente novamente.");
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A distância só aceita números. Tente novamente.");
                     continue;
                 }
                 distanciaMax = Double.parseDouble(distanciaMaxStr);
