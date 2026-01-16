@@ -852,11 +852,12 @@ public class EmpresaTVDE {
     //Pesquisar viagens de um cliente num intervalo de data dada pelo cliente
 
     /**
-     * Método
-     * @param contribuinte
-     * @param inicio
-     * @param fim
-     * @return
+     * Método para pesquisar viagem de cliente pela data.
+     * Lê o ficheiro de viagem com todos os dados inseridos pelo usuário.
+     * @param contribuinte Utilizado para procurar o cliente com o contribuinte inserido.
+     * @param inicio Utilizado para procurar a data Inicio da viagem.
+     * @param fim Utilizado para procurar a data final com a data inicial.
+     * @return A viagem encontrada entre as datas inseridas.
      */
     public ArrayList<Viagem> pesquisarViagemClienteData(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<Viagem> viagemEncontrada = new ArrayList<>();
@@ -896,6 +897,12 @@ public class EmpresaTVDE {
         return viagemEncontrada;
     }
 
+    /**
+     * Método para calcular a distância média.
+     * @param inicio Inserido pelo utilizador, na medida de encontrar a viagem.
+     * @param fim Inserido pelo utilizador, na medida de encontrar a viagem
+     * @return media calculada pela distância entre as datas usadas.
+     */
     public double calculaDistanciaMedia(LocalDateTime inicio, LocalDateTime fim) {
         double media = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
@@ -920,6 +927,13 @@ public class EmpresaTVDE {
         return media;
     }
 
+    /**
+     * Método para encontrar o destino popular.
+     * ler o ficheiro de viagem e reservas.
+     * @param inicio Utilizado para encontrar a viagem.
+     * @param fim Utilizado para encontrar a viagem.
+     * @return o destino mais popular.
+     */
     public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<String> destinos = new ArrayList<>();
 
@@ -972,6 +986,12 @@ public class EmpresaTVDE {
         return "O destino mais popular é :" + destino + " pedido " + pedidos + "vezes.";
     }
 
+    /**
+     * Método para calculcar a distancia pelos clientes.
+     * @param distanciaMinima Utilizado para encontrar o cliente que se encontra entre a distancia minima e distancia máxima.
+     * @param distanciaMaxima Utilizado para encontrar o cliente que se encontra entre a distancia minima e distancia máxima.
+     * @return Os clientes encontrados.
+     */
     public ArrayList<Cliente> clientesPorDistancia(double distanciaMinima, double distanciaMaxima) {
         ArrayList<Cliente> clientesEncontrados = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CLIENTES))) {
@@ -996,15 +1016,30 @@ public class EmpresaTVDE {
         return clientesEncontrados;
     }
 
+    /**
+     * Método para alterar a data de reserva.
+     * @param dataAntiga Utilizado para identificar a data antiga.
+     * @param dia O dia alterado.
+     * @param mes O mes alterado.
+     * @param ano O ano alterado.
+     * @return true caso seja verdadeiro os caracteres inseridos.
+     */
     boolean alterarDataReserva(LocalDateTime dataAntiga, int dia, int mes, int ano) {
         for (Reserva reserva : reservas) {
-            LocalDateTime dataNova = reserva.getDataHoraInicio().withDayOfMonth(dia).withMonth(mes).withYear(ano);
-            reserva.setDataHoraInicio(dataNova);
+            LocalDateTime dataNovo = reserva.getDataHoraInicio().withDayOfMonth(dia).withMonth(mes).withYear(ano);
+            reserva.setDataHoraInicio(dataNovo);
             return true;
         }
         return false;
     }
 
+    /**
+     * Método para alterar a hora da reserva.
+     * @param horaAntiga Indica a hora antiga.
+     * @param hora Hora alterada.
+     * @param minuto Minuto alterado.
+     * @return true caso seja inserido os caracteres associados.
+     */
     boolean alterarHoraReserva(LocalDateTime horaAntiga, int hora, int minuto) {
         for (Reserva reserva : reservas) {
             LocalDateTime horaNova = reserva.getDataHoraInicio().withHour(hora).withMinute(minuto);
@@ -1015,22 +1050,39 @@ public class EmpresaTVDE {
     }
 
     //getter gerais
+
+    /**
+     * Devolve a lista completa de clientes registados no sistema.
+     * @return ArrayList contendo todos os objetos {@link Cliente}.
+     */
     public ArrayList<Cliente> getClientes() {
         return clientes;
     }
-
+    /**
+     * Devolve a lista completa de clientes registados no sistema.
+     * @return ArrayList contendo todos os objetos {@link Condutor}.
+     */
     public ArrayList<Condutor> getCondutores() {
         return condutores;
     }
-
+    /**
+     * Devolve a lista completa de clientes registados no sistema.
+     * @return ArrayList contendo todos os objetos {@link Viatura}.
+     */
     public ArrayList<Viatura> getViaturas() {
         return viaturas;
     }
-
+    /**
+     * Devolve a lista completa de clientes registados no sistema.
+     * @return ArrayList contendo todos os objetos {@link Reserva}.
+     */
     public ArrayList<Reserva> getReservas() {
         return reservas;
     }
-
+    /**
+     * Devolve a lista completa de clientes registados no sistema.
+     * @return ArrayList contendo todos os objetos {@link Viagem}.
+     */
     public ArrayList<Viagem> getViagens() {
         return viagens;
     }
