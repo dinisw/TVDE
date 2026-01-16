@@ -95,32 +95,6 @@ public class Condutor extends Pessoa{
         this.totalViagens = totalViagens;
     }
 
-    /**
-     * Incrementa o número total de viagens do condutor em uma unidade.
-     */
-    public void addViagem(){
-        this.totalViagens ++;
-    }
-
-    /**
-    * Converte os dados do condutor em uma string formatada para ficheiro.
-    *
-    * Os atributos do condutor são concatenados em uma única linha, separados por ponto e vírgula (';'),
-    * na seguinte ordem:
-    * - Nome
-    * - Idade
-    * - Sexo
-    * - Email
-    * - Telefone
-    * - Morada
-    * - Cartão de Cidadão
-    * - Contribuinte
-    * - Carta de Condução
-    *
-    * Esta representação é adequada para gravação em ficheiros CSV ou similares.
-    *
-    * @return uma string contendo os dados do condutor separados por ';'
-    */
     public String paraFicheiro() {
         return getNome() + ";" +
                 getIdade() + ";" +
@@ -149,18 +123,17 @@ public class Condutor extends Pessoa{
      */
     @Override
     public String toString() {
-        return "Condutor{" +
-                "Nome=" + getNome() +
-                ", Idade=" + getIdade() +
-                ", Sexo=" + getSexo() +
-                ", Email=" + getEmail() +
-                ", Telefone=" + getTelefone() +
-                ", Morada=" + getMorada() +
-                ", Carta de Cidadão=" + getCartaoDeCidadao() +
-                ", Contribuinte=" + getContribuinte() +
-                ", Carta de condução='" + cartaDeConducao + '\'' +
-                ", avaliação=" + avaliacao + '\'' +
-                ", totalViagens=" + totalViagens + '\'' +
-                '}';
+        return "CONDUTOR\n\n" +
+                "Nome:  " + getNome() + '\n' +
+                "Idade:  " + getIdade() + '\n' +
+                "Sexo:  " + getSexo() + '\n' +
+                "Email:  " + getEmail() + '\n' +
+                "Telefone:  " + getTelefone() + '\n' +
+                "Morada:  " + getMorada() + '\n' +
+                "Carta de Cidadão:  " + getCartaoDeCidadao() + '\n' +
+                "Contribuinte:  " + getContribuinte() + '\n' +
+                "Carta de condução:  '" + getCartaDeConducao() + '\n' +
+                "Avaliação:  " + avaliacao + '\'' + '\n' +
+                "TotalViagens:  " + totalViagens + '\'' + '\n';
     }
 }

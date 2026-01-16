@@ -25,6 +25,8 @@ public class Viagem {
     private boolean concluida;
     /** Atributo do custo da viagem.*/
     private double custoViagem;
+    /** Atribuição para a distância.*/
+    private double distancia;
 
     public Viagem(String moradaOrigem, String moradaDestino, LocalDate dataInicio, LocalTime horaInicio, String cliente, String viatura, String condutor) {
         this.cliente = new Cliente();
@@ -36,6 +38,7 @@ public class Viagem {
         this.moradaDestino = "";
         concluida = false;
         custoViagem = 0;
+        distancia = 0;
     }
     /**
      * Construtor com parâmetros da classe Viagem.
@@ -60,6 +63,7 @@ public class Viagem {
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
         this.custoViagem = custoViagem;
+        this.distancia = distancia;
     }
 
     /**
@@ -71,11 +75,33 @@ public class Viagem {
         return cliente.getContribuinte() + ";" +
                 condutor.getContribuinte() + ";" +
                 viatura.getMatricula() + ";" +
-                datanIcio + ";" +
-                dataFim + ";" +
-                moradaOrigem + ";" +
-                moradaDestino + ";" +
-                custoViagem;
+                getInicio() + ";" +
+                getFim() + ";" +
+                isConcluida() + ";" +
+                getMoradaOrigem() + ";" +
+                getMoradaDestino() + ";" +
+                getCustoViagem() + ";" +
+                getDistancia();
+    }
+
+    @Override
+    public String toString() {
+        String status = "";
+        if(this.concluida)
+            status = "Concluído";
+        else
+            status = "Não concluído";
+        return "VIAGEM\n\n" +
+                "Início:  " + getInicio() + '\n' +
+                "Fim:  " + getFim() + '\n' +
+                "Status:  " + status + '\n' +
+                "Origem:  " + getMoradaOrigem() + '\n' +
+                "Destino:  " + getMoradaDestino() + '\n' +
+                "Distância:  " + getDistancia() + '\n' +
+                "Custo da viagem:  " + getCustoViagem() + '\n' +
+                "Nome do cliente:  " + cliente.getNome() + '\n' +
+                "Nome do Condutor:  " + condutor.getNome() + '\n' +
+                "Viatura: " + viatura.getMatricula() + " " + viatura.getCor()+ " " + viatura.getMarca() + " " + viatura.getModelo();
     }
 
     /**
@@ -204,9 +230,19 @@ public class Viagem {
     public void setCustoViagem(double custoViagem) {
         this.custoViagem = custoViagem;
     }
+
     /**
-     * Adiciona ou processa uma lista de viagens.
-     * @param viagens A lista (ArrayList) de viagens a ser adicionada.
+     * Obtém a distância da viagem.
+     * @return A double da distância da viagem.
      */
-    public void add(ArrayList<Viagem> viagens){}
+    public double getDistancia() {
+        return distancia;
+    }
+    /**
+     * Define a distância da viagem.
+     * @param distancia A nova distância da viagem.
+     */
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
 }

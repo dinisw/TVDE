@@ -78,39 +78,6 @@ public class Cliente extends Pessoa {
         this.totalGasto = totalGasto;
     }
 
-    /**
-     * Regista uma nova viagem realizada pelo cliente.
-     *
-     * Incrementa o número total de viagens e adiciona o valor da viagem
-     * ao total gasto.
-     *
-     * @param valor Custo da viagem
-     */
-    public void addViagem(double valor){
-        this.totalViagens++;
-        this.totalGasto += valor;
-    }
-
-    /**
-     * Converte os dados do condutor em uma string formatada para gravação em ficheiro.
-     *
-     * Os atributos do condutor são concatenados em uma única linha, separados por ponto e vírgula (';'),
-     * na seguinte ordem:
-     * - Nome
-     * - Idade
-     * - Sexo
-     * - Email
-     * - Telefone
-     * - Morada
-     * - Cartão de Cidadão
-     * - Contribuinte
-     * - Total de viagens realizadas
-     * - Total gasto em viagens
-     *
-     * Esta representação é adequada para gravação em ficheiros CSV ou outros ficheiros de texto estruturados.
-     *
-     * @return uma string contendo todos os dados do condutor separados por ';'
-     */
     public String paraFicheiro() {
         return getNome() + ";" +
                 getIdade() + ";" +
@@ -136,11 +103,11 @@ public class Cliente extends Pessoa {
                 "Idade:  " + getIdade() + '\n' +
                 "Sexo:  " + getSexo() + '\n' +
                 "Email:  " + getEmail() + '\n' +
-                "Telefone: " + getTelefone() + '\n' +
-                "Morada: " + getMorada() + '\n' +
-                "Cartão de Cidadão: " + getCartaoDeCidadao() + '\n' +
-                "Contribuinte: " + getContribuinte() + '\n' +
-                "Até agora já realizou: " + totalViagens + " viagens\n" +
-                "Valor Total Gasto em Viagens: " + totalGasto + '\n';
+                "Telefone:  " + getTelefone() + '\n' +
+                "Morada:  " + getMorada() + '\n' +
+                "Cartão de Cidadão:  " + getCartaoDeCidadao() + '\n' +
+                "Contribuinte:  " + getContribuinte() + '\n' +
+                "Até agora já realizou:  " + totalViagens + " viagens\n" +
+                "Valor Total Gasto em Viagens:  " + totalGasto + '\n';
     }
 }
