@@ -771,10 +771,13 @@ public class EmpresaTVDE {
         return viagemEncontrada;
     }
 
-    public double calculaDistanciaMedia(LocalDateTime inicio, LocalDateTime fim) {
+    public double calculaDistanciaMedia(LocalDateTime inicio, LocalDateTime fim, ArrayList<Reserva> reservas) {
         double media = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             double kMS = 0;
+            for(var reserva : reservas){
+                kMS += reserva.getDistancia();
+            }
             int quantidadeViagens = 0;
             String linha;
             while ((linha = reader.readLine()) != null) {

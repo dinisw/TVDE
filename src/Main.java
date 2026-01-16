@@ -1944,6 +1944,7 @@ public class Main {
         System.out.print(ROXO + "\n\n--- Nova Viagem (Escreva 'sair' para cancelar) ---\n\n" + RESET);
         try {
             String moradaOrigem, moradaDestino, dataStr;
+            double distancia;
             int indexCliente, indexViatura, indexCondutor;
             Cliente cliente;
             Viatura viatura;
@@ -2080,10 +2081,20 @@ public class Main {
                     }
                     break;
                 }
-
+                while (true) {
+                    System.out.print("Indique a distância em Kms: ");
+                    String distanciaStr = ler.nextLine();
+                    if (opcaoSair(distanciaStr)) return;
+                    if (!isDistanciaValida(distanciaStr)) {
+                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A distância não está no formato correto. Tente novamente.");
+                        continue;
+                    }
+                    distancia = Double.parseDouble(distanciaStr);
+                    break;
+                }
                 condutor = condutores.get(indexCondutor);
 
-                Viagem viagem = new Viagem(cliente, condutor, viatura, dataInicio, horaReserva, concluida, moradaOrigem, moradaDestino, custoViagem);
+                Viagem viagem = new Viagem(cliente, condutor, viatura, dataInicio.atTime(horaReserva), horaReserva, false, moradaOrigem, moradaDestino, distancia*2);
                 if (empresaTVDE.adicionarViagem(viagem)) {
                     System.out.print(VERDE_BRILHANTE + "\n\nViagem criada com sucesso!\n\n" + RESET);
                     viagens = empresaTVDE.carregarViagem();
@@ -2121,7 +2132,9 @@ public class Main {
     }
 
     void transformarReservaEmViagem(Scanner ler) {
-
+        Condutor condutor;
+        Viatura viatura;
+        Cliente cliente;
 
         if (reservas.isEmpty()) {
             System.out.println("Não existe nenhuma reserva para transformar em viagem.");
@@ -2171,9 +2184,12 @@ public class Main {
             System.out.println("Condutor inválido.");
             return;
         }
+        condutor = condutores.get(indexCondutor);
+        viatura = reservaSelecionada.getViatura();
+        cliente = reservaSelecionada.getCliente();
 
-        Viagem novaViagem = new Viagem();
-        viagens.add(novaViagem);
+        Viagem viagem = new Viagem(cliente, condutor, viatura, reservaSelecionada.getDataHoraInicio(), reservaSelecionada.getDataHoraInicio().toLocalTime(), false, reservaSelecionada.getMoradaOrigem(), reservaSelecionada.getMoradaDestino(), reservaSelecionada.getDistancia()*2);
+        viagens.add(viagem);
 
         System.out.println("Sucesso! A reserva foi transformada em viagem.");
     }
@@ -2462,7 +2478,7 @@ public class Main {
                 break;
             }
 
-            double media = empresaTVDE.calculaDistanciaMedia(inicio, fim);
+            double media = empresaTVDE.calculaDistanciaMedia(inicio, fim, reservas);
 
             if (media > 0) {
                 System.out.println("A distância média é de: " + media);
