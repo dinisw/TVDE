@@ -14,6 +14,14 @@ public class Condutor extends Pessoa{
     /** Número total de viagens realizadas pelo condutor. */
     private int totalViagens;
 
+    /**
+     * Construtor padrão da classe Condutor.
+     *
+     * Inicializa os atributos do condutor com valores padrão:
+     * - cartaDeConducao: string vazia
+     * - avaliacao: 0
+     * - totalViagens: 0
+     */
     public Condutor(){
         cartaDeConducao = "";
         avaliacao = 0;
@@ -100,9 +108,18 @@ public class Condutor extends Pessoa{
     }
 
     /**
-     * Devolve uma representação textual do condutor.
-     *
+     * Retorna uma representação em formato de string do objeto condutor.
+     * A string inclui informações detalhadas da viatura, como:
      * @return String com os dados do condutor
+     * - nome
+     * - idade
+     * - email
+     * - telefone
+     * - morada
+     * - cc
+     * - avaliação
+     * - total viagens
+     * @return uma string formatada com os dados do condutor.
      */
     @Override
     public String toString() {

@@ -1,7 +1,6 @@
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -729,7 +728,7 @@ public class EmpresaTVDE {
      */
     public boolean adicionarViagem(Viagem viagem) {
         for (Viagem viagem1 : viagens) {
-            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getInicio().equals(viagem1.getInicio())) {
+            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getDatanIcio().equals(viagem1.getDatanIcio())) {
                 return false;
             }
         }
@@ -889,12 +888,12 @@ public class EmpresaTVDE {
                             Viatura viatura = procurarViatura(dados[3]);
                             Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[2]));
                             if (cliente != null && viatura != null && condutor != null) {
-                                Viagem viagem = new Viagem();
+                                Viagem viagem = new Viagem(moradaOrigem, moradaDestino, dataInicio, horaInicio, cliente, viatura, condutor);
                                 viagem.setCliente(cliente);
                                 viagem.setCondutor(condutor);
                                 viagem.setViatura(viatura);
-                                viagem.setFim(fim);
-                                viagem.setInicio(inicio);
+                                viagem.setDataFim(fim);
+                                viagem.setDatanIcio(inicio);
                                 viagem.setMoradaOrigem(dados[5]);
                                 viagem.setMoradaDestino(dados[4]);
                                 viagem.setCustoViagem(Double.parseDouble(dados[7]));

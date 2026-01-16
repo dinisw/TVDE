@@ -31,6 +31,13 @@ public class Viatura {
      */
     private boolean status;
 
+    /**
+    * Construtor padrão da classe Viatura.
+    **
+    * Inicializa todos os atributos com valores padrão
+    * Este construtor permite criar objetos Viatura sem fornecer parâmetros,
+    * podendo ser posteriormente preenchidos através de setters ou outros métodos.
+    */
     public Viatura(){
         matricula = "";
         marca = "";
@@ -60,10 +67,28 @@ public class Viatura {
         this.status = status;
     }
 
+    /**
+     * O metodo expande os principais atributos do objeto separados por ponto e vírgula (`;`),
+     * criando uma representação adequada para armazenamento ou exportação para ficheiro.
+     * @return uma String contendo os dados do objeto separados por `;`, pronta para escrita em ficheiro
+     */
     public String paraFicheiro() {
         return this.matricula + ";" + this.marca + ";" + this.modelo + ";" + this.anoDeFabrico + ";" + this.cor + ";" + this.status;
     }
 
+    /**
+     * Retorna uma representação em formato de string do objeto Viatura.
+     *
+     * A string inclui informações detalhadas da viatura, como:
+     * - Matrícula
+     * - Marca
+     * - Modelo
+     * - Ano de fabrico
+     * - Cor
+     * - Status de disponibilidade ("Disponível" ou "Indisponível")
+     *
+     * @return uma string formatada com os dados da viatura.
+     */
     @Override
     public String toString() {
         String status = "";
@@ -79,6 +104,28 @@ public class Viatura {
                 "Cor:  " + getCor() + '\n' +
                 "Status: " + status + '\n';
     }
+
+    /**
+     * Filtra e retorna uma lista de viaturas que estão disponíveis.
+     *
+     * Este metodo percorre a lista fornecida de viaturas e seleciona apenas
+     * aquelas cujo status é verdadeiro (disponível).
+     *
+     * @param viaturas uma lista de objetos Viatura a ser filtrada
+     * @return uma nova lista contendo apenas as viaturas disponíveis
+     */
+    public ArrayList<Viatura> getViaturasDisponiveis(ArrayList<Viatura> viaturas){
+        ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
+        for(var viatura : viaturas){
+            if(viatura.status){
+                viaturasDisponiveis.add(viatura);
+            }
+        }
+        return viaturasDisponiveis;
+    }
+
+
+
 
     /**
      * Obtém a matrícula da viatura.
