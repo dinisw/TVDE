@@ -71,19 +71,6 @@ public class Cliente extends Pessoa {
         this.totalGasto = totalGasto;
     }
 
-    /**
-     * Regista uma nova viagem realizada pelo cliente.
-     *
-     * Incrementa o número total de viagens e adiciona o valor da viagem
-     * ao total gasto.
-     *
-     * @param valor Custo da viagem
-     */
-    public void addViagem(double valor){
-        this.totalViagens++;
-        this.totalGasto += valor;
-    }
-
     public String paraFicheiro() {
         return getNome() + ";" +
                 getIdade() + ";" +

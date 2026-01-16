@@ -803,9 +803,9 @@ public class EmpresaTVDE {
             while ((linha = viagem.readLine()) != null) {
                 String[] dados = linha.split(";");
                 if (dados.length >= 6) {
-                    LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
+                    LocalDateTime dataViagem = LocalDateTime.parse(dados[3]);
                     if (dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
-                        destinos.add(dados[6]);
+                        destinos.add(dados[7]);
                     }
                 }
             }
@@ -818,9 +818,9 @@ public class EmpresaTVDE {
             while ((linha = reserva.readLine()) != null) {
                 String[] dados = linha.split(";");
                 if (dados.length >= 6) {
-                    LocalDateTime dataReserva = LocalDateTime.parse(dados[3]);
+                    LocalDateTime dataReserva = LocalDateTime.parse(dados[2]);
                     if (dataReserva.isBefore(inicio) && !dataReserva.isAfter(fim)) {
-                        destinos.add(dados[6]);
+                        destinos.add(dados[4]);
                     }
                 }
             }
@@ -849,7 +849,7 @@ public class EmpresaTVDE {
 
     public ArrayList<Cliente> clientesPorDistancia(double distanciaMinima, double distanciaMaxima) {
         ArrayList<Cliente> clientesEncontrados = new ArrayList<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
@@ -859,7 +859,7 @@ public class EmpresaTVDE {
                     if (distancia >= distanciaMinima && distancia <= distanciaMaxima) {
                         int nifCliente = Integer.parseInt(dados[2]);
                         Cliente cliente = procurarNifCliente(nifCliente);
-                        if (cliente != null) {
+                        if (cliente != null && !clientesEncontrados.contains(cliente)) {
                             clientesEncontrados.add(cliente);
                         }
                     }
