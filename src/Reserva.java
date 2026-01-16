@@ -53,6 +53,11 @@ public class Reserva {
     public Reserva(LocalDate dataReserva, LocalTime horaReserva, String moradaOrigem, String moradaDestino, String viatura, String cliente) {
     }
 
+    /**
+     * O metodo expande os principais atributos do objeto separados por ponto e vírgula (`;`),
+     * criando uma representação adequada para armazenamento ou exportação para ficheiro.
+     * @return uma String contendo os dados do objeto separados por `;`, pronta para escrita em ficheiro
+     */
     public String paraFicheiro() {
         return cliente.getContribuinte() + ";" +
                 viatura.getMatricula() + ";" +

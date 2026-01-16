@@ -21,42 +21,76 @@ import java.util.Scanner;
  */
 public class Main {
 
+    /** Caminho do ficheiro de logs de erros relacionados com viaturas. */
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
+    /** Caminho do ficheiro de logs de erros relacionados com Clientes. */
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE = "logsErrosClientes.txt";
+    /** Caminho do ficheiro de logs de erros relacionados com condutores. */
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR = "logsErrosCondutor.txt";
+    /** Caminho do ficheiro de logs de erros relacionados com reservas. */
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_RESERVA = "logsErrosReserva.txt";
+    /** Caminho do ficheiro de logs de erros relacionados com viagens. */
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIAGEM = "logsErrosViagem.txt";
 
+    /** Instância principal da empresa TVDE responsável pela gestão dos dados. */
     EmpresaTVDE empresaTVDE = new EmpresaTVDE();
+    /** Lista de clientes carregados a partir do sistema. */
     ArrayList<Cliente> clientes = empresaTVDE.carregarClientes();
+    /** Lista de condutores carregados a partir do sistema. */
     ArrayList<Condutor> condutores = empresaTVDE.carregarCondutores();
+    /** Lista de viaturass carregados a partir do sistema. */
     ArrayList<Viatura> viaturas = empresaTVDE.carregarViaturas();
+    /** Lista de reservas carregados a partir do sistema. */
     ArrayList<Reserva> reservas = new ArrayList<>();
+    /** Lista de viagens carregados a partir do sistema. */
     ArrayList<Viagem> viagens = new ArrayList<>();
 
-
     //region Design
-    /*Reset*/
+    /** Código ANSI utilizado para repor a formatação padrão da consola. */
     public static final String RESET = "\u001B[0m";
-    /*Cores*/
+
+    //Cores
+    /** Código ANSI utilizado para apresentar texto a vermelho na consola. */
     public static final String VERMELHO = "\u001B[31m";
+    /** Código ANSI utilizado para apresentar texto a verde na consola. */
     public static final String VERDE = "\u001B[32m";
+    /** Código ANSI utilizado para apresentar texto a amarelo na consola. */
     public static final String AMARELO = "\u001B[33m";
+    /** Código ANSI utilizado para apresentar texto a azul na consola. */
     public static final String AZUL = "\u001B[34m";
+    /** Código ANSI utilizado para apresentar texto a roxo na consola. */
     public static final String ROXO = "\u001B[35m";
+    /** Código ANSI utilizado para apresentar texto a ciano na consola. */
     public static final String CIANO = "\u001B[36m";
 
     /*Cores Brilhantes*/
+    /** Código ANSI utilizado para apresentar texto a vermelho brilhante na consola. */
     public static final String VERMELHO_BRILHANTE = "\u001B[91m";
+    /** Código ANSI utilizado para apresentar texto a verde brilhante na consola. */
     public static final String VERDE_BRILHANTE = "\u001B[92m";
+    /** Código ANSI utilizado para apresentar texto a amarelo brilhante na consola. */
     public static final String AMARELO_BRILHANTE = "\u001B[93m";
+    /** Código ANSI utilizado para apresentar texto a azul brilhante na consola. */
     public static final String AZUL_BRILHANTE = "\u001B[94m";
+    /** Código ANSI utilizado para apresentar texto a roxo brilhante na consola. */
     public static final String ROXO_BRILHANTE = "\u001B[95m";
+    /** Código ANSI utilizado para apresentar texto a ciano brilhante na consola. */
     public static final String CIANO_BRILHANTE = "\u001B[96m";
-    /*Negrito*/
+
+    //Negrito
+    /** Código ANSI utilizado para apresentar texto a negrito na consola. */
     public static final String NEGRITO = "\u001B[1m";
 
     /*função centralizar texto*/
+    /**
+     * Imprime um texto centrado na consola.
+     *
+     * O texto é centrado com base numa largura fixa de 80 caracteres.
+     * Caso o texto seja maior do que a largura definida, é impresso
+     * normalmente sem centralização.
+     *
+     * @param texto texto a ser apresentado de forma centralizada na consola
+     */
     public static void printCentralizado(String texto) {
         int largura = 80;
         int espacos = (largura - texto.length()) / 2;
@@ -68,6 +102,12 @@ public class Main {
     }
 
     /*Função titulo principal*/
+    /**
+     * Imprime o título principal do sistema TVDE centralizado na consola.
+     *
+     * O título é formatado com cores e estilo em negrito, utilizando
+     * códigos ANSI, e é centralizado na largura da consola.
+     */
     public static void printTituloPrincipal() {
         System.out.println();
         printCentralizado(NEGRITO + AZUL + "========= Sistema de Viagens TVDE ===========" + RESET);
@@ -75,6 +115,14 @@ public class Main {
     }
 
     /*Função titulo secundario */
+    /**
+     * Imprime um título secundário centralizado na consola.
+     *
+     * O texto é apresentado na cor ciano, utilizando códigos ANSI,
+     * e é centralizado com base na largura da consola.
+     *
+     * @param texto texto do título secundário a ser impresso
+     */
     public static void printTituloSecundario(String texto) {
         printCentralizado(CIANO + texto + RESET);
         System.out.println();
@@ -83,32 +131,49 @@ public class Main {
 
     void main() {
 
+        /** Carrega todos os condutores registados no sistema. */
         clientes = empresaTVDE.carregarClientes();
+        /** Carrega todos os condutores registados no sistema. */
         condutores = empresaTVDE.carregarCondutores();
 
+        /**
+         * switch case das opções do menu principal do sistema TVDE.
+         * Se o utilizador inserir uma opção inválida, é apresentada uma mensagem
+         * e o menu é exibido novamente. O loop continua até que a opção 0 seja
+         * selecionada.
+         *
+         *   @param ler Scanner utilizado para ler as opções do utilizador
+         */
         int opcao;
         Scanner ler = new Scanner(System.in);
         do {
             opcao = menu(ler);
             switch (opcao) {
+                /* Opção que leva ao menu de clientes. */
                 case 1:
                     Clientes(ler);
                     break;
+                /* Opção que leva ao menu de condutores. */
                 case 2:
                     Condutores(ler);
                     break;
+                /* Opção que leva ao menu de viaturas. */
                 case 3:
                     Viaturas(ler);
                     break;
+                /* Opção que leva ao menu de reservas. */
                 case 4:
                     Reservas(ler);
                     break;
+                /* Opção que leva ao menu de viagens. */
                 case 5:
                     Viagens(ler);
                     break;
+                /* Opção que leva ao menu de informações. */
                 case 6:
                     informacoes(ler);
                     break;
+                /* Opção para sair do programa. */
                 case 0:
                     System.out.print("Obrigado por utilizar a App da TVDE!!");
                     break;
@@ -119,6 +184,16 @@ public class Main {
         } while (opcao != 0);
     }
 
+    /**
+     * Apresenta o menu principal do sistema TVDE e lê a opção escolhida pelo utilizador.
+     *
+     * O utilizador deve inserir um número correspondente à opção desejada.
+     * A entrada é lida como String e convertida para inteiro.
+     *
+     * @param ler Scanner utilizado para ler a opção do utilizador
+     * @return número inteiro correspondente à opção escolhida
+     * @throws NumberFormatException se a entrada não for um número válido
+     */
     int menu(Scanner ler) {
         printTituloPrincipal();
         printTituloSecundario("MENU");
@@ -135,6 +210,12 @@ public class Main {
     }
 
     //region Validações
+    /**
+     * Metodo que verifica se uma matricula é válida.
+     * O metodo so acita exatamente 6 caracteres alfanuméricos (A-Z, 0-9).
+     * @param matricula matrícula a ser validada
+     * @return "true" se a matricula for valida, "false" se for invalida.
+     */
     public boolean isMatriculaValida(String matricula) {
         if (matricula == null) return false;
         String regex = "^[A-Z0-9]{6}$";
@@ -142,43 +223,121 @@ public class Main {
         return matricula.trim().toUpperCase().matches(regex);
     }
 
+    /**
+     * Verifica se a marca de uma viatura é valida.
+     * @param marca marca de uma viatura a ser validada
+     * @return "true" se a marca for valida, "false" se for invalida.
+     */
     public boolean isMarcaValida(String marca) {
         if (marca == null) return false;
         return marca.trim().length() >=2;
-    } //! dinis fazer
+    }
+
+    /**
+     * Verifica se o modelo de uma viatura é valida.
+     * @param modelo modelo de uma viatura a ser validada
+     * @return "true" se o modelo for valido, "false" se for invalido.
+     */
     public boolean isModeloValido (String modelo) {
         if (modelo == null) return false;
 
         return !modelo.trim().isEmpty();
     }
 
+    /**
+     * Verifica se o ano de fabrico de uma viatura é valida
+     * Ometodo so aceita se não for nulo, estiver no intervalo
+     * de 2001 a 2026
+     * For representado exatamente como 4 dígitos numéricos.
+     * @param anoDeFabrico ano de fabrico a ser validado
+     * @return "true" se o ano de frabrico for valido, "false" se for invalido.
+     */
     public boolean isAnoDeFabricoValido(String anoDeFabrico) {
         if (anoDeFabrico == null) return false;
         String regex = "^(200[1-9]|201[0-9]|202[0-6])$";
 
         return anoDeFabrico.trim().matches(regex);
     }
+
+    /**
+     * Verifica se a cor de uma viatura é válida.
+     *
+     * O metodo considera válida uma cor se:
+     * - Não for nula
+     * - Conter apenas letras (maiúsculas ou minúsculas), acentos comuns em português e espaços
+     *
+     * @param cor cor a ser validada
+     * @return "true" se a cor for valida, "false" se for invalida.
+     */
     public boolean isCorValida (String cor) {
         if (cor == null) return false;
 
         return cor.trim().matches("^[a-zA-ZãõáéíóúçÃÕÁÉÍÓÚÇ ]+$");
-    } //! dinis fazer
+    }
+
+    /**
+     * Verifica se o status de uma viatura é válido.
+     *
+     * O metodo considera válido um status se:
+     * - Não for nulo
+     * - For representado pelos valores "1" ou "2" (ignorando maiúsculas e minúsculas)
+     *
+     * Normalmente, esses valores podem representar, por exemplo:
+     * - "1" = Disponível
+     * - "2" = Indisponível
+     *
+     * @param status status a ser validado
+     * @return "true" se o status for valido, "false" se for invalido.
+     */
     public boolean isStatusValido (String status) {
         if (status == null) return false;
         return status.equalsIgnoreCase("1") || status.equalsIgnoreCase("2");
     }
 
+    /**
+     * Verifica se um NIF (Número de Identificação Fiscal) é válido.
+     *
+     * O metodo considera válido um NIF se:
+     * - Não for nulo
+     * - Conter exatamente 9 dígitos numéricos
+     *
+     * @param nif nif a ser validado
+     * @return "true" se o nif for valida, "false" se for invalido.
+     */
     public boolean isNifValido(String nif) {
         if (nif == null) return false;
         String regex = "^\\d{9}$";
 
         return nif.trim().matches(regex);
     }
+
+    /**
+     * Verifica se o nome de um condutor ou viatura é válido.
+     *
+     * O metodo considera válido um nome se:
+     * - Não for nulo
+     * - Conter apenas letras (maiúsculas ou minúsculas), incluindo acentos comuns em português, e espaços
+     * - Possuir pelo menos 2 caracteres
+     *
+     * @param nome o nome a ser validado
+     * @return "true" se o nome for valida, "false" se for invalido.
+     */
     public boolean isNomeValido(String nome) {
         if (nome== null) return false;
 
         return nome.trim().matches("^[a-zA-ZãõáéíóúçÃÕÁÉÍÓÚÇ ]{2,}$");
-    } //! dinis fazer
+    }
+
+    /**
+     * Verifica se o Cartão de Cidadão (CC) é válido.
+     *
+     * O metodo considera válido um CC se:
+     * - Não for nulo
+     * - Conter exatamente 8 dígitos numéricos
+     *
+     * @param cc o Cartão de Cidadão a ser validado
+     * @return "true" se o CC for válido, "false" se for inválido
+     */
     public boolean isCcValido(String cc) {
         if (cc == null) return false;
         String regex = "^\\d{8}$";
@@ -186,6 +345,16 @@ public class Main {
         return cc.trim().matches(regex);
     }
 
+    /**
+     * Verifica se a carta de condução é válida.
+     *
+     * O metodo considera válida uma carta de condução se:
+     * - Não for nula
+     * - Seguir o formato: uma letra maiúscula, seguida de um hífen e 7 dígitos (ex.: "B-1234567")
+     *
+     * @param carta a carta de condução a ser validada
+     * @return "true" se a carta for válida, "false" se for inválida
+     */
     public boolean isCartaValido(String carta) {
         if (carta == null) return false;
         String regex = "^[A-Z]-\\d{7}$";
@@ -193,6 +362,16 @@ public class Main {
         return carta.trim().matches(regex);
     }
 
+    /**
+     * Verifica se a idade de um condutor é válida.
+     *
+     * O metodo considera válida uma idade se:
+     * - Não for nula
+     * - For um número inteiro entre 1 e 129 (inclusive)
+     *
+     * @param idade a idade a ser validada
+     * @return "true" se a idade for válida, "false" se for inválida
+     */
     public boolean isIdadeValido(String idade) {
         if (idade == null) return false;
         String regex = "^(?:[1-9][0-9]?|1[0-2][0-9])$";
@@ -200,11 +379,40 @@ public class Main {
         return idade.trim().matches(regex);
     }
 
+    /**
+     * Verifica se o sexo de um condutor é válido.
+     *
+     * O metodo considera válido um sexo se:
+     * - Não for nulo
+     * - For representado pelos valores "1", "2" ou "3" (ignorando maiúsculas/minúsculas)
+     *
+     * Normalmente, esses valores podem representar, por exemplo:
+     * - "1" = Masculino
+     * - "2" = Feminino
+     * - "3" = Outro
+     *
+     * @param sexo o sexo a ser validado
+     * @return "true" se o sexo for válido, "false" se for inválido
+     */
     public boolean isSexoValido(String sexo) {
         if (sexo == null) return false;
         return sexo.equalsIgnoreCase("1") || sexo.equalsIgnoreCase("2") || sexo.equalsIgnoreCase("3");
     }
 
+
+    /**
+     * Verifica se o email de um condutor é válido.
+     *
+     * O metodo considera válido um email se:
+     * - Não for nulo
+     * - Seguir o formato padrão de email: local@domínio.extensão
+     *   - Parte local pode conter letras, números e caracteres especiais como . _ % + -
+     *   - Domínio pode conter letras, números e hífens
+     *   - Extensão deve ter pelo menos 2 letras
+     *
+     * @param email o email a ser validado
+     * @return "true" se o email for válido, "false" se for inválido
+     */
     public boolean isEmailValido(String email) {
         if (email == null) return false;
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
@@ -212,6 +420,16 @@ public class Main {
         return email.trim().toLowerCase().matches(regex);
     }
 
+    /**
+     * Verifica se o telefone de um condutor é válido.
+     *
+     * O metodo considera válido um telefone se:
+     * - Não for nulo
+     * - Contiver exatamente 9 dígitos numéricos
+     *
+     * @param telefone o número de telefone a ser validado
+     * @return "true" se o telefone for válido, "false" se for inválido
+     */
     public boolean isTelefoneValido(String telefone) {
         if (telefone == null) return false;
         String regex = "^\\d{9}$";
@@ -219,6 +437,18 @@ public class Main {
         return telefone.trim().matches(regex);
     }
 
+    /**
+     * Verifica se a morada de um condutor é válida.
+     *
+     * O metodo considera válida uma morada se:
+     * - Não for nula
+     * - Seguir o formato padrão de endereço com código postal português:
+     *   - Qualquer texto (nome da rua, número, etc.) seguido de espaço
+     *   - Código postal no formato "NNNN-NNN" (4 dígitos, hífen, 3 dígitos)
+     *
+     * @param morada a morada a ser validada
+     * @return "true" se a morada for válida, "false" se for inválida
+     */
     public boolean isMoradaValido(String morada) {
         if (morada == null) return false;
         String regex = "^.+ \\d{4}-\\d{3}$";
@@ -226,12 +456,34 @@ public class Main {
         return morada.toLowerCase().matches(regex);
     }
 
+    /**
+     * Verifica se o texto fornecido corresponde à opção de sair.
+     *
+     * O metodo considera válido o texto se:
+     * - Não for nulo
+     * - For exatamente "sair", ignorando maiúsculas e minúsculas
+     *
+     * @param texto o texto a ser verificado
+     * @return "true" se o texto for "sair", "false" caso contrário
+     */
     public boolean opcaoSair(String texto) {
         if (texto == null) return false;
         return texto.equalsIgnoreCase("sair");
     }
 
-
+    /**
+     * Converte um texto para formato capitalizado.
+     *
+     * O metodo transforma cada palavra do texto de modo que:
+     * - A primeira letra fique em maiúscula
+     * - As demais letras fiquem em minúscula
+     *
+     * Palavras são definidas como sequências de caracteres separadas por espaços.
+     * Se o texto for nulo ou vazio, ele é retornado inalterado.
+     *
+     * @param texto o texto a ser capitalizado
+     * @return o texto capitalizado, ou o texto original se for nulo ou vazio
+     */
     public static String toCapitalize(String texto) {
         if (texto == null || texto.isEmpty()) {
             return texto;
@@ -251,26 +503,38 @@ public class Main {
     //endregion
 
     //region Clientes
+    /** Metodo utilizado para apresentar o menu do Cliente. */
     void Clientes(Scanner ler) {
         int opcao;
         do {
             opcao = subMenuClientes(ler);
+            /**  Opção para registar um cliente. */
             if (opcao == 1) {
                 registarCliente(ler);
+            /**  Opção para pesquisar por um cliente. */
             } else if (!clientes.isEmpty() && opcao == 2) {
                 pesquisarCliente(ler);
+            /**  Opção para atualizar dados do cliente. */
             } else if (!clientes.isEmpty() && opcao == 3) {
                 atualizarCliente(ler);
+            /**  Opção para remover um cliente. */
             } else if (!clientes.isEmpty() && opcao == 4) {
                 removerCliente(ler);
+            /**  Opção para voltar ao menu anterior. */
             } else if (opcao == 0) {
                 break;
+            /**  Opção para quando a opção do cliente é invalida. */
             } else {
                 System.out.println("Opção Inválida!");
             }
         } while (opcao != 0);
-    } //Completo
+    }
 
+    /** Metodo utilizado para apresentar o submenu cliente.
+     * As opções de pesquisa, atualização e remoção só estão disponíveis quando existem reservas registadas.
+     *
+     * O menu é apresentado repetidamente até o utilizador escolhera opção 0 (voltar/sair).
+     * */
     int subMenuClientes(Scanner ler) {
         int count = 1;
         limparConsola();
@@ -296,8 +560,21 @@ public class Main {
         } catch (Exception e) {
             return -1;
         }
-    } //Completo
+    }
 
+    /**
+     * Regista um novo cliente no sistema.
+     * Para cada campo, o metodo:
+     * - Valida a entrada utilizando os métodos de validação correspondentes
+     * - Garante que valores duplicados (NIF ou CC já registados) não sejam aceitos
+     * - Permite ao utilizador digitar "sair" a qualquer momento para cancelar o registo
+     * - Informa o utilizador sobre erros de formato e solicita nova entrada
+     *
+     * Em caso de exceção durante o processo, a mensagem de erro é registada
+     * num ficheiro de logs de erros e o metodo imprime "Dados inválidos.".
+     *
+     * @param ler ler Scanner usado para ler a entrada do utilizador
+     */
     private void registarCliente(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Novo Registo de Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -305,6 +582,7 @@ public class Main {
             String ccStr, sexo, email, morada;
             int cc, idade, telefone, nif;
 
+            // Validação e solicitação do NIF
             while (true) {
                 System.out.print("Indique o NIF (Contribuinte): ");
                 String nifStr = ler.nextLine();
@@ -324,6 +602,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação do Cartão de Cidadão
             while (true) {
                 System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
                 ccStr = ler.nextLine();
@@ -343,10 +622,12 @@ public class Main {
                 }
             }
 
+            // Validação e solicitação do Nome
             System.out.print("Indique o seu nome: ");
             String nome = ler.nextLine();
             if (opcaoSair(nome)) return;
 
+            // Validação e solicitação da Idade
             while (true) {
                 System.out.print("Indique a sua idade: ");
                 String idadeStr = ler.nextLine();
@@ -359,6 +640,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação do Sexo
             while (true) {
                 System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
                 sexo = ler.nextLine().toLowerCase();
@@ -373,6 +655,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação do Email
             while (true) {
                 System.out.print("Indique o seu email: ");
                 email = ler.nextLine();
@@ -384,6 +667,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação Numero de Telefone
             while (true) {
                 System.out.print("Indique o número de telefone: ");
                 String telStr = ler.nextLine();
@@ -396,6 +680,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação da Morada
             while (true) {
                 System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
                 morada = ler.nextLine();
@@ -412,8 +697,22 @@ public class Main {
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE, e.getMessage());
         }
-    } //Completo
+    }
 
+    /**
+     * Permite pesquisar um cliente no sistema pelo NIF de forma interativa via console.
+     *
+     * O metodo realiza os seguintes passos:
+     * - Solicita ao utilizador que indique o NIF do cliente
+     * - Permite digitar "sair" para cancelar a pesquisa
+     * - Valida o NIF utilizando o metodo isNifValido
+     * - Se o NIF for válido, procura o cliente no sistema
+     * - Se o cliente for encontrado, imprime os detalhes do cliente
+     * - Se não for encontrado, informa que o cliente não existe
+     * - Permite ao utilizador pressionar Enter para continuar após visualizar os detalhes
+     *
+     * @param ler Scanner usado para ler a entrada do utilizador
+     */
     private void pesquisarCliente(Scanner ler) {
         while (true) {
             System.out.print(ROXO + "\n\n--- Buscar Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -440,8 +739,23 @@ public class Main {
                 System.out.println("NIF inválido.");
             }
         }
-    } //Completo
+    }
 
+    /**
+    * Permite atualizar os dados de um cliente existente de forma interativa via console.
+    *
+    * O metodo realiza os seguintes passos:
+    * - Solicita ao utilizador o NIF do cliente
+    * - Permite digitar "sair" a qualquer momento para cancelar a atualização
+    * - Valida o NIF e procura o cliente no sistema
+    * - Se o cliente existir, apresenta um menu com as opções de atualização
+    * - Para cada campo, realiza validação específica (usando os métodos de validação)
+    * - Impede duplicação de dados críticos (Cartão de Cidadão)
+    * - Salva imediatamente as alterações utilizando empresaTVDE.guardarAlteracoesClientes()
+    * - Em caso de erro, registra a exceção em logs e informa o utilizador
+    *
+    * @param ler Scanner usado para ler a entrada do utilizador
+    */
     void atualizarCliente(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Atualizar Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -470,6 +784,7 @@ public class Main {
                         String opcao = ler.nextLine();
 
                         switch (opcao) {
+                            // Opção para alterar o nome
                             case "1":
                                 while (true) {
                                     System.out.print("Indique o seu nome: ");
@@ -486,6 +801,7 @@ public class Main {
                                     break;
                                 }
                                 break;
+                            // Opção para alterar a idade
                             case "2":
                                 while (true) {
                                     System.out.print("Indique a sua idade: ");
@@ -503,6 +819,7 @@ public class Main {
                                     break;
                                 }
                                 break;
+                            // Opção para alterar o sexo
                             case "3":
                                 while (true) {
                                     System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
@@ -522,6 +839,7 @@ public class Main {
                                     break;
                                 }
                                 break;
+                            // Opção para alterar o email
                             case "4":
                                 while (true) {
                                     System.out.print("Indique o seu email: ");
@@ -538,6 +856,7 @@ public class Main {
                                     break;
                                 }
                                 break;
+                            // Opção para alterar o numeor de telefone
                             case "5":
                                 while (true) {
                                     System.out.print("Indique o número de telefone: ");
@@ -555,6 +874,7 @@ public class Main {
                                     break;
                                 }
                                 break;
+                            // Opção para alterar a morada
                             case "6":
                                 while (true) {
                                     System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
@@ -572,6 +892,7 @@ public class Main {
                                     break;
                                 }
                                 break;
+                            // Opção para alterar o cartão de cidadão
                             case "7":
                                 while (true) {
                                     System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
@@ -595,6 +916,7 @@ public class Main {
                                    break;
                                 }
                                 break;
+                            // Opção para sair
                             case "0":
                                 return;
                             default:
@@ -610,8 +932,24 @@ public class Main {
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE, e.getMessage());
         }
-    } //Completo Dinis :)
+    }
 
+    /**
+     * Permite remover um cliente do sistema de forma interativa via console.
+     *
+     * O metodo realiza os seguintes passos:
+     * - Solicita ao utilizador o NIF do cliente a ser removido
+     * - Permite digitar "sair" a qualquer momento para cancelar a operação
+     * - Valida o NIF utilizando o metodo isNifValido
+     * - Se o NIF for válido, procura o cliente no sistema
+     * - Se o cliente for encontrado, solicita confirmação do utilizador [S/N]
+     * - Se confirmado, remove o cliente usando empresaTVDE.removerCliente()
+     * - Atualiza a lista local de clientes chamando empresaTVDE.carregarClientes()
+     * - Informa o utilizador se a remoção foi bem-sucedida ou se o cliente não pôde ser removido
+     * - Em caso de erro de input ou exceção, informa o utilizador
+     *
+     * @param ler Scanner usado para ler a entrada do utilizador
+     */
     void removerCliente(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Remover Cliente (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -648,30 +986,42 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Erro de input." + e.getMessage());
         }
-    } //Completo Dinis :)
+    }
     //endregion
 
     //region Condutores
+    /** Metodo utilizado para apresentar o menu do Condutor*/
     void Condutores(Scanner ler) {
         int opcao;
         do {
             opcao = subMenuCondutores(ler);
+            /**  Opção para registar um condutor. */
             if (opcao == 1) {
                 registarCondutor(ler);
+            /**  Opção para pesquisar por um condutor. */
             } else if (!condutores.isEmpty() && opcao == 2) {
                 pesquisarCondutor(ler);
+            /**  Opção para atualizar dados do condutor. */
             } else if (!condutores.isEmpty() && opcao == 3) {
                 atualizarCondutor(ler);
+            /**  Opção para remover um condutor. */
             } else if (!condutores.isEmpty() && opcao == 4) {
                 removerCondutor(ler);
+            /**  Opção para voltar ao menu anterior. */
             } else if (opcao == 0) {
                 break;
+            /**  Opção para quando a opção do cliente é invalida. */
             } else {
                 System.out.println("Opção Inválida!");
             }
         } while (opcao != 0);
-    } //Completo Dinis :)
+    }
 
+    /** Metodo utilizado para apresentar o submenu condutor.
+     * As opções de pesquisa, atualização e remoção só estão disponíveis quando existem reservas registadas.
+     *
+     * O menu é apresentado repetidamente até o utilizador escolhera opção 0 (voltar/sair).
+     * */
     int subMenuCondutores(Scanner ler) {
         int count = 1;
         limparConsola();
@@ -697,15 +1047,28 @@ public class Main {
         } catch (Exception e) {
             return -1;
         }
-    } //Completo Dinis :)
+    }
 
+    /**
+     * Regista um novo condutor no sistema.
+     * Para cada campo, o metodo:
+     * - Valida a entrada utilizando os métodos de validação correspondentes
+     * - Garante que valores duplicados (NIF ou CC já registados) não sejam aceitos
+     * - Permite ao utilizador digitar "sair" a qualquer momento para cancelar o registo
+     * - Informa o utilizador sobre erros de formato e solicita nova entrada
+     *
+     * Em caso de exceção durante o processo, a mensagem de erro é registada
+     * num ficheiro de logs de erros e o metodo imprime "Dados inválidos.".
+     *
+     * @param ler ler Scanner usado para ler a entrada do utilizador
+     */
     void registarCondutor(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Novo Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
 
             String ccStr, sexo, email, morada, cartaStr;
             int cc, idade, telefone, nif;
-
+            // Validação e solicitação do NIF
             while (true) {
                 System.out.println("Indique o NIF (Contribuinte): ");
                 String nifStr = ler.nextLine();
@@ -725,6 +1088,7 @@ public class Main {
                 break;
             }
 
+            //Validação e solicitação do Cartão de Cidadão
             while (true) {
                 System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
                 ccStr = ler.nextLine();
@@ -743,7 +1107,7 @@ public class Main {
                 }
 
             }
-
+            // Validação e Solicitação da Carta de Condução
             while (true) {
                 System.out.println("Indique a Carta de Condução (Formato: L-1234567):");
                 cartaStr = ler.nextLine().toUpperCase().trim();
@@ -760,10 +1124,12 @@ public class Main {
                 }
             }
 
+            // Validação e solicitação do Nome
             System.out.println("Indique o seu nome: ");
             String nome = ler.nextLine();
             if (opcaoSair(nome)) return;
 
+            // Validação e solicitação da Idade
             while (true) {
                 System.out.println("Indique a sua idade:");
                 String idadeStr = ler.nextLine();
@@ -776,6 +1142,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação do Sex
             while (true) {
                 System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
                 sexo = ler.nextLine().toLowerCase();
@@ -790,6 +1157,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação do Email
             while (true) {
                 System.out.print("Indique o seu email: ");
                 email = ler.nextLine();
@@ -800,6 +1168,8 @@ public class Main {
                 }
                 break;
             }
+
+            // Validação e solicitação da Morada
             while (true) {
                 System.out.println("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
                 morada = ler.nextLine();
@@ -811,6 +1181,7 @@ public class Main {
                 break;
             }
 
+            // Validação e solicitação Numero de Telefone
             while (true) {
                 System.out.print("Indique o número de telefone: ");
                 String telStr = ler.nextLine();
@@ -832,8 +1203,22 @@ public class Main {
             System.out.println("Dados inválidos.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR, e.getMessage());
         }
-    } //Completo Dinis :)
+    }
 
+    /**
+     * Permite pesquisar um condutor no sistema pelo NIF de forma interativa via console.
+     *
+     * O metodo realiza os seguintes passos:
+     * - Solicita ao utilizador que indique o NIF do condutor
+     * - Permite digitar "sair" para cancelar a pesquisa
+     * - Valida o NIF utilizando o metodo isNifValido
+     * - Se o NIF for válido, procura o condutor no sistema
+     * - Se o condutor for encontrado, imprime os detalhes do condutor
+     * - Se não for encontrado, informa que o condutor não existe
+     * - Permite ao utilizador pressionar Enter para continuar após visualizar os detalhes
+     *
+     * @param ler Scanner usado para ler a entrada do utilizador
+     */
     private void pesquisarCondutor(Scanner ler) {
         while (true) {
             System.out.print(ROXO + "\n\n--- Buscar Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -859,8 +1244,31 @@ public class Main {
                 System.out.println("NIF inválido.");
             }
         }
-    } //Completo Dinis :)
+    }
 
+    /**
+     * Permite atualizar os dados de um condutor existente no sistema de forma interativa via console.
+     *
+     * O método realiza os seguintes passos:
+     * - Solicita ao utilizador o NIF do condutor que deseja atualizar
+     * - Permite digitar "sair" a qualquer momento para cancelar a operação
+     * - Valida o NIF informado usando o método isNifValido
+     * - Se o condutor for encontrado, exibe um menu de opções para atualizar:
+     *   1 - Nome
+     *   2 - Idade
+     *   3 - Género
+     *   4 - Email
+     *   5 - Telefone
+     *   6 - Morada
+     *   7 - Cartão de Cidadão
+     *   8 - Carta de Condução
+     *   0 - Sair
+     * - Para cada opção, valida os dados de entrada antes de atualizar o condutor
+     * - Salva automaticamente as alterações após cada atualização
+     * - Garante que não haja duplicação de Cartão de Cidadão ou Carta de Condução entre condutores
+     *
+     * @param ler Scanner usado para ler a entrada do utilizador
+     */
     void atualizarCondutor(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Atualizar Condutor (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -891,6 +1299,7 @@ public class Main {
                         String opcao = ler.nextLine();
 
                         switch (opcao) {
+                            // Opção para alterar o nome
                             case "1":
                             while (true) {
                                 System.out.print("Indique o seu nome: ");
@@ -907,6 +1316,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para alterar a idade
                         case "2":
                             while (true) {
                                 System.out.print("Indique a sua idade: ");
@@ -924,6 +1334,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para alterar o sexo
                         case "3":
                             while (true) {
                                 System.out.print("Indique o seu género:\n1\t-\tMasculino\n2\t-\tFeminino\n3\t-\tOutro\n ");
@@ -943,6 +1354,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para alterar o email
                         case "4":
                             while (true) {
                                 System.out.print("Indique o seu email: ");
@@ -959,6 +1371,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para alterar o numeor de telefone
                         case "5":
                             while (true) {
                                 System.out.print("Indique o número de telefone: ");
@@ -976,6 +1389,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para alterar a morada
                         case "6":
                             while (true) {
                                 System.out.print("Indique a sua morada [Rua de Santa catarina, 123 - 3210-450]: ");
@@ -993,6 +1407,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para alterar o cartão de cidadão
                         case "7":
                             while (true) {
                                 System.out.print("Indique o número de cartão de cidadão (8 primeiros dígitos): ");
@@ -1017,6 +1432,7 @@ public class Main {
                             }
                             break;
                         case "8":
+                            // Opção para alterar a carta de condução
                             while (true) {
                                 System.out.print("Indique a carta de condução: ");
                                 String cartaStr = ler.nextLine();
@@ -1037,6 +1453,7 @@ public class Main {
                                 break;
                             }
                             break;
+                        // Opção para sair
                         case "0":
                             return;
                         default:
@@ -1052,7 +1469,7 @@ public class Main {
         System.out.println("Dados inválidos.");
         empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR, e.getMessage());
     }
-} //Completo Dinis
+}
 
     void removerCondutor(Scanner ler) {
         try {

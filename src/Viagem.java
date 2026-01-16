@@ -62,6 +62,11 @@ public class Viagem {
         this.custoViagem = custoViagem;
     }
 
+    /**
+     * O metodo expande os principais atributos do objeto separados por ponto e vírgula (`;`),
+     * criando uma representação adequada para armazenamento ou exportação para ficheiro.
+     * @return uma String contendo os dados do objeto separados por `;`, pronta para escrita em ficheiro
+     */
     public String paraFicheiro() {
         return cliente.getContribuinte() + ";" +
                 condutor.getContribuinte() + ";" +
@@ -72,6 +77,7 @@ public class Viagem {
                 moradaDestino + ";" +
                 custoViagem;
     }
+
     /**
      * Obtém o cliente da viagem.
      * @return O objeto Cliente.
