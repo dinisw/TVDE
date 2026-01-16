@@ -1388,7 +1388,7 @@ public class Main {
                                     } else {
                                         status = false;
                                     }
-                                    viatura.setDisponivel(status);
+                                    viatura.setStatus(status);
                                     empresaTVDE.guardarAlteracoesViaturas();
                                     System.out.println(VERDE_BRILHANTE + "\n\nStatus atualizado com sucesso!\n\n" + RESET);
                                     break;
@@ -1449,6 +1449,7 @@ public class Main {
     } //Completo Dinis :)
     //endregion
 
+    //region Reservas
     void Reservas(Scanner ler) {
         int opcao;
         do{
@@ -1523,7 +1524,6 @@ public class Main {
             }
 
             while (true) {
-                System.out.println("=== Escolha o Cliente ===");
 
                 if (clientes.isEmpty()) {
                     System.out.println("Não existe nenhum cliente registado. Registe um cliente primeiro.");
@@ -1532,7 +1532,9 @@ public class Main {
                 for (int i = 0; i < clientes.size(); i++) {
                     System.out.println((i + 1) + ". " + clientes.get(i).toString());
                 }
-                System.out.print("Introduza o número do cliente: ");
+
+                System.out.println("=== Escolha o Cliente ===");
+                System.out.print("Introduza o número do cliente que deseja selecionar: ");
                 indexCliente = ler.nextInt() - 1;
                 ler.nextLine();
                 if (opcaoSair(cliente)) {
@@ -1548,7 +1550,6 @@ public class Main {
             }
 
             while (true) {
-                System.out.println("=== Escolha a viatura ===");
 
                 if (viaturas.isEmpty()) {
                     System.out.println("Não existe nenhuma Viatura registada. Registe uma viatura primeiro.");
@@ -1557,7 +1558,8 @@ public class Main {
                 for (int i = 0; i < viaturas.size(); i++) {
                     System.out.println((i + 1) + ". " + viaturas.get(i).toString());
                 }
-                System.out.print("Introduza o número do cliente: ");
+                System.out.println("=== Escolha a viatura ===");
+                System.out.print("Introduza o número da viatura que deseja selecionar: ");
                 indexViatura = ler.nextInt() - 1;
                 ler.nextLine();
                 if (opcaoSair(viatura)) {
@@ -1627,7 +1629,7 @@ public class Main {
             }
 
             while (true) {
-                System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
+                System.out.print("Indique a morada de destino [Rua de Santa catarina, 123 - 3210-450]: ");
                 moradaDestino = ler.nextLine();
                 if (opcaoSair(moradaDestino)) return;
                 if (!isMoradaValida(moradaDestino)) {
@@ -1646,7 +1648,6 @@ public class Main {
             //empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_RESERVA, e.getMessage());
         }
     }
-
     private void alterarReserva(Scanner ler) {
         try {
             System.out.println(ROXO + "\n\n--- Alterar Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -1820,24 +1821,22 @@ public class Main {
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_RESERVAS, e.getMessage());
         }
     }
-
-
     private void consultarReservas(Scanner ler) {
+        System.out.print(ROXO + "\n\n--- Consultar Reservas (Escreva 'sair' para cancelar) ---\n\n" + RESET);
         while (true) {
-            System.out.print(ROXO + "\n\n--- Consultar Reservas (Escreva 'sair' para cancelar) ---\n\n" + RESET);
-
             System.out.print("Indique o NIF: ");
             String nifStr = ler.nextLine();
+            if (opcaoSair(nifStr)) break;
             if (!isNifValido(nifStr)) {
                 System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
                 continue;
             }
-            if (opcaoSair(nifStr)) break;
 
             try {
                 int nif = Integer.parseInt(nifStr);
                 Reserva reserva = empresaTVDE.procurarNifReserva(nif);
                 if (reserva != null) {
+                    System.out.println(reserva.toString());
                     System.out.println("Enter para continuar...");
                     ler.nextLine();
                     break;
@@ -1847,7 +1846,6 @@ public class Main {
             }
         }
     }
-
     void removerReserva(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
@@ -1885,7 +1883,7 @@ public class Main {
             System.out.println("Erro de input." + e.getMessage());
         }
     }
-//endregion
+    //endregion
 
     //region Viagens
     void Viagens(Scanner ler) {

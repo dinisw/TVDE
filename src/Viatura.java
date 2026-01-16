@@ -83,7 +83,7 @@ public class Viatura {
     public ArrayList<Viatura> getViaturasDisponiveis(ArrayList<Viatura> viaturas){
         ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
         for(var viatura : viaturas){
-            if(viatura.disponivel){
+            if(viatura.status){
                 viaturasDisponiveis.add(viatura);
             }
         }
