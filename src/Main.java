@@ -1449,10 +1449,12 @@ public class Main {
     } //Completo Dinis :)
     //endregion
 
+    private void verListaDeClientes(Scanner ler, String matricula) {
+    }
     //region Reservas
     void Reservas(Scanner ler) {
         int opcao;
-        do {
+        do{
             opcao = subMenuReservas(ler);
             if (opcao == 1) {
                 criarReserva(ler);
