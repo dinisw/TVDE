@@ -1526,25 +1526,32 @@ public class Main {
     //endregion
 
     //region Viaturas
+    /**metodo utilizado para apresentar o menu da viatura*/
     void Viaturas(Scanner ler) {
         int opcao;
         do {
             opcao = subMenuViaturas(ler);
+            /**  Opção para registar uma viatura. */
             if (opcao == 1) {
                 registarViatura(ler);
+            /**  Opção para pesquisar por uma viatura. */
             } else if (!viaturas.isEmpty() && opcao == 2) {
                 pesquisarViatura(ler);
+            /**  Opção para atualizar uma viatura. */
             } else if (!viaturas.isEmpty() && opcao == 3) {
                 atualizarViatura(ler);
+            /**  Opção para remover uma viatura. */
             } else if (!viaturas.isEmpty() && opcao == 4){
                 removerViatura(ler);
+            /**  Opção para voltar ao menu anterior. */
             } else if (opcao == 0) {
                 break;
+            /**  Opção para quando a opção do cliente é invalida. */
             } else {
                 System.out.println("Opção Inválida!");
             }
         } while (opcao != 0);
-    } // Completo Dinis :)
+    }
 
     int subMenuViaturas(Scanner ler) {
         int count = 1;
