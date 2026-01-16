@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,14 +26,14 @@ public class Viagem {
     /** Atributo do custo da viagem.*/
     private double custoViagem;
 
-    public Viagem() {
-        cliente = new Cliente();
-        condutor = new Condutor();
-        viatura = new Viatura();
+    public Viagem(String moradaOrigem, String moradaDestino, LocalDate dataInicio, LocalTime horaInicio, String cliente, String viatura, String condutor) {
+        this.cliente = new Cliente();
+        this.condutor = new Condutor();
+        this.viatura = new Viatura();
         datanIcio = LocalDateTime.now();
         dataFim = LocalDateTime.now();
-        moradaOrigem = "";
-        moradaDestino = "";
+        this.moradaOrigem = "";
+        this.moradaDestino = "";
         concluida = false;
         custoViagem = 0;
     }

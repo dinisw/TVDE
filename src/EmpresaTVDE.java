@@ -66,6 +66,7 @@ public class EmpresaTVDE {
         }
         return false;
     } // Completo
+
     //READ
     public ArrayList<Viatura> carregarViaturas() {
         viaturas.clear();
@@ -154,6 +155,7 @@ public class EmpresaTVDE {
         }
         return false;
     } //Completo
+
     //READ
     public ArrayList<Cliente> carregarClientes() {
         clientes.clear();
@@ -276,6 +278,7 @@ public class EmpresaTVDE {
         }
         return false;
     } //Completo Dinis
+
     //READ
     public ArrayList<Condutor> carregarCondutores() {
         condutores.clear();
@@ -384,12 +387,12 @@ public class EmpresaTVDE {
     //Faturação total do condutor
     public double calcularFaturacaoTotal(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         double total = 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CONDUTORES))) {
             String linha;
-            while((linha = reader.readLine()) != null){
+            while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(",");
 
-                if(dados.length >=8){
+                if (dados.length >= 8) {
                     int contribuinteLido = Integer.parseInt(dados[0]);
                     LocalDateTime data = LocalDateTime.parse(dados[3]);
                     if (contribuinteLido == contribuinte && data.isBefore(inicio) && data.isAfter(fim)) {
@@ -397,30 +400,27 @@ public class EmpresaTVDE {
                     }
                 }
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Erro ao calcular faturação total: " + e.getMessage());
         }
         return total;
     }
-//endregion
+
+    //endregion
     //region CRUD RESERVA
     //CREATE
     public boolean adicionarReserva(Reserva reserva) {
-        if(reserva == null || procurarNifReserva(reserva.getContribuinte()) != null)
+        if (reserva == null)
             return false;
 
-        boolean adicionou = reservas.add(reserva);
-        if(adicionou) {
-            try (BuffereWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
-                writer.write(reserva.paraFicheiro());
-                writer.newLine();
-                return true;
-            } catch (IOException e){
-                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_RESERVAS, e.getMessage());
-                return true;
-            }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
+            writer.write(reserva.paraFicheiro());
+            writer.newLine();
+            return true;
+        } catch (IOException e) {
+            adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_RESERVAS, e.getMessage());
+            return true;
         }
-        return false;
     }
 
     //READ
@@ -442,7 +442,7 @@ public class EmpresaTVDE {
                     Viatura viatura = procurarViatura(matricula);
 
                     if (cliente != null && viatura != null) {
-                        Reserva reserva = new Reserva(cliente,viatura,datahora,origem,destino,kms);
+                        Reserva reserva = new Reserva(cliente, viatura, datahora, origem, destino, kms);
                         reservas.add(reserva);
                     }
                 }
@@ -480,7 +480,7 @@ public class EmpresaTVDE {
 
     public Reserva procurarNifReserva(int contribuinte) {
         for (Reserva reserva : reservas) {
-            if (reserva.getViatura().getContribuinte() == contribuinte) {
+            if (reserva.getCliente().getContribuinte() == contribuinte) {
                 return reserva;
             }
         }
@@ -515,7 +515,7 @@ public class EmpresaTVDE {
         }
         boolean adicionar = viagens.add(viagem);
         if (adicionar) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS,true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_VIAGENS, true))) {
                 writer.write(viagem.paraFicheiro());
                 writer.newLine();
                 System.out.println("Viagem adicionado com sucesso!");
@@ -531,6 +531,43 @@ public class EmpresaTVDE {
             }
         }
         return false;
+    }
+
+    public ArrayList<Viagem> carregarViagem() {
+        viagens.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
+            String linha;
+
+            while ((linha = reader.readLine()) != null) {
+                String[] dados = linha.split(",");
+                if (dados.length == 7) {
+                    int contribuinte = Integer.parseInt(dados[0]);
+                    String matricula = dados[1];
+                    String moradaOrigem = dados[3];
+                    String moradaDestino = dados[4];
+                    LocalDateTime dataInicio = LocalDateTime.parse(dados[5]);
+                    LocalDateTime horaInicio = LocalDateTime.parse(dados[6]);
+
+                    Cliente cliente = procurarNifCliente(contribuinte);
+                    Viatura viatura = procurarViatura(matricula);
+
+                    if (cliente != null && viatura != null) {
+                        Viagem viagem = new Viagem();
+                        viagem.add(viagens);
+                    }
+                }
+            }
+            return viagens;
+        } catch (IOException e) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_LOGS_VIAGENS, true))) {
+                writer.write("Erro ao ler as viagens: " + e.getMessage());
+                writer.newLine();
+                return null;
+            } catch (IOException ex) {
+                System.out.println("Erro crítico: Falha ao ler ficheiro e falha ao gravar log.");
+            }
+        }
+        return null;
     }
 
     public Viagem procurarViagens(int contribuinte) {
@@ -570,25 +607,26 @@ public class EmpresaTVDE {
         }
         return false;
     }
+
     //Pesquisar viagens de um cliente num intervalo de data dada pelo cliente
     public ArrayList<Viagem> pesquisarViagemClienteData(int contribuinte, LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<Viagem> viagemEncontrada = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             String linha;
 
-            while((linha = reader.readLine()) != null){
+            while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if(dados.length >= 6) {
-                    int contribuinteLido =  Integer.parseInt(dados[0]);
-                    if(contribuinteLido == contribuinte) {
+                if (dados.length >= 6) {
+                    int contribuinteLido = Integer.parseInt(dados[0]);
+                    if (contribuinteLido == contribuinte) {
                         LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
-                        if(dataViagem.isBefore(inicio) && dataViagem.isAfter(fim)) {
+                        if (dataViagem.isBefore(inicio) && dataViagem.isAfter(fim)) {
                             Cliente cliente = procurarNifCliente(contribuinte);
                             Viatura viatura = procurarViatura(dados[3]);
                             Condutor condutor = procurarNifCondutor(Integer.parseInt(dados[2]));
-                            if(cliente != null && viatura != null && condutor != null) {
-                                Viagem viagem = new Viagem();
+                            if (cliente != null && viatura != null && condutor != null) {
+                                Viagem viagem = new Viagem(moradaOrigem, moradaDestino, dataInicio, horaInicio, cliente, viatura, condutor);
                                 viagem.setCliente(cliente);
                                 viagem.setCondutor(condutor);
                                 viagem.setViatura(viatura);
@@ -611,21 +649,21 @@ public class EmpresaTVDE {
 
     public double calculaDistanciaMedia(LocalDateTime inicio, LocalDateTime fim) {
         double media = 0;
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
-            double kMS=0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
+            double kMS = 0;
             int quantidadeViagens = 0;
             String linha;
-            while((linha = reader.readLine()) != null){
+            while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if(dados.length >= 6) {
+                if (dados.length >= 6) {
                     LocalDateTime dataViagem = LocalDateTime.parse(dados[0]);
 
-                    if(!dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
+                    if (!dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
                         kMS = Double.parseDouble(dados[1]);
                         quantidadeViagens++;
                     }
                 }
-                media = kMS/quantidadeViagens;
+                media = kMS / quantidadeViagens;
             }
         } catch (IOException ex) {
             System.out.println("Erro ao ler ficheiro: " + ex.getMessage());
@@ -636,13 +674,13 @@ public class EmpresaTVDE {
     public String destinoPopular(LocalDateTime inicio, LocalDateTime fim) {
         ArrayList<String> destinos = new ArrayList<>();
 
-        try (BufferedReader viagem = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))){
+        try (BufferedReader viagem = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_VIAGENS))) {
             String linha;
-            while ((linha = viagem.readLine()) != null){
+            while ((linha = viagem.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if(dados.length >= 6) {
+                if (dados.length >= 6) {
                     LocalDateTime dataViagem = LocalDateTime.parse(dados[1]);
-                    if(dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
+                    if (dataViagem.isBefore(inicio) && !dataViagem.isAfter(fim)) {
                         destinos.add(dados[6]);
                     }
                 }
@@ -651,33 +689,33 @@ public class EmpresaTVDE {
             System.out.println("Erro ao ler ficheiro da viagem: " + e.getMessage());
         }
 
-        try(BufferedReader reserva = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))){
+        try (BufferedReader reserva = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_RESERVAS))) {
             String linha;
-            while ((linha = reserva.readLine()) != null){
+            while ((linha = reserva.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if(dados.length >= 6) {
+                if (dados.length >= 6) {
                     LocalDateTime dataReserva = LocalDateTime.parse(dados[3]);
-                    if(dataReserva.isBefore(inicio) && !dataReserva.isAfter(fim)) {
+                    if (dataReserva.isBefore(inicio) && !dataReserva.isAfter(fim)) {
                         destinos.add(dados[6]);
                     }
                 }
             }
-        }catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println("Erro ao ler ficheiro da reserva: " + ex.getMessage());
         }
-        if(destinos.isEmpty()) {
+        if (destinos.isEmpty()) {
             return "Não existe reservas nem viagens entre as datas inseridas!";
         }
         String destino = "";
         int pedidos = 0;
         int maxPedidos = 0;
-        for(String destino1 : destinos){
-            for(String destino2 : destinos){
-                if(destino1.equalsIgnoreCase(destino2)){
+        for (String destino1 : destinos) {
+            for (String destino2 : destinos) {
+                if (destino1.equalsIgnoreCase(destino2)) {
                     pedidos++;
                 }
             }
-            if (pedidos > maxPedidos){
+            if (pedidos > maxPedidos) {
                 maxPedidos = pedidos;
                 destino = destino1;
             }
@@ -685,19 +723,19 @@ public class EmpresaTVDE {
         return "O destino mais popular é :" + destino + " pedido " + pedidos + "vezes.";
     }
 
-    public ArrayList<Cliente> clientesPorDistancia(double distanciaMinima, double distanciaMaxima){
+    public ArrayList<Cliente> clientesPorDistancia(double distanciaMinima, double distanciaMaxima) {
         ArrayList<Cliente> clientesEncontrados = new ArrayList<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CLIENTES))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_FICHEIRO_CLIENTES))) {
             String linha;
-            while ((linha = reader.readLine()) != null){
+            while ((linha = reader.readLine()) != null) {
                 String[] dados = linha.split(";");
-                if(dados.length >= 6) {
-                    double distancia =  Double.parseDouble(dados[1]);
+                if (dados.length >= 6) {
+                    double distancia = Double.parseDouble(dados[1]);
 
-                    if(distancia >= distanciaMinima && distancia <= distanciaMaxima){
+                    if (distancia >= distanciaMinima && distancia <= distanciaMaxima) {
                         int nifCliente = Integer.parseInt(dados[2]);
                         Cliente cliente = procurarNifCliente(nifCliente);
-                        if(cliente != null){
+                        if (cliente != null) {
                             clientesEncontrados.add(cliente);
                         }
                     }
@@ -708,6 +746,7 @@ public class EmpresaTVDE {
         }
         return clientesEncontrados;
     }
+
     //getter gerais
     public ArrayList<Cliente> getClientes() {
         return clientes;

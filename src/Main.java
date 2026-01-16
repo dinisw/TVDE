@@ -24,6 +24,8 @@ public class Main {
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIATURAS = "logsErrosViaturas.txt";
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CLIENTE = "logsErrosClientes.txt";
     private final String CAMINHO_FICHEIRO_LOGS_ERROS_CONDUTOR = "logsErrosCondutor.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_ERROS_RESERVA = "logsErrosReserva.txt";
+    private final String CAMINHO_FICHEIRO_LOGS_ERROS_VIAGEM = "logsErrosViagem.txt";
 
     EmpresaTVDE empresaTVDE = new EmpresaTVDE();
     ArrayList<Cliente> clientes = empresaTVDE.carregarClientes();
@@ -1785,7 +1787,7 @@ public class Main {
             }
         } catch  (Exception e) {
             System.out.println("Dados inválidos.");
-            //empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_RESERVA, e.getMessage());
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_RESERVA, e.getMessage());
         }
     }
 
@@ -1822,7 +1824,7 @@ public class Main {
             System.out.print(ROXO + "\n\n--- Remover Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
                 System.out.println("Indique o NIF (Contribuinte): ");
-                String nifStr = ler.nextLine().trim();
+                String nifStr = ler.nextLine();
                 if (opcaoSair(nifStr)) break;
                 if (!isNifValido(nifStr)) {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
@@ -1831,12 +1833,12 @@ public class Main {
                 int nif = Integer.parseInt(nifStr);
                 Reserva reserva = empresaTVDE.procurarNifReserva(nif);
                 if (reserva != null) {
-                    System.out.printf("Tem certeza que deseja remover a reserva com NIF %s? [S/N]", reserva.getContribuinte());
+                    System.out.printf("Tem certeza que deseja remover a reserva com NIF %s? [S/N]" + reserva.getCliente().getContribuinte());
                     String validacao = ler.nextLine().trim();
 
                     if (validacao.equalsIgnoreCase("S")) {
-                        if (empresaTVDE.removerCondutor(reserva.getContribuinte())) {
-                            System.out.printf("Condutor %s removido com sucesso.", reserva.getContribuinte());
+                        if (empresaTVDE.removerCondutor(reserva.getCliente().getContribuinte())) {
+                            System.out.printf("Condutor %s removido com sucesso.", reserva.getCliente().getContribuinte());
                             condutores = empresaTVDE.carregarCondutores();
                             break;
                         } else {
@@ -1862,7 +1864,7 @@ public class Main {
             do {
                 opcao = subMenuViagens(ler);
                 if (opcao == 1) {
-                    //criarViagem(ler);
+                    criarViagem(ler);
                 } else if (!viagens.isEmpty() && opcao == 2) {
                     //transformarReservaEmViagem(ler);
                 } else if (!viagens.isEmpty() && opcao == 3) {
@@ -1894,23 +1896,11 @@ public class Main {
             return Integer.parseInt(opcao);
         }
 
-        /*Permitir trasnformar uma reserva em viagem
-         * Validar se a viagem já existe antes de inserir
-         * */
-
-        /*
-         * Criar um SUb menu para Registrar Viagens e Eliminar
-         * */
-        //transformarReservaEmViagem(ler);
-        //criarViagem(ler);
-        //removerViagem(ler);
-
-
     void criarViagem(Scanner ler) {
         try {
             System.out.print(ROXO + "\n\n--- Nova Viagem (Escreva 'sair' para cancelar) ---\n\n" + RESET);
-            String moradaOrigem, moradaDestino, dataStr, horaStr, cliente = "", viatura = "", condutor ="";
-            int indexCliente, indexViatura, indexCondutor = 0;
+            String moradaOrigem, moradaDestino, dataStr, horaStr, cliente = "", viatura = "", condutor;
+            int indexCliente, indexViatura, indexCondutor;
             LocalDate dataInicio;
             LocalTime horaInicio;
             while (true) {
@@ -1992,7 +1982,6 @@ public class Main {
                     System.out.println("Cliente inválido.");
                     continue;
                 }
-                Cliente cliente1 = clientes.get(indexCliente);
                 break;
             }
 
@@ -2017,7 +2006,6 @@ public class Main {
                     System.out.println("Viatura inválida.");
                     continue;
                 }
-                Viatura viatura1 = viaturas.get(indexViatura);
                 break;
             }
 
@@ -2033,27 +2021,25 @@ public class Main {
                 }
                 System.out.print("Introduza o número do condutor: ");
                 indexCondutor = ler.nextInt() - 1;
-                ler.nextLine();
-                if (opcaoSair(condutor)) {
+                if (opcaoSair(String.valueOf(indexCondutor));
                     return;
-                }
+
 
                 if (indexCondutor < 0 || indexCondutor >= condutores.size()) {
                     System.out.println("Condutor inválido.");
                     continue;
                 }
-                Condutor condutor1 = condutores.get(indexCondutor);
                 break;
             }
 
-            Viagem viagem = new Viagem();
+            Viagem viagem = new Viagem(moradaOrigem, moradaDestino, dataInicio, horaInicio, cliente, viatura, condutor);
             if (empresaTVDE.adicionarViagem(viagem)){
                 System.out.println(VERDE_BRILHANTE + "\n\nViagem registada com sucesso!\n\n" + RESET);
-                //condutores = empresaTVDE.carregarViagens();
+                viagem = empresaTVDE.carregarViagem();
             }
         } catch (Exception e) {
             System.out.println("Dados inválidos.");
-            //empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGEM, e.getMessage());
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGEM, e.getMessage());
         }
 
     }
@@ -2070,7 +2056,7 @@ public class Main {
                             continue;
                         }
                         int nif = Integer.parseInt(nifStr);
-                        Viagem viagem = empresaTVDE.procurarViagens(int contribuinte)
+                        Viagem viagem = empresaTVDE.procurarViagens(int contribuinte);
                     }
                 } catch (Exception e) {
                     System.out.println("Erro de input." + e.getMessage());
@@ -2131,8 +2117,8 @@ public class Main {
 
                 Condutor condutorSelecionado = condutores.get(indexCondutor);
 
-                //Viagem novaViagem = new Viagem(cliente, condutor, viatura, reservaSelecionada, condutorSelecionado);
-                //viagens.add(novaViagem);
+                Viagem novaViagem = new Viagem(cliente, condutor, viatura, reservaSelecionada, condutorSelecionado);
+                viagens.add(novaViagem);
 
                 System.out.println("Sucesso! A reserva foi transformada em viagem.");
             }
