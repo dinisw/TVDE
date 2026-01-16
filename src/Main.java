@@ -127,7 +127,9 @@ public class Main {
         System.out.println(VERDE + "3\t-\tViaturas" + RESET);
         System.out.println(VERDE + "4\t-\tReservas" + RESET);
         System.out.println(VERDE + "5\t-\tViagens" + RESET);
-        System.out.println(VERDE + "6\t-\tInformações" + RESET);
+        if(!clientes.isEmpty() || !condutores.isEmpty() || !viaturas.isEmpty() || !reservas.isEmpty() || !viagens.isEmpty()) {
+            System.out.println(VERDE + "6\t-\tInformações" + RESET);
+        }
         System.out.println(VERDE + "0\t-\tSair" + RESET);
         System.out.print("Indique a opção que queira realizar utilizando os números de 0 a 6: ");
         String opcao = ler.nextLine();
@@ -174,7 +176,7 @@ public class Main {
     }
     public boolean isNomeValido(String nome) {
         if (nome== null) return false;
-        String regex = "^[a-zA-Z]{2,}$";
+        String regex = "^[a-zA-Z\\u00C0-\\u00FF ]+$";
         return nome.trim().matches(regex);
     }
     public boolean isCcValido(String cc) {
@@ -220,7 +222,8 @@ public class Main {
     public boolean isDataValida(String data, DateTimeFormatter formatterData) {
         if (data == null) return false;
         try{
-            LocalDateTime.parse(data, formatterData);
+            LocalDate dataFormatada = LocalDate.parse(data, formatterData);
+            dataFormatada.atStartOfDay();
             return true;
         } catch (Exception e) {
              throw new RuntimeException(e);
@@ -230,9 +233,9 @@ public class Main {
         if (dataInicio == null || dataFim == null) return false;
         try{
             if(dataFim.isAfter(dataInicio)){
-                return false;
+                return true;
             }
-            return true;
+            return false;
         } catch (Exception e) {
              throw new RuntimeException(e);
         }
@@ -292,16 +295,16 @@ public class Main {
         printTituloPrincipal();
         printTituloSecundario("CLIENTES");
         System.out.printf(VERDE + "%d\t-\tRegistar Cliente\n" + RESET, count);
+        count++;
         if (!clientes.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tPesquisar Cliente\n" + RESET, count);
+            count++;
         }
         if (!clientes.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tAtualizar Cliente\n" + RESET, count);
+            count++;
         }
         if (!clientes.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tRemover Cliente\n" + RESET, count);
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
@@ -697,17 +700,18 @@ public class Main {
         printTituloPrincipal();
         printTituloSecundario("CONDUTORES");
         System.out.printf(VERDE + "%d\t-\tRegistar Condutores\n" + RESET, count);
+        count++;
         if (!condutores.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tPesquisar Condutores\n" + RESET, count);
+            count++;
         }
         if (!condutores.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tAtualizar Condutores\n" + RESET, count);
+            count++;
         }
         if (!condutores.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tRemover Condutores\n" + RESET, count);
+            count++;
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
@@ -1139,17 +1143,18 @@ public class Main {
         printTituloPrincipal();
         printTituloSecundario("VIATURAS");
         System.out.printf(VERDE + "%d\t-\tRegistar Viatura\n" + RESET, count);
+        count++;
         if (!viaturas.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tPesquisar Viatura pela Matrícula\n" + RESET, count);
+            count++;
         }
         if(!viaturas.isEmpty()){
-            count++;
             System.out.printf(VERDE + "%d\t-\tAtualizar Viatura pela Matrícula\n" + RESET, count);
+            count++;
         }
         if(!viaturas.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tRemover Viatura\n" + RESET, count);
+            count++;
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
@@ -1282,7 +1287,7 @@ public class Main {
         try {
             System.out.print(ROXO + "\n\n--- Atualizar Viatura (Escreva 'sair' para cancelar) ---\n\n" + RESET);
             while (true) {
-                System.out.println("Indique a matrícula [XX-XX-XX]: ");
+                System.out.println("Indique a matrícula [XXXXXX]: ");
                 String matriculaStr = ler.nextLine().trim().toUpperCase();
 
                 if (opcaoSair(matriculaStr)) return;
@@ -1451,22 +1456,21 @@ public class Main {
         int opcao;
         do{
             opcao = subMenuReservas(ler);
-            if (opcao == 1){
+            if (opcao == 1) {
                 criarReserva(ler);
             } else if (!reservas.isEmpty() && opcao == 2) {
                 consultarReservas(ler);
             } else if (!reservas.isEmpty() && opcao == 3) {
-                removerReserva(ler);
-            } else if (!reservas.isEmpty() && opcao == 4) {
                 alterarReserva(ler);
-            } else if (!reservas.isEmpty() && opcao == 0) {
+            } else if (!reservas.isEmpty() && opcao == 4) {
+                removerReserva(ler);
+            } else if (opcao == 0) {
                 break;
             } else {
-                System.out.println("Opção Invalida, Tente novamente.");
+                System.out.println("Opção Inválida!");
             }
-
-        }while(opcao !=0);
-    }
+        } while (opcao != 0);
+    } //Completo
 
     int subMenuReservas(Scanner ler) {
         int count = 1;
@@ -1474,178 +1478,417 @@ public class Main {
         printTituloPrincipal();
         printTituloSecundario("RESERVAS");
         System.out.printf(VERDE + "%d\t-\tCriar Reserva\n" + RESET, count);
-        if (!condutores.isEmpty()) {
+        if (!reservas.isEmpty()) {
             count++;
             System.out.printf(VERDE + "%d\t-\tConsultar Reservas\n" + RESET, count);
         }
-        if (!condutores.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tRemover Reserva\n" + RESET, count);
-        }
-        if (!condutores.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tAlterar Reserva\n" + RESET, count);
-        }
-        System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
-        System.out.print("Indique a opção que queira realizar: ");
-        try { return Integer.parseInt(ler.nextLine()); } catch (Exception e) { return -1; }
-    }
-    /*Validar antes de inserir se a reserva já existe*/
-
-        } while (opcao != 0);
-    }
-
-    int subMenuReservas(Scanner ler) {
-        int count = 1;
-        limparConsola();
-        printTituloPrincipal();
-        printTituloSecundario("RESERVAS");
-        System.out.printf(VERDE + "%d\t-\tCriar Reserva\n" + RESET, count);
         if (!reservas.isEmpty()) {
             count++;
-            System.out.printf(VERDE + "%d\t-\tConsultar Reserva\n" + RESET, count);
+            System.out.printf(VERDE + "%d\t-\tAlterar Reserva\n" + RESET, count);
         }
         if (!reservas.isEmpty()) {
             count++;
             System.out.printf(VERDE + "%d\t-\tRemover Reserva\n" + RESET, count);
         }
-        if (!reservas.isEmpty()) {
-            count++;
-            System.out.printf(VERDE + "%d\t-\tAlterar Reserva\n" + RESET, count);
-        }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
-        String opcao = ler.nextLine();
-        return Integer.parseInt(opcao);
-    }
-    /*Validar antes de inserir se a reserva já existe*/
-
-
-    /*
-    Fazer um switch case
-    * Criar um SUb menu para Registrar Reservas e Eliminar
-    * */
-
-    private void alterarReserva(Scanner ler) {
-        System.out.println("Lista de Reservas:");
-        for (Reserva reserva : reservas) {
-            for (int i = 0; i < reservas.size(); i++) {
-                //System.out.println( i + reservas.get(i));
-            }
+        try {
+            return Integer.parseInt(ler.nextLine());
+        } catch (Exception e) {
+            return -1;
         }
-        System.out.println("Introduza o numero da reserva que deseja alterar");
-        int indice = Integer.parseInt(ler.nextLine());
-
-        if (indice < reservas.size() || indice >= 0) {
-            System.out.println("Reserva invalida");
-        }
-
-        Reserva reserva = reservas.get(indice);
-        int opcao;
-        do {
-            System.out.println("O que deseja alterar?");
-            System.out.println("1. Cliente");
-            System.out.println("2. Viatura");
-            System.out.println("3. Data");
-            System.out.println("4. Hora");
-            System.out.println("5. Origem");
-            System.out.println("6. Destino");
-            System.out.println("0. Concluir");
-
-            opcao = Integer.parseInt(ler.nextLine());
-
-            switch (opcao) {
-                case 1:
-                    System.out.println("Indique o nome do cliente:");
-                    String cliente = ler.nextLine();
-                    break;
-                case 2:
-                    System.out.println("Indique o nome do viatura:");
-                    String viatura = ler.nextLine();
-                    break;
-                case 3:
-                    System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
-                    DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    LocalDate data = LocalDate.parse(ler.nextLine(), formatoData);
-                    break;
-                case 4:
-                    System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
-                    DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
-                    LocalTime hora = LocalTime.parse(ler.nextLine(), formatoHora);
-                    break;
-                case 5:
-                    System.out.println("Indique a sua atual morada:");
-                    String moradaOrigem = ler.nextLine();
-                    break;
-                case 6:
-                    String moradaDestino = ler.nextLine();
-                    System.out.println("Indique a distância:");
-                    break;
-                case 0:
-                    System.out.println("Alterações concluídas");
-                    break;
-            }
-        } while (opcao == 0);
-    }
-
-    private void consultarReservas(Scanner ler) {
-        System.out.println("Lista de Reservas");
-        for (Reserva reserva : reservas) {
-            System.out.println(reserva);
-        }
-    }
-    public ArrayList<Viatura> getViaturasDisponiveis(){
-        ArrayList<Viatura> viaturasDisponiveis = new ArrayList<Viatura>();
-        for(var viatura : viaturas){
-            if(viatura.isStatus()){
-                viaturasDisponiveis.add(viatura);
-            }
-        }
-        return viaturasDisponiveis;
     }
     void criarReserva(Scanner ler) {
-        ArrayList<Viatura> viaturasDisponiveis = getViaturasDisponiveis();
-        Viatura viaturaParaReserva = new Viatura();
-        for(var viatura : viaturasDisponiveis){
-            viaturaParaReserva = viatura;
-            break;
+        try {
+            System.out.print(ROXO + "\n\n--- Nova Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+            String moradaOrigem, moradaDestino, horaStr, dataStr, cliente = "", viatura = "", nifStr;
+            int nif, indexCliente, indexViatura = 0;
+            LocalDate dataReserva;
+            LocalTime horaReserva;
+
+            while (true) {
+                System.out.println("Indique o NIF (Contribuinte): ");
+                nifStr = ler.nextLine();
+
+                if (opcaoSair(nifStr)) return;
+                if (!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                    continue;
+                }
+
+                nif = Integer.parseInt(nifStr);
+
+                if (empresaTVDE.procurarNifReserva(nif) != null) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Esse NIF já está registado no sistema. Tente outro.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("=== Escolha o Cliente ===");
+
+                if (clientes.isEmpty()) {
+                    System.out.println("Não existe nenhum cliente registado. Registe um cliente primeiro.");
+                    return;
+                }
+                for (int i = 0; i < clientes.size(); i++) {
+                    System.out.println((i + 1) + ". " + clientes.get(i).toString());
+                }
+                System.out.print("Introduza o número do cliente: ");
+                indexCliente = ler.nextInt() - 1;
+                ler.nextLine();
+                if (opcaoSair(cliente)) {
+                    return;
+                }
+
+                if (indexCliente < 0 || indexCliente >= clientes.size()) {
+                    System.out.println("Cliente inválido.");
+                    continue;
+                }
+                Cliente cliente1 = clientes.get(indexCliente);
+                break;
+            }
+
+            while (true) {
+                System.out.println("=== Escolha a viatura ===");
+
+                if (viaturas.isEmpty()) {
+                    System.out.println("Não existe nenhuma Viatura registada. Registe uma viatura primeiro.");
+                    return;
+                }
+                for (int i = 0; i < viaturas.size(); i++) {
+                    System.out.println((i + 1) + ". " + viaturas.get(i).toString());
+                }
+                System.out.print("Introduza o número do cliente: ");
+                indexViatura = ler.nextInt() - 1;
+                ler.nextLine();
+                if (opcaoSair(viatura)) {
+                    return;
+                }
+
+                if (indexViatura < 0 || indexViatura >= viaturas.size()) {
+                    System.out.println("Viatura inválida.");
+                    continue;
+                }
+                Viatura viatura1 = viaturas.get(indexViatura);
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique a data que pretende reservar (dd/MM/yyyy): ");
+                dataStr = ler.nextLine();
+
+                if (opcaoSair(dataStr)) return;
+
+                try {
+                    dataReserva = LocalDate.parse(
+                            dataStr,
+                            DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    );
+
+                    if (dataReserva.isBefore(LocalDate.now())) {
+                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data não pode ser no passado. Tente novamente.");
+                        continue;
+                    }
+
+                    break;
+
+                } catch (DateTimeParseException e) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data informada não está no formato correto. Exemplo: 25/12/2026");
+                }
+            }
+
+            while (true) {
+                System.out.print("Indique a hora que pretende reservar (HH:mm): ");
+                horaStr = ler.nextLine();
+
+                if (opcaoSair(horaStr)) return;
+
+                try {
+                    horaReserva = LocalTime.parse(
+                            horaStr,
+                            DateTimeFormatter.ofPattern("HH:mm")
+                    );
+
+                    break;
+
+                } catch (DateTimeParseException e) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A hora informada não está no formato correto. Exemplo: 14:30");
+                }
+            }
+
+            while (true) {
+                System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
+                moradaOrigem = ler.nextLine();
+                if (opcaoSair(moradaOrigem)) return;
+                if (!isMoradaValida(moradaOrigem)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
+                moradaDestino = ler.nextLine();
+                if (opcaoSair(moradaDestino)) return;
+                if (!isMoradaValida(moradaDestino)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+            Reserva reserva = new Reserva();
+            if (empresaTVDE.adicionarReserva(reserva)) {
+                System.out.print(VERDE_BRILHANTE + "\n\nReserva criada com sucesso!\n\n" + RESET);
+                reservas = empresaTVDE.carregarReservas();
+            }
+        } catch (Exception e) {
+            System.out.println("Dados inválidos.");
+            //empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_RESERVA, e.getMessage());
         }
-        System.out.println("Indique o NIF do cliente para reserva");
-        String nif = ler.nextLine();
-        Cliente cliente = empresaTVDE.procurarNifCliente(Integer.parseInt(nif));
-        System.out.println("Indique a data que pretenda reservar (em formato de dd/MM/yyyy):");
-        String data = ler.nextLine();
-        DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDateTime dataFormatada = LocalDateTime.parse(data, formatoData);
-        System.out.println("Indique a hora que pretenda reservar (em formato de HH:mm):");
-        LocalTime horaParte = LocalTime.parse(ler.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
-        LocalDateTime dataHoraInicio = LocalDateTime.of(dataParte, horaParte);
-        System.out.println("Indique a sua atual morada:");
-        String moradaOrigem = ler.nextLine();
-        System.out.println("Indique o destino:");
-        String moradaDestino = ler.nextLine();
-        System.out.println("Indique a distância:");
-        double distancia = ler.nextDouble();
-        Reserva reserva = new Reserva(cliente, viaturaParaReserva, dataFormatada, hora, moradaOrigem, moradaDestino, distancia);
-        reserva.add(reservas);
+    }
+
+    private void alterarReserva(Scanner ler) {
+        try {
+            System.out.println(ROXO + "\n\n--- Alterar Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+            while (true) {
+                System.out.print("Indique o NIF (Contribuinte): ");
+                String nifStr = ler.nextLine().trim();
+
+                if (opcaoSair(nifStr)) return;
+                if (!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                    continue;
+                }
+                int nif = Integer.parseInt(nifStr);
+                Reserva reserva = empresaTVDE.procurarNifReserva(nif);
+                if (reserva != null) {
+                    while (true) {
+                        System.out.println("Escolha a opção que deseja Alterar: ");
+                        System.out.println("1\t-\tMorada de Origem");
+                        System.out.println("2\t-\tMorada de Destino");
+                        System.out.println("3\t-\tData da Reserva");
+                        System.out.println("4\t-\tHora da Reserva");
+                        System.out.println("5\t-\tCliente");
+                        System.out.println("6\t-\tViatura");
+                        System.out.println("0\t-\tSair");
+                        String opcao = ler.nextLine();
+
+                        switch (opcao) {
+                            case "1":
+                                while (true) {
+                                    System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
+                                    String moradaOrigem = ler.nextLine();
+                                    if (opcaoSair(moradaOrigem)) return;
+                                    if (!isMoradaValida(moradaOrigem)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                                        continue;
+                                    }
+                                    empresaTVDE.guardarAlteracoesReservas();
+                                    break;
+                                }
+                                break;
+                            case "2":
+                                while (true) {
+                                    System.out.print("Indique a morada de destino por exemplo [Rua de Santa catarina, 123 - 3210-450]: ");
+                                    String moradaDestino = ler.nextLine();
+                                    if (opcaoSair(moradaDestino)) return;
+                                    if (!isMoradaValida(moradaDestino)) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada inserida não está no formato correto. Tente novamente.");
+                                        continue;
+                                    }
+                                    empresaTVDE.guardarAlteracoesReservas();
+                                    break;
+                                }
+                                break;
+                            case "3":
+                                while (true) {
+                                    try {
+                                        System.out.print("Data/Hora atual da reserva (AAAA-MM-DDTHH:MM): ");
+                                        LocalDateTime atual = LocalDateTime.parse(ler.next());
+
+                                        System.out.println("Introduza a nova data:");
+                                        System.out.print("Dia: ");
+                                        int d = ler.nextInt();
+                                        System.out.print("Mês: ");
+                                        int m = ler.nextInt();
+                                        System.out.print("Ano: ");
+                                        int a = ler.nextInt();
+
+                                        if (empresaTVDE.alterarDataReserva(atual, d, m, a)) {
+                                            System.out.println("Data alterada! Hora mantêm-se!");
+                                            empresaTVDE.guardarAlteracoesReservas();
+                                        } else {
+                                            System.out.println("Reserva não encontrada.");
+                                        }
+
+                                        break;
+
+                                    } catch (DateTimeParseException e) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data informada não está no formato correto. Exemplo: 25/12/2026");
+                                    }
+                                }
+                                break;
+                            case "4":
+                                while (true) {
+                                    try {
+                                        System.out.print("Data e Hora atual da reserva (dd-MM-aaaa THH:MM): ");
+                                        LocalDateTime atual = LocalDateTime.parse(ler.next());
+
+                                        System.out.println("Introduza a nova hora:");
+                                        System.out.print("Hora: ");
+                                        int hora = ler.nextInt();
+                                        System.out.print("Minuto: ");
+                                        int minuto = ler.nextInt();
+                                        if (empresaTVDE.alterarHoraReserva(atual, hora, minuto)) {
+                                            System.out.println("Hora alterada! Data mantêm-se!");
+                                            empresaTVDE.guardarAlteracoesReservas();
+                                        } else {
+                                            System.out.println("Reserva não encontrada.");
+                                        }
+
+                                        break;
+
+                                    } catch (DateTimeParseException e) {
+                                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A hora informada não está no formato correto. Exemplo: 14:30");
+                                    }
+                                }
+                                break;
+                            case "5":
+                                while (true) {
+                                    System.out.println("=== Escolha o Cliente ===");
+                                    for (Cliente cliente : clientes) {
+                                        if (clientes.isEmpty()) {
+                                            System.out.println("Não existe nenhum cliente registado. Registe um cliente primeiro.");
+                                            return;
+                                        }
+                                        for (int i = 0; i < clientes.size(); i++) {
+                                            System.out.println((i + 1) + ". " + clientes.get(i).toString());
+                                        }
+                                        System.out.print("Introduza o número do cliente: ");
+                                        int indexCliente = ler.nextInt() - 1;
+                                        ler.nextLine();
+                                        if (opcaoSair(String.valueOf(cliente))) {
+                                            return;
+                                        }
+                                        if (indexCliente < 0 || indexCliente >= clientes.size()) {
+                                            System.out.println("Cliente inválido.");
+                                            continue;
+                                        }
+                                        empresaTVDE.guardarAlteracoesReservas();
+                                        break;
+                                    }
+                                }
+                            case "6":
+                                while (true) {
+                                    System.out.println("=== Escolha a viatura ===");
+                                    for (Viatura viatura : viaturas) {
+                                        if (viaturas.isEmpty()) {
+                                            System.out.println("Não existe nenhuma Viatura registada. Registe uma viatura primeiro.");
+                                            return;
+                                        }
+                                        for (int i = 0; i < viaturas.size(); i++) {
+                                            System.out.println((i + 1) + ". " + viaturas.get(i).toString());
+                                        }
+                                        System.out.print("Introduza o número da viatura: ");
+                                        int indexViatura = ler.nextInt() - 1;
+                                        ler.nextLine();
+                                        if (opcaoSair(String.valueOf(viatura))) {
+                                            return;
+                                        }
+
+                                        if (indexViatura < 0 || indexViatura >= viaturas.size()) {
+                                            System.out.println("Viatura inválida.");
+                                            continue;
+                                        }
+                                        empresaTVDE.guardarAlteracoesReservas();
+                                        break;
+                                    }
+                                }
+                            case "0":
+                                return;
+                            default:
+                                System.out.print("Opção invalida. Tente novamente.");
+                                break;
+                        }
+                    }
+                } else {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Reserva não encontrada.");
+                }
+            }
+        } catch  (Exception e) {
+            System.out.println("Dados inválidos.");
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_RESERVAS, e.getMessage());
+        }
+    }
+
+
+    private void consultarReservas(Scanner ler) {
+        while (true) {
+            System.out.print(ROXO + "\n\n--- Consultar Reservas (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+
+            System.out.print("Indique o NIF: ");
+            String nifStr = ler.nextLine();
+            if (!isNifValido(nifStr)) {
+                System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                continue;
+            }
+            if (opcaoSair(nifStr)) break;
+
+            try {
+                int nif = Integer.parseInt(nifStr);
+                Reserva reserva = empresaTVDE.procurarNifReserva(nif);
+                if (reserva != null) {
+                    System.out.println("Enter para continuar...");
+                    ler.nextLine();
+                    break;
+                } else System.out.println("Reserva não encontrado.");
+            } catch (NumberFormatException e) {
+                System.out.println("NIF inválido.");
+            }
+        }
     }
 
     void removerReserva(Scanner ler) {
-        System.out.println("Lista de Reservas");
-        for (Reserva reserva : reservas) {
-            System.out.println(reserva);
-        }
-        System.out.println("Escreva o nome do cliente da reserva que deseja remover:");
-        String nome = ler.nextLine();
-        for (Reserva reserva : reservas) {
-            if (reserva.getCliente().getNome().equals(nome)) {
-                reservas.remove(reserva);
-                System.out.println("A Reserva" + nome + "removida com sucesso!");
-                break;
+        try {
+            System.out.print(ROXO + "\n\n--- Reserva (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+            while (true) {
+                System.out.println("Indique o NIF (Contribuinte): ");
+                String nifStr = ler.nextLine();
+                if (opcaoSair(nifStr)) break;
+                if (!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                    continue;
+                }
+                int nif = Integer.parseInt(nifStr);
+                Reserva reserva = empresaTVDE.procurarNifReserva(nif);
+                if (reserva != null) {
+                    System.out.print("Tem certeza que deseja remover a reserva com NIF %s? [S/N]" + reserva.getCliente().getContribuinte());
+                    String validacao = ler.nextLine().trim();
+
+                    if (validacao.equalsIgnoreCase("S")) {
+                        if (empresaTVDE.removerReservas(reserva.getCliente().getContribuinte())) {
+                            System.out.print("Reserva %s removida com sucesso." + reserva.getCliente().getContribuinte());
+                            reservas = empresaTVDE.carregarReservas();
+                            break;
+                        } else {
+                            System.out.println("Erro: Reserva não encontrada ou não pode ser removida.");
+                        }
+                    } else {
+                        System.out.println("Operação cancelada.");
+                        break;
+                    }
+                } else {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro:" + RESET + " Reserva não encontrado.");
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Erro de input." + e.getMessage());
         }
     }
-    //endregion
+//endregion
 
     //region Viagens
     void Viagens(Scanner ler) {
@@ -1653,9 +1896,9 @@ public class Main {
         do {
             opcao = subMenuViagens(ler);
             if (opcao == 1) {
-                //criarViagem(ler);
+                criarViagem(ler);
             } else if (!viagens.isEmpty() && opcao == 2) {
-                //transformarReservaEmViagem(ler);
+                transformarReservaEmViagem(ler);
             } else if (!viagens.isEmpty() && opcao == 3) {
                 removerViagem(ler);
             } else if (opcao == 0) {
@@ -1670,7 +1913,7 @@ public class Main {
         limparConsola();
         printTituloPrincipal();
         printTituloSecundario("VIAGENS");
-        System.out.printf(VERDE + "%d\t-\tRegistar Viagens\n" + RESET, count);
+        System.out.printf(VERDE + "%d\t-\tCriar Viagens\n" + RESET, count);
         if(!viaturas.isEmpty()){
             count++;
             System.out.printf(VERDE + "%d\t-\tTransformar Reserva Em Viagem\n" + RESET, count);
@@ -1684,43 +1927,161 @@ public class Main {
         String opcao = ler.nextLine();
         return Integer.parseInt(opcao);
     }
-        /*Permitir trasnformar uma reserva em viagem
-         * Validar se a viagem já existe antes de inserir
-         * */
 
-        /*
-         * Criar um SUb menu para Registrar Viagens e Eliminar
-         * */
-        //transformarReservaEmViagem(ler);
-        //criarViagem(ler);
+    void criarViagem(Scanner ler) {
+        try {
+            System.out.print(ROXO + "\n\n--- Nova Viagem (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+            String moradaOrigem, moradaDestino, dataStr, cliente = "", viatura = "", condutor = "";
+            int indexCliente, indexViatura, indexCondutor;
+            LocalDate dataInicio;
+            while (true) {
+                System.out.print("Indique a data que pretende reservar (dd/MM/yyyy): ");
+                dataStr = ler.nextLine();
+
+                if (opcaoSair(dataStr)) return;
+
+                try {
+                    dataInicio = LocalDate.parse(dataStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    if (dataInicio.isBefore(LocalDate.now())) {
+                        System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data não pode ser no passado. Tente novamente.");
+                        continue;
+                    }
+                    break;
+
+                } catch (DateTimeParseException e) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data informada não está no formato correto. Exemplo: 25/12/2026");
+                }
+            }
+            while (true) {
+                System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
+                moradaOrigem = ler.nextLine();
+                if (opcaoSair(moradaOrigem)) return;
+                if (!isMoradaValida(moradaOrigem)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.print("Indique a morada de origem [Rua de Santa catarina, 123 - 3210-450]: ");
+                moradaDestino = ler.nextLine();
+                if (opcaoSair(moradaDestino)) return;
+                if (!isMoradaValida(moradaDestino)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A morada informada não está no formato correto. Tente novamente.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("=== Escolha o Cliente ===");
+
+                if (clientes.isEmpty()) {
+                    System.out.println("Não existe nenhum cliente registado. Registe um cliente primeiro.");
+                    return;
+                }
+                for (int i = 0; i < clientes.size(); i++) {
+                    System.out.println((i + 1) + ". " + clientes.get(i).toString());
+                }
+                System.out.print("Introduza o número do cliente: ");
+                indexCliente = ler.nextInt() - 1;
+                ler.nextLine();
+                if (opcaoSair(cliente)) {
+                    return;
+                }
+
+                if (indexCliente < 0 || indexCliente >= clientes.size()) {
+                    System.out.println("Cliente inválido.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("=== Escolha a viatura ===");
+
+                if (viaturas.isEmpty()) {
+                    System.out.println("Não existe nenhuma Viatura registada. Registe uma viatura primeiro.");
+                    return;
+                }
+                for (int i = 0; i < viaturas.size(); i++) {
+                    System.out.println((i + 1) + ". " + viaturas.get(i).toString());
+                }
+                System.out.print("Introduza o número do cliente: ");
+                indexViatura = ler.nextInt() - 1;
+                ler.nextLine();
+                if (opcaoSair(viatura)) {
+                    return;
+                }
+
+                if (indexViatura < 0 || indexViatura >= viaturas.size()) {
+                    System.out.println("Viatura inválida.");
+                    continue;
+                }
+                break;
+            }
+
+            while (true) {
+                System.out.println("=== Escolha o condutor ===");
+
+                if (condutores.isEmpty()) {
+                    System.out.println("Não existe nenhum condutor registado. Registe um condutor primeiro.");
+                    return;
+                }
+                for (int i = 0; i < condutores.size(); i++) {
+                    System.out.println((i + 1) + ". " + condutores.get(i).toString());
+                }
+                System.out.print("Introduza o número do condutor: ");
+                indexCondutor = ler.nextInt() - 1;
+                ler.nextLine();
+                if (opcaoSair(condutor)) {
+                    if (indexCondutor < 0 || indexCondutor >= condutores.size()) {
+                        System.out.println("Condutor inválido.");
+                        return;
+                    }
+                    break;
+                }
 
 
-    void criarViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
-        System.out.println("Indique a hora de inicio:");
-        DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        System.out.println("Indique a hora:");
-        LocalTime hora = LocalTime.parse(ler.nextLine(), formatter);
-        System.out.println("Indique a data");
-        LocalDateTime dataViagem = LocalDateTime.parse(ler.nextLine(), formatterData);
-        System.out.println("Indique a morada de origem:");
-        String moradaOrigem = ler.nextLine();
-        System.out.println("Indique a morada de destino:");
-        String moradaDestino = ler.nextLine();
-        System.out.println("Indique a custo da viagem:");
-        double custoViagem = ler.nextDouble();
-        System.out.println("Indique a distancia percorrida:");
-        double distancia = ler.nextDouble();
-        boolean concluida = false;
-        viatura.setDisponivel(false);
-        Viagem viagem = new Viagem(cliente, condutor, viatura, dataViagem, hora, concluida, moradaOrigem, moradaDestino, custoViagem);
-        viagem.add(viagens);
+                Viagem viagem = new Viagem();
+                if (empresaTVDE.adicionarViagem(viagem)) {
+                    System.out.print(VERDE_BRILHANTE + "\n\nViagem criada com sucesso!\n\n" + RESET);
+                    viagens = empresaTVDE.carregarViagem();
+                }
+            }
+        } catch(Exception e){
+            System.out.println("Dados inválidos.");
+            empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGENS, e.getMessage());
+        }
+
     }
 
-    void removerViagem(Scanner ler) {
+    void removerViagem (Scanner ler){
+        try {
+            System.out.println(ROXO + "\n\n--- Remover Viagem (Escreva 'sair' para cancelar) ---\n\n" + RESET);
+            while (true) {
+                System.out.println("Indique o NIF (Contribuinte): ");
+                String nifStr = ler.nextLine().trim();
+                System.out.println("Indique a data da viagem:");
+                LocalDateTime dataInicio = LocalDateTime.parse(ler.nextLine());
+                if (opcaoSair(nifStr)) break;
+                if (!isNifValido(nifStr)) {
+                    System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "O NIF deve conter exatamente 9 dígitos numéricos. Tente novamente.");
+                    continue;
+                }
+                int nif = Integer.parseInt(nifStr);
+                if(empresaTVDE.removerViagem(nif,  dataInicio)) {
+                    Viagem viagem = empresaTVDE.procurarViagens(nif, dataInicio);
+                    System.out.println("A " + viagem + " foi removida!");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Erro de input." + e.getMessage());
+        }
     }
 
-    void transformarReservaEmViagem(Scanner ler, Cliente cliente, Condutor condutor, Viatura viatura) {
+    void transformarReservaEmViagem(Scanner ler) {
 
 
         if (reservas.isEmpty()) {
@@ -1772,50 +2133,83 @@ public class Main {
             return;
         }
 
-        Condutor condutorSelecionado = condutores.get(indexCondutor);
-
-        //Viagem novaViagem = new Viagem(cliente, condutor, viatura, reservaSelecionada, condutorSelecionado);
-        //viagens.add(novaViagem);
+        Viagem novaViagem = new Viagem();
+        viagens.add(novaViagem);
 
         System.out.println("Sucesso! A reserva foi transformada em viagem.");
     }
     //endregion
 
     //region Informações
-    int informacoes(Scanner ler) {
-        int count = 1;
+    void informacoes(Scanner ler) {
+        int opcao;
+        do {
+            opcao = subMenuInformacoes(ler);
+            if (opcao == 1) {
+                pesquisarViagem(ler);
+            } else if (opcao == 2) {
+                totalFaturado(ler);
+            } else if (opcao == 3) {
+                distanciaMedia(ler);
+            } else if (opcao == 4) {
+                destinoMaisPopular(ler);
+            } else if (opcao == 5) {
+                verListaDeClientes(ler);
+            } else if (opcao == 0) {
+                break;
+            } else {
+                System.out.println("Opção Inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    int subMenuInformacoes(Scanner ler) {
         limparConsola();
         printTituloPrincipal();
-        printTituloSecundario("Informações");
+        printTituloSecundario("INFORMAÇÕES");
+
+        int count = 1;
+        ArrayList<Integer> mapOpcoes = new ArrayList<>();
         if (!viagens.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tPesquisar Viagem\n" + RESET, count);
-            pesquisarViagem(ler);
+            mapOpcoes.add(1);
+            count++;
         }
         if (!condutores.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tPesquisar Valor Faturado por Motorista\n" + RESET, count);
-            totalFaturado(ler);
+            mapOpcoes.add(2);
+            count++;
         }
         if (!viaturas.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tDistância Média das Viagens\n" + RESET, count);
-            distanciaMedia(ler);
+            mapOpcoes.add(3);
+            count++;
         }
         if (!reservas.isEmpty() || !viagens.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tDestino mais solicitado\n" + RESET, count);
-            destinoMaisPopular(ler);
+            mapOpcoes.add(4);
+            count++;
         }
         if (!clientes.isEmpty()) {
-            count++;
             System.out.printf(VERDE + "%d\t-\tLista de clientes\n" + RESET, count);
-            verListaDeClientes(ler);
+            mapOpcoes.add(5);
         }
         System.out.println(VERDE + "0\t-\tVoltar ao menu anterior" + RESET);
         System.out.print("Indique a opção que queira realizar: ");
-        String opcao = ler.nextLine();
-        return Integer.parseInt(opcao);
+        try {
+            int opcao = Integer.parseInt(ler.nextLine());
+
+            if (opcao == 0) return 0;
+
+            if (opcao > 0 && opcao <= mapOpcoes.size()) {
+                return mapOpcoes.get(opcao - 1);
+            } else {
+                return -1;
+            }
+
+        } catch (Exception e) {
+            return -1;
+        }
     }
     public void limparConsola() {
         System.out.print("\033[H\033[2J");
@@ -1855,7 +2249,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                inicio = LocalDateTime.parse(inicioStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(inicioStr, formatterData);
+                inicio = dataFormatada.atStartOfDay();
                 break;
             }
 
@@ -1869,7 +2264,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                fim = LocalDateTime.parse(fimStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(fimStr, formatterData);
+                fim = dataFormatada.atStartOfDay();
                 if(!isIntervaloDeDataValida(inicio, fim)){
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data de fim deve posterior a data de início. Tente novamente.");
                     continue;
@@ -1882,6 +2278,9 @@ public class Main {
             if (resultado != null) {
                 for (Viagem viagem : resultado) {
                     System.out.println(viagem.toString());
+                    System.out.println("\nEnter para continuar...");
+                    ler.nextLine();
+                    break;
                 }
             }
         } catch (Exception e) {
@@ -1895,6 +2294,7 @@ public class Main {
             String nomeCondutor;
             int nif;
             LocalDateTime inicio, fim;
+            DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             while (true) {
                 System.out.print("Indique o NIF (Contribuinte): ");
                 String nifStr = ler.nextLine();
@@ -1916,7 +2316,6 @@ public class Main {
             }
 
             while (true) {
-                DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 System.out.print("Indique a data de início que pretenda pesquisar, no seguinte formato [dd/MM/aaaa]: ");
                 String inicioStr = ler.nextLine();
 
@@ -1925,12 +2324,12 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                inicio = LocalDateTime.parse(inicioStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(inicioStr, formatterData);
+                inicio = dataFormatada.atStartOfDay();
                 break;
             }
 
             while (true) {
-                DateTimeFormatter formatterData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 System.out.print("Indique a data de termino que pretenda pesquisar, no seguinte formato [dd/MM/aaaa]: ");
                 String fimStr = ler.nextLine();
 
@@ -1939,7 +2338,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                fim = LocalDateTime.parse(fimStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(fimStr, formatterData);
+                fim = dataFormatada.atStartOfDay();
                 if(!isIntervaloDeDataValida(inicio, fim)){
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data de fim deve posterior a data de início. Tente novamente.");
                     continue;
@@ -1948,7 +2348,9 @@ public class Main {
             }
 
             double total = empresaTVDE.calcularFaturacaoTotal(nif, inicio, fim);
-            System.out.printf("Total faturado pelo condutor %s entre as datas %s e %s é €%.2f", nomeCondutor, inicio, fim, total);
+            System.out.printf("Total faturado pelo condutor %s entre as datas %s e %s é €%.2f", nomeCondutor, inicio.format(formatterData), fim.format(formatterData), total);
+            System.out.println("\nEnter para continuar...");
+            ler.nextLine();
         } catch (Exception e) {
             System.out.println("Erros ao pesquisar o total faturado.");
             empresaTVDE.adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_ERROS_VIAGENS, "totalFaturado -" + e.getMessage());
@@ -1968,7 +2370,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                inicio = LocalDateTime.parse(inicioStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(inicioStr, formatterData);
+                inicio = dataFormatada.atStartOfDay();
                 break;
             }
 
@@ -1982,7 +2385,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                fim = LocalDateTime.parse(fimStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(fimStr, formatterData);
+                fim = dataFormatada.atStartOfDay();
                 if(!isIntervaloDeDataValida(inicio, fim)){
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data de fim deve posterior a data de início. Tente novamente.");
                     continue;
@@ -1994,6 +2398,8 @@ public class Main {
 
             if (media > 0) {
                 System.out.println("A distância média é de: " + media);
+                System.out.println("\nEnter para continuar...");
+                ler.nextLine();
             } else{
                 System.out.println("Não foram encontrados registos entre as datas de viagens inseridas");
             }
@@ -2016,7 +2422,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                inicio = LocalDateTime.parse(inicioStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(inicioStr, formatterData);
+                inicio = dataFormatada.atStartOfDay();
                 break;
             }
 
@@ -2030,7 +2437,8 @@ public class Main {
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "Adata deve estar no formato [dd/MM/aaaa]. Tente novamente.");
                     continue;
                 }
-                fim = LocalDateTime.parse(fimStr, formatterData);
+                LocalDate dataFormatada = LocalDate.parse(fimStr, formatterData);
+                fim = dataFormatada.atStartOfDay();
                 if(!isIntervaloDeDataValida(inicio, fim)){
                     System.out.println(VERMELHO_BRILHANTE + "Erro: " + RESET + "A data de fim deve posterior a data de início. Tente novamente.");
                     continue;
@@ -2040,6 +2448,8 @@ public class Main {
 
             String destinoPopular = empresaTVDE.destinoPopular(inicio, fim);
             System.out.print("O destino mais poupular é: " + destinoPopular);
+            System.out.println("\nEnter para continuar...");
+            ler.nextLine();
 
         } catch (Exception e) {
             System.out.println("Erro ao pesquisar a distancia média de viagens.");
@@ -2102,6 +2512,8 @@ public class Main {
                 for (Cliente cliente : listaClientes) {
                     System.out.printf("Nome:\t%s\tContribuinte:\t%d\n", cliente.getNome(), cliente.getContribuinte());
                 }
+                System.out.println("\nEnter para continuar...");
+                ler.nextLine();
             }
         } catch (Exception e) {
             System.out.println("Erro ao pesquisar a lista de clientes.");

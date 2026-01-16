@@ -107,7 +107,7 @@ public class EmpresaTVDE {
     //DELETE
     public boolean removerViaturas(String matricula) {
         Viatura viatura = procurarViatura(matricula);
-        if (viatura == null && viaturas.remove(viatura)) {
+        if (viatura != null && viaturas.remove(viatura)) {
             guardarAlteracoesViaturas();
             return true;
         }
@@ -116,7 +116,7 @@ public class EmpresaTVDE {
 
     public Viatura procurarViatura(String matricula) {
         for (Viatura viatura : viaturas) {
-            if (viatura.getMatricula() != null && viatura.getMatricula().equalsIgnoreCase(matricula)) {
+            if (viatura.getMatricula() != null && viatura.getMatricula().equals(matricula)) {
                 return viatura;
             }
         }
