@@ -1,8 +1,6 @@
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Declaração da classe Viagem.
@@ -15,9 +13,9 @@ public class Viagem {
     /** A viatura utilizada na viagem. */
     private Viatura viatura;
     /** Atribuição da data e hora do início viagem.*/
-    private LocalDateTime inicio;
+    private LocalDateTime datanIcio;
     /** Atribuição da data e hora do fim da viagem. */
-    private LocalDateTime fim;
+    private LocalDateTime dataFim;
     /** Atribuição da morada da origem.*/
     private String moradaOrigem;
     /** Atribuição da morada do destino.*/
@@ -31,8 +29,8 @@ public class Viagem {
         cliente = new Cliente();
         condutor = new Condutor();
         viatura = new Viatura();
-        inicio = LocalDateTime.now();
-        fim = LocalDateTime.now();
+        datanIcio = LocalDateTime.now();
+        dataFim = LocalDateTime.now();
         moradaOrigem = "";
         moradaDestino = "";
         concluida = false;
@@ -55,8 +53,8 @@ public class Viagem {
         this.cliente = cliente;
         this.condutor = condutor;
         this.viatura = viatura;
-        this.inicio = inicio;
-        this.fim = fim;
+        this.datanIcio = datanIcio;
+        this.dataFim = dataFim;
         this.concluida = concluida;
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
@@ -67,8 +65,8 @@ public class Viagem {
         return cliente.getContribuinte() + ";" +
                 condutor.getContribuinte() + ";" +
                 viatura.getMatricula() + ";" +
-                inicio + ";" +
-                fim + ";" +
+                datanIcio + ";" +
+                dataFim + ";" +
                 moradaOrigem + ";" +
                 moradaDestino + ";" +
                 custoViagem;
@@ -119,29 +117,29 @@ public class Viagem {
      * Obtém a data e hora da viagem.
      * @return A data e hora da viagem.
      */
-    public LocalDateTime getInicio() {
-        return inicio;
+    public LocalDateTime getDatanIcio() {
+        return datanIcio;
     }
     /**
      * Define a data e hora da viagem.
-     * @param inicio A nova data e hora da viagem.
+     * @param datanIcio A nova data e hora da viagem.
      */
-    public void setInicio(LocalDateTime inicio) {
-        this.inicio = inicio;
+    public void setDatanIcio(LocalDateTime datanIcio) {
+        this.datanIcio = datanIcio;
     }
     /**
      * Obtém a data e hora da viagem.
      * @return A data e hora da viagem.
      */
-    public LocalDateTime getFim() {
-        return fim;
+    public LocalDateTime getDataFim() {
+        return dataFim;
     }
     /**
      * Define a data e hora da viagem.
-     * @param fim A nova data hora da viagem.
+     * @param dataFim A nova data hora da viagem.
      */
-    public void setFim(LocalDateTime fim) {
-        this.fim = fim;
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
     }
     /**
      * Verifica se a viagem está concluída.

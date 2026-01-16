@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ public class Reserva {
     /** A distância estimada ou calculada da viagem. */
     private double distancia;
 
-    public Reserva() {
-        cliente = new Cliente();
-        viatura = new Viatura();
-        dataHoraInicio = LocalDateTime.now();
-        moradaOrigem = "";
-        moradaDestino = "";
+    public Reserva(LocalDate dataReserva, LocalTime horaReserva, String moradaOrigem, String moradaDestino, int cc) {
+        this.cliente = new Cliente();
+        this.viatura = new Viatura();
+        this.dataHoraInicio = LocalDateTime.now();
+        this.moradaOrigem = "";
+        this.moradaDestino = "";
         distancia = 0;
     }
 
@@ -47,6 +48,9 @@ public class Reserva {
         this.moradaOrigem = moradaOrigem;
         this.moradaDestino = moradaDestino;
         this.distancia = distancia;
+    }
+
+    public Reserva(LocalDate dataReserva, LocalTime horaReserva, String moradaOrigem, String moradaDestino, String viatura, String cliente) {
     }
 
     public String paraFicheiro() {

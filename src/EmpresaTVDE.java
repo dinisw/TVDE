@@ -1,7 +1,6 @@
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class EmpresaTVDE {
@@ -406,21 +405,23 @@ public class EmpresaTVDE {
 //endregion
     //region CRUD RESERVA
     //CREATE
-    /*public boolean adicionarReserva(Reserva reserva) {
-        if (reserva == null || (procurarNifReserva(reserva.getCliente().getContribuinte()) != null && !reserva.getViatura().isStatus()))
+    public boolean adicionarReserva(Reserva reserva) {
+        if(reserva == null || procurarNifReserva(reserva.getContribuinte()) != null)
             return false;
-        if (reservas.add(reserva)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
+
+        boolean adicionou = reservas.add(reserva);
+        if(adicionou) {
+            try (BuffereWriter writer = new BufferedWriter(new FileWriter(CAMINHO_FICHEIRO_RESERVAS, true))) {
                 writer.write(reserva.paraFicheiro());
                 writer.newLine();
                 return true;
-            } catch (IOException e) {
-               adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_VIATURAS, e.getMessage());
-               return true;
+            } catch (IOException e){
+                adicionarLogsDeErros(CAMINHO_FICHEIRO_LOGS_RESERVAS, e.getMessage());
+                return true;
             }
         }
         return false;
-    } */
+    }
 
     //READ
     public ArrayList<Reserva> carregarReservas() {
@@ -479,7 +480,7 @@ public class EmpresaTVDE {
 
     public Reserva procurarNifReserva(int contribuinte) {
         for (Reserva reserva : reservas) {
-            if (reserva.getCliente().getContribuinte() == contribuinte) {
+            if (reserva.getViatura().getContribuinte() == contribuinte) {
                 return reserva;
             }
         }
@@ -508,7 +509,7 @@ public class EmpresaTVDE {
 
     public boolean adicionarViagem(Viagem viagem) {
         for (Viagem viagem1 : viagens) {
-            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getInicio().equals(viagem1.getInicio())) {
+            if (viagem.getViatura().getMatricula().equals(viagem1.getViatura().getMatricula()) && viagem.getDatanIcio().equals(viagem1.getDatanIcio())) {
                 return false;
             }
         }
@@ -591,8 +592,8 @@ public class EmpresaTVDE {
                                 viagem.setCliente(cliente);
                                 viagem.setCondutor(condutor);
                                 viagem.setViatura(viatura);
-                                viagem.setFim(fim);
-                                viagem.setInicio(inicio);
+                                viagem.setDataFim(fim);
+                                viagem.setDatanIcio(inicio);
                                 viagem.setMoradaOrigem(dados[5]);
                                 viagem.setMoradaDestino(dados[4]);
                                 viagem.setCustoViagem(Double.parseDouble(dados[7]));
